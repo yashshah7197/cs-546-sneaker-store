@@ -1,11 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const data = require('../data');
+const data = require("../data");
 const reviewsData = data.reviews;
 
-const {ObjectId} = require('mongodb');
+const { ObjectId } = require("mongodb");
 
-router.get('/', (req, res) => {
+router.get("/", (req, res) => {
+  console.log("Welcome");
 });
 
 module.exports = router;
