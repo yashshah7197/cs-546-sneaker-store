@@ -1,27 +1,22 @@
-const mongoCollections = require('../config/mongoCollections');
+const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.reports;
 
-const {ObjectId} = require('mongodb');
+const { ObjectId } = require("mongodb");
 
-const create = (reportedBy, reportFor, reportReasons) => {
-};
+const create = (reportedBy, reportFor, reportReasons) => {};
 
-const getAll = () => {
-};
+const getAll = () => {};
 
-const get = (reportId) => {
-};
+const get = (reportId) => {};
 
-const update = (reportId, reportedBy, reportFor, reportReasons) => {
-};
+const update = (reportId, reportedBy, reportFor, reportReasons) => {};
 
-const remove = (reportId) => {
-};
+const remove = (reportId) => {};
 
 module.exports = {
-    create,
-    getAll,
-    get,
-    update,
-    remove
+  create,
+  getAll,
+  get,
+  update,
+  remove,
 };
