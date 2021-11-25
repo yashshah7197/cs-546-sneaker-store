@@ -1,0 +1,11 @@
+<form >
+<h1> {{sneaker.brandName}}</h1> 
+       <p> {{sneaker.modelName}}</p>
+       {{#sneaker.sizesAvailable}}
+            <div>{{sneaker.size}} : {{sneaker.available}}</div>
+       {{/sneaker.sizesAvailable}}
+
+       <p>{{sneaker.price}}</p>
+    <p>{{sneaker.listedBy}}</p>
+    <input type="submit" value="UPDATE">
+    </form>

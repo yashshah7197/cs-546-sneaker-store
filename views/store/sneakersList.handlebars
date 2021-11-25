@@ -1,0 +1,19 @@
+
+
+      {{#each sneakers}}
+<form action="/sneakers/{{_id}}" method="get" > 
+     <h1> {{brandName}}</h1> 
+       <p> {{modelName}}</p>
+       {{#sizesAvailable}}
+            <div>{{size}} : {{available}}</div>
+       {{/sizesAvailable}}
+
+       <p>{{price}}</p>
+    <p>{{listedBy}}</p>
+    {{!-- <input type="button" value="DELETE"> --}}
+    <input type="submit" value="UPDATE">
+    
+    </form>
+
+       {{/each}}
+ 
