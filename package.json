@@ -19,6 +19,7 @@
   "homepage": "https://github.com/yashshah7197/cs-546-sneaker-store#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "express-handlebars": "^6.0.1",
     "mongodb": "^4.1.4"
   }
 }

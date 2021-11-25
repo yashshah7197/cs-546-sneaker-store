@@ -5,7 +5,7 @@ const validation = require("./validate");
 const { ObjectId } = require("mongodb");
 // const { reports } = require("../config/mongoCollections");
 
-const create = (reportedBy, reportFor, reportReasons) => {
+const create = async (reportedBy, reportFor, reportReasons) => {
   validation.checkInputStr(reportedBy, "Reported By");
   // validation.checkValidObjectId(reportedBy);
   validation.checkInputStr(reportFor, "Report For");
@@ -36,7 +36,7 @@ const create = (reportedBy, reportFor, reportReasons) => {
   return addedReport;
 };
 
-const getAll = () => {
+const getAll = async () => {
   let emptyResult = [];
   const reportCollection = await reports();
 
@@ -55,7 +55,7 @@ const getAll = () => {
   return reportList;
 };
 
-const get = (reportId) => {
+const get = async (reportId) => {
   validation.checkInputStr(reportId, "Report id");
 
   //validation.checkValidObjectId(reportId);
@@ -76,7 +76,7 @@ const get = (reportId) => {
   return report;
 };
 
-const update = (reportId, reportedBy, reportFor, reportReasons) => {
+const update = async (reportId, reportedBy, reportFor, reportReasons) => {
   validation.checkInputStr(reportId, "Report Id");
   //validation.checkValidObjectId(reportId);
   let parsedId = ObjectId(reportId.trim());
@@ -129,7 +129,7 @@ const update = (reportId, reportedBy, reportFor, reportReasons) => {
   return updatedReport;
 };
 
-const remove = (reportId) => {
+const remove = async (reportId) => {
   let result = {};
   validation.checkInputStr(reportId, "Id");
 
