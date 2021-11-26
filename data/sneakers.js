@@ -34,10 +34,15 @@ const getAll = async() => {
   const sneakerList = await sneaker.find({}).toArray();
   for(let x of sneakerList)  
     x._id=x._id.toString();
-
   return sneakerList;
 };
-
+const getAllListedBy = async(listedBy) => {
+  const sneaker = await sneakers();
+  const sneakerList = await sneaker.find({listedBy:(listedBy)}).toArray();
+  for(let x of sneakerList)  
+    x._id=x._id.toString();
+  return sneakerList;
+};
 const get = async(sneakerId) => {
   const sneakersCollection = await sneakers();
     const rest = await sneakersCollection.findOne({ _id: ObjectId(sneakerId) });
@@ -79,4 +84,5 @@ module.exports = {
   get,
   update,
   remove,
+  getAllListedBy
 };

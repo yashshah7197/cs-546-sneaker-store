@@ -40,7 +40,7 @@ async function main() {
  
   try {
     let sneaker = await sneakers.create(
-      "Adidas",
+      "Nike",
       "AF1",
       [{"size":3,"available":4},{"size":4,"available":3}],
       45,
@@ -49,6 +49,70 @@ async function main() {
       0,
       [],
       "619a6f6ffb3a89c138ee0560",
+      []
+    );
+  } catch (e) {
+    console.log(e);
+  }
+  try {
+    let sneaker = await sneakers.create(
+      "Nike",
+      "AF1",
+      [{"size":3,"available":4},{"size":4,"available":3}],
+      45,
+      [],
+      [],
+      0,
+      [],
+      "619a6f6ffb3a89c138ee0560",
+      []
+    );
+  } catch (e) {
+    console.log(e);
+  }
+  try {
+    let sneaker = await sneakers.create(
+      "Nike",
+      "AF1",
+      [{"size":3,"available":4},{"size":4,"available":3}],
+      45,
+      [],
+      [],
+      0,
+      [],
+      "619a6f6ffb3a89c138ee0563",
+      []
+    );
+  } catch (e) {
+    console.log(e);
+  }
+  try {
+    let sneaker = await sneakers.create(
+      "Nike",
+      "AF1",
+      [{"size":3,"available":4},{"size":4,"available":3}],
+      45,
+      [],
+      [],
+      0,
+      [],
+      "619a6f6ffb3a89c138ee0563",
+      []
+    );
+  } catch (e) {
+    console.log(e);
+  }
+  try {
+    let sneaker = await sneakers.create(
+      "Adidas",
+      "AF1",
+      [{"size":3,"available":4},{"size":4,"available":3}],
+      45,
+      [],
+      [],
+      0,
+      [],
+      "619a6f6ffb3a89c138ee0563",
       []
     );
   } catch (e) {

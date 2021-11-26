@@ -1,0 +1,28 @@
+
+
+
+<div class="container" >
+  <div class="row">
+       {{#each sneakers}}
+    <div class="col-sm-4">
+<form > 
+     <h1> {{brandName}}</h1> 
+       <p> {{modelName}}</p>
+       {{#sizesAvailable}}
+            <div>{{size}} : {{available}}</div>
+       {{/sizesAvailable}}
+
+       <p>{{price}}</p>
+    <p>{{listedBy}}</p>
+
+<input type="submit" value="DELETE" formaction="/sneakers/delete/{{_id}}">
+    <input type="submit" value="UPDATE" formaction="/sneakers/listedByUpdate/{{_id}}" >
+    {{!-- http://localhost:3000/sneakers/61a04f4e878558d0e73856ba? --}}
+    </form>
+
+   
+    </div>
+        {{/each}}
+  </div>
+</div>
+ 

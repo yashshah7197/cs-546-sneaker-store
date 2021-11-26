@@ -1,21 +1,33 @@
 
 
-      {{#each sneakers}}
-<form > 
+
+<div class="container" >
+  <div class="row">
+       {{#each sneakers}}
+    <div class="col-sm-4">
+      
+     
+<form action="/sneakers/{{_id}}" method="get"> 
      <h1> {{brandName}}</h1> 
        <p> {{modelName}}</p>
-       {{#sizesAvailable}}
-            <div>{{size}} : {{available}}</div>
-       {{/sizesAvailable}}
+       <img
+        class="d-block w-100"
+        src="../../public/images/LP1.jpeg"
+      />
+    
 
-       <p>{{price}}</p>
-    <p>{{listedBy}}</p>
+       <p>Price : {{price}}$</p>
 
-<input type="submit" value="DELETE" formaction="/sneakers/delete/{{_id}}">
-    <input type="submit" value="UPDATE" formaction="/sneakers/{{_id}}" >
+
+<input type="submit" value="BUY" >
+    
     
     
     </form>
 
-       {{/each}}
+   
+    </div>
+        {{/each}}
+  </div>
+</div>
  
