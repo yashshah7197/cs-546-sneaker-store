@@ -24,7 +24,7 @@ const create = async(  brandName,  modelName,  sizesAvailable,  price,  images, 
     if (insertInfo.insertedCount === 0) throw 'Could not add Sneaker';
 
     const newId = insertInfo.insertedId;
-    const sneaker = await this.get(String(newId));
+    const sneaker = await get(String(newId));
     return sneaker;
 };
 
@@ -60,7 +60,18 @@ const update = (
   notify
 ) => {};
 
-const remove =async (sneakerId) => {};
+const remove =async (sneakerId) => 
+{
+ 
+  const rest = await sneakers();
+
+  const deletionInfo = await rest.deleteOne({ _id: ObjectId(sneakerId) });
+if (deletionInfo.deletedCount === 0) {
+  throw `Could not delete post with id of ${id}`;
+}
+return {Deleted:true};  
+
+};
 
 module.exports = {
   create,

@@ -1,7 +1,7 @@
 
 
       {{#each sneakers}}
-<form action="/sneakers/{{_id}}" method="get" > 
+<form > 
      <h1> {{brandName}}</h1> 
        <p> {{modelName}}</p>
        {{#sizesAvailable}}
@@ -10,8 +10,10 @@
 
        <p>{{price}}</p>
     <p>{{listedBy}}</p>
-    {{!-- <input type="button" value="DELETE"> --}}
-    <input type="submit" value="UPDATE">
+
+<input type="submit" value="DELETE" formaction="/sneakers/delete/{{_id}}">
+    <input type="submit" value="UPDATE" formaction="/sneakers/{{_id}}" >
+    
     
     </form>
 
