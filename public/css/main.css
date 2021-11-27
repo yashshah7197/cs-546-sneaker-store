@@ -14,3 +14,19 @@
   margin-top: 20px;
   margin-bottom: 75px;
 }
+
+.carousel-item {
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 600px;
+}
+
+.carousel-caption h5 {
+  color: rgb(97, 47, 47);
+  font-size: xxx-large;
+}
+
+.carousel-caption p {
+  color: White;
+  font-size: xx-large;
+}
