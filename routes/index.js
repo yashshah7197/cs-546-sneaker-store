@@ -11,7 +11,7 @@ const configRoutes = (app) => {
   app.use("/sneakers", sneakersRoutes);
   app.use("/reviews", reviewsRoutes);
   app.use("/reports", reportsRoutes);
-  app.use("/qAndAsRoutes", qAndAsRoutes);
+  app.use("/qAndA", qAndAsRoutes);
 
   app.use("*", (req, res) => {
     res.status(404).json({ error: "Not found!" });

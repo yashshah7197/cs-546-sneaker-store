@@ -1,5 +1,6 @@
 const mongoCollections = require("../config/mongoCollections");
 const reviews = mongoCollections.reviews;
+const sneakers = mongoCollections.sneakers;
 const validation = require("./validate");
 
 const { ObjectId } = require("mongodb");
@@ -30,6 +31,9 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
   if (insertInfo.insertedCount === 0) {
     throw "Could not create review.";
   }
+
+  //Recalculate average rating
+  let avgRating = await calAvgRating(reviewFor);
 
   //Fetch objectId for newly created review
   const newId = insertInfo.insertedId;
@@ -146,6 +150,9 @@ const update = async (
     throw "Could not update the review.";
   }
 
+  //Recalculate average rating
+  let avgRating = await calAvgRating(reviewFor);
+
   //Fetch the updated review object
   const updatedReview = await reviewCollection.findOne({
     _id: parsedId,
@@ -185,6 +192,55 @@ const remove = async (reviewId) => {
 
   return result;
 };
+
+//Function to calculate Average rating
+async function calAvgRating(productId) {
+  let rating = 0;
+  checkInputStr(productId, "Product id");
+  //checkValidId(productId);
+  //Convert id into a valid ObjectID
+  let parsedId = ObjectId(productId.trim());
+
+  const sneakerCollection = await sneakersData();
+
+  //Check if the restaurant with the given id exists
+  const sneaker = await sneakerCollection.findOne({ _id: parsedId });
+  if (sneaker === null) {
+    throw "No sneaker with that id.";
+  }
+
+  const reviewCollection = await reviews();
+
+  let reviews = sneaker.reviews;
+  let overallRating = 0;
+  reviews.forEach(async (element) => {
+    //Convert id into a valid ObjectID
+    let parsedId = ObjectId(element.trim());
+
+    //Check if the review with the given id exists
+    const review = await reviewCollection.findOne({ _id: parsedId });
+    if (review === null) {
+      throw "No review with that id.";
+    }
+    overallRating += review.rating;
+  });
+
+  if (overallRating > 0) {
+    overallRating = overallRating / reviews.length;
+    overallRating = rating.toFixed(2);
+  }
+
+  let updatedSneaker = await sneakerCollection.updateOne(
+    { _id: parsedId },
+    { $set: { overallRating: overallRating } }
+  );
+
+  if (updatedSneaker.modifiedCount === 0 && sneaker.overallRating != rating) {
+    throw "Could not update the sneaker rating.";
+  } else {
+    return true;
+  }
+}
 
 module.exports = {
   create,
