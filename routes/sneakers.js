@@ -52,13 +52,4 @@ router.get("/delete/:id", async (req, res) => {
   }
 });
 
-//Route for individual sneaker page
-router.get("/sneaker/:id", async (req, res) => {
-  try {
-    //const sneakers = await sneakersData.get(req.params.id);
-    res.render("store/sneakerInfo", { title: "Individual Sneaker page" });
-  } catch (e) {
-    res.sendStatus(500);
-  }
-});
 module.exports = router;
