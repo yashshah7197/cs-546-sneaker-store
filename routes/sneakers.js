@@ -9,7 +9,7 @@ const { ObjectId } = require("mongodb");
 router.get("/listedBy/:id", async (req, res) => {
   try {
     const sneakers = await sneakersData.getAllListedBy(req.params.id);
-    
+
     res.render("store/sneakerListedby", { sneakers: sneakers });
   } catch (e) {
     res.sendStatus(500);
@@ -27,16 +27,15 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.get(req.params.id);
-    let rev=[];
-    for (const x of sneaker.reviews) 
-    {
-       rev.push(await reviewData.get(x));
+    let rev = [];
+    for (const x of sneaker.reviews) {
+      rev.push(await reviewData.get(x));
     }
     console.log(rev);
 
-    res.render("store/sneakerBuy", { sneaker: sneaker ,review:rev});
+    res.render("store/sneakerBuy", { sneaker: sneaker, review: rev });
   } catch (e) {
-    res.status(404).json({ message: " There is no Sneaker with that ID"+e });
+    res.status(404).json({ message: " There is no Sneaker with that ID" + e });
   }
 });
 router.get("/listedByUpdate/:id", async (req, res) => {
@@ -58,6 +57,16 @@ router.get("/delete/:id", async (req, res) => {
   } catch (e) {
     console.log(e);
     res.status(404).json({ message: "There is no Restaurant with that ID" });
+  }
+});
+
+router.post("/search", async (req, res) => {
+  try {
+    let searchTerm = req.body.searchTerm;
+    const sneakers = await sneakersData.getName(searchTerm);
+    res.render("store/sneakersList", { sneakers: sneakers });
+  } catch (e) {
+    res.sendStatus(500);
   }
 });
 

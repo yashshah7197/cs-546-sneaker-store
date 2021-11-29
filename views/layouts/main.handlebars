@@ -42,10 +42,16 @@
               <a class="nav-link" href="/sneakers/">Sell</a>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
+          <form
+            class="form-inline my-2 my-lg-0"
+            method="post"
+            action="/sneakers/search"
+          >
             <input
               class="form-control mr-sm-2"
               type="search"
+              id="searchTerm"
+              name="searchTerm"
               placeholder="Search"
               aria-label="Search"
             />
