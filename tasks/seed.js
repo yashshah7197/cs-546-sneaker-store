@@ -22,12 +22,12 @@ async function main() {
   
   try {
     let sneaker = await sneakers.create(
-      "Nike",
+      "Ni",
       "AF1",
       [{"size":3,"available":4},{"size":4,"available":3}],
       45,
       [],
-      [],
+      ["61a52d717cd09d7df1018521"],
       0,
       [],
       "619a6f6ffb3a89c138ee0560",

@@ -33,8 +33,7 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
   }
 
   //Recalculate average rating
-  let avgRating = await calAvgRating(reviewFor);
-
+  //let avgRating = await calAvgRating(reviewFor);
   //Fetch objectId for newly created review
   const newId = insertInfo.insertedId;
 
@@ -196,12 +195,12 @@ const remove = async (reviewId) => {
 //Function to calculate Average rating
 async function calAvgRating(productId) {
   let rating = 0;
-  checkInputStr(productId, "Product id");
+  validation.checkInputStr(productId, "Product id");
   //checkValidId(productId);
   //Convert id into a valid ObjectID
   let parsedId = ObjectId(productId.trim());
 
-  const sneakerCollection = await sneakersData();
+  const sneakerCollection = await sneakers();
 
   //Check if the restaurant with the given id exists
   const sneaker = await sneakerCollection.findOne({ _id: parsedId });

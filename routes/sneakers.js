@@ -2,12 +2,14 @@ const express = require("express");
 const router = express.Router();
 const data = require("../data");
 const sneakersData = data.sneakers;
+const reviewData = data.reviews;
 
 const { ObjectId } = require("mongodb");
 
 router.get("/listedBy/:id", async (req, res) => {
   try {
     const sneakers = await sneakersData.getAllListedBy(req.params.id);
+    
     res.render("store/sneakerListedby", { sneakers: sneakers });
   } catch (e) {
     res.sendStatus(500);
@@ -25,9 +27,15 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.get(req.params.id);
-    res.render("store/sneakerBuy", { sneaker: sneaker });
+    let rev=[];
+    for (const x of sneaker.reviews) 
+    {
+       rev.push(await reviewData.get(x));
+    }
+    console.log(rev);
+    res.render("store/sneakerBuy", { sneaker: sneaker ,review:rev});
   } catch (e) {
-    res.status(404).json({ message: " There is no Sneaker with that ID" });
+    res.status(404).json({ message: " There is no Sneaker with that ID"+e });
   }
 });
 router.get("/listedByUpdate/:id", async (req, res) => {
