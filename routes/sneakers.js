@@ -33,6 +33,7 @@ router.get("/:id", async (req, res) => {
        rev.push(await reviewData.get(x));
     }
     console.log(rev);
+
     res.render("store/sneakerBuy", { sneaker: sneaker ,review:rev});
   } catch (e) {
     res.status(404).json({ message: " There is no Sneaker with that ID"+e });
