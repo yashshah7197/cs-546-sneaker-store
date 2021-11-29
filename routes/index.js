@@ -13,6 +13,10 @@ const configRoutes = (app) => {
   app.use("/reports", reportsRoutes);
   app.use("/qAndA", qAndAsRoutes);
 
+  app.use("/", (req, res) => {
+    res.redirect("/home");
+  });
+
   app.use("*", (req, res) => {
     res.status(404).json({ error: "Not found!" });
   });
