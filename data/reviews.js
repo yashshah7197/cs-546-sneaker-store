@@ -33,9 +33,33 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
   }
 
   //Recalculate average rating
-  //let avgRating = await calAvgRating(reviewFor);
+  //n let avgRating = await calAvgRating(reviewFor);
+
   //Fetch objectId for newly created review
   const newId = insertInfo.insertedId;
+
+  const sneakerCollection = await sneakers();
+
+  let sneakerId = ObjectId(reviewFor);
+
+  //Check if the restaurant with the given id exists
+  const sneaker = await sneakerCollection.findOne({ _id: sneakerId });
+  if (sneaker === null) {
+    throw "No sneaker with that id.";
+  }
+
+  let newReviews = sneaker.reviews;
+
+  newReviews.push(newId.toString());
+
+  //Update new review object to review collection
+  const updateInfo = await sneakerCollection.updateOne(
+    { _id: sneakerId },
+    { $set: { reviews: newReviews } }
+  );
+  if (updateInfo.modifiedCount === 0) {
+    throw "Could not add review to sneaker.";
+  }
 
   //Fetch the newly created review object
   const addedReview = await reviewCollection.findOne({ _id: newId });

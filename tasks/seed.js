@@ -1,7 +1,7 @@
 const dbConnection = require("../config/mongoConnection");
 const data = require("../data/");
 const reviews = data.reviews;
-const sneakers=data.sneakers;
+const sneakers = data.sneakers;
 
 async function main() {
   const db = await dbConnection.connectToDb();
@@ -19,12 +19,14 @@ async function main() {
     console.log(e);
   }
 
-  
   try {
     let sneaker = await sneakers.create(
       "Ni",
       "AF1",
-      [{"size":3,"available":4},{"size":4,"available":3}],
+      [
+        { size: 3, available: 4 },
+        { size: 4, available: 3 },
+      ],
       45,
       [],
       ["61a52d717cd09d7df1018521"],
@@ -37,12 +39,14 @@ async function main() {
     console.log(e);
   }
 
- 
   try {
     let sneaker = await sneakers.create(
       "Nike",
       "AF1",
-      [{"size":3,"available":4},{"size":4,"available":3}],
+      [
+        { size: 3, available: 4 },
+        { size: 4, available: 3 },
+      ],
       45,
       [],
       [],
@@ -58,7 +62,10 @@ async function main() {
     let sneaker = await sneakers.create(
       "Nike",
       "AF1",
-      [{"size":3,"available":4},{"size":4,"available":3}],
+      [
+        { size: 3, available: 4 },
+        { size: 4, available: 3 },
+      ],
       45,
       [],
       [],
@@ -74,7 +81,10 @@ async function main() {
     let sneaker = await sneakers.create(
       "Nike",
       "AF1",
-      [{"size":3,"available":4},{"size":4,"available":3}],
+      [
+        { size: 3, available: 4 },
+        { size: 4, available: 3 },
+      ],
       45,
       [],
       [],
@@ -90,7 +100,10 @@ async function main() {
     let sneaker = await sneakers.create(
       "Nike",
       "AF1",
-      [{"size":3,"available":4},{"size":4,"available":3}],
+      [
+        { size: 3, available: 4 },
+        { size: 4, available: 3 },
+      ],
       45,
       [],
       [],
@@ -106,7 +119,10 @@ async function main() {
     let sneaker = await sneakers.create(
       "Adidas",
       "AF1",
-      [{"size":3,"available":4},{"size":4,"available":3}],
+      [
+        { size: 3, available: 4 },
+        { size: 4, available: 3 },
+      ],
       45,
       [],
       [],
@@ -118,8 +134,6 @@ async function main() {
   } catch (e) {
     console.log(e);
   }
-
-
 
   console.log("Done seeding database");
 
