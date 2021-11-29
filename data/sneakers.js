@@ -62,7 +62,7 @@ const get = async (sneakerId) => {
 };
 const getName = async (sneakerName) => {
   const sneaker = await sneakers();
-  const sneakerList = await sneaker.find({ brandName: sneakerName }).toArray();
+  const sneakerList = await sneaker.find({ modelName: sneakerName }).toArray();
 
   return sneakerList;
 };

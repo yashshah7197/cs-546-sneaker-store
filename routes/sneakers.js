@@ -31,7 +31,6 @@ router.get("/:id", async (req, res) => {
     for (const x of sneaker.reviews) {
       rev.push(await reviewData.get(x));
     }
-    console.log(rev);
 
     res.render("store/sneakerBuy", { sneaker: sneaker, review: rev });
   } catch (e) {
@@ -64,6 +63,7 @@ router.post("/search", async (req, res) => {
   try {
     let searchTerm = req.body.searchTerm;
     const sneakers = await sneakersData.getName(searchTerm);
+    console.log(sneakers);
     res.render("store/sneakersList", { sneakers: sneakers });
   } catch (e) {
     res.sendStatus(500);
