@@ -1,0 +1,32 @@
+.footer {
+  position: fixed;
+  background-color: #000000;
+  /* background-color: #343a40; */
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  margin-bottom: 0px;
+  text-align: right;
+  height: 55px;
+}
+
+#mainContainer {
+  margin-top: 20px;
+  margin-bottom: 75px;
+}
+
+.carousel-item {
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 600px;
+}
+
+.carousel-caption h5 {
+  color: rgb(97, 47, 47);
+  font-size: xxx-large;
+}
+
+.carousel-caption p {
+  color: White;
+  font-size: xx-large;
+}

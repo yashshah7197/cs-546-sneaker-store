@@ -1,0 +1,33 @@
+
+
+
+<div class="container" >
+  <div class="row">
+       {{#each sneakers}}
+    <div class="col-sm-4">
+      
+     
+<form action="/sneakers/{{_id}}" method="get"> 
+     <h1> {{brandName}}</h1> 
+       <p> {{modelName}}</p>
+       <img
+        class="d-block w-100"
+        src="../../public/images/LP1.jpeg"
+      />
+    
+
+       <p>Price : {{price}}$</p>
+
+
+<input type="submit" value="BUY" >
+    
+    
+    
+    </form>
+
+   
+    </div>
+        {{/each}}
+  </div>
+</div>
+ 

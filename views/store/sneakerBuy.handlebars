@@ -1,0 +1,19 @@
+<form >
+<h1> {{sneaker.brandName}}</h1> 
+       <p> {{sneaker.modelName}}</p>
+        <img
+         width="400" height="200"
+        src="../../public/images/LP1.jpeg"
+      />
+       {{#sneaker.sizesAvailable}}
+            <div>Size Available - {{size}} : Quantity {{available}}</div>
+       {{/sneaker.sizesAvailable}}
+
+       <p>Price : {{sneaker.price}}</p>
+    <input type="submit" value="BUY">
+    Reviews
+           {{review}}
+            <div>Size Available - {{size}} : Quantity {{available}}</div>
+       {{!-- {{/sneaker.sizesAvailable}} --}}
+
+    </form>
