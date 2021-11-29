@@ -11,9 +11,26 @@
 
        <p>Price : {{sneaker.price}}</p>
     <input type="submit" value="BUY">
-    Reviews
-           {{review}}
-            <div>Size Available - {{size}} : Quantity {{available}}</div>
-       {{!-- {{/sneaker.sizesAvailable}} --}}
+    <br>RATINGS
+
+
+<div class="accordion" id="accordionExample">
+        {{#each review}}
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+         {{title}}
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+            <div> Name : {{reviewedBy}} </div>
+            <div> {{review}}</div>
+              <div> Rating : {{rating}}</div>
+      </div>
+    </div>
+  </div>
+     {{/each}}
+</div>
 
     </form>

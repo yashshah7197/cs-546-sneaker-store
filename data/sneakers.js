@@ -55,7 +55,16 @@ const get = async(sneakerId) =>
     rest._id = rest._id.toString();
     return rest;
 };
+// const getName = async(sneakerId) => 
+// {
+//     const sneakersCollection = await sneakers();
+//     const review = await reviews();
 
+//     const rest = await sneakersCollection.findOne({ _id: ObjectId(sneakerId) });
+//     if (rest === null) throw 'No Sneakers with that id';
+//     rest._id = rest._id.toString();
+//     return rest;
+// };
 const update = (
   sneakerId,
   brandName,
@@ -91,4 +100,5 @@ module.exports = {
   update,
   remove,
   getAllListedBy
+//  getName
 };
