@@ -53,7 +53,7 @@ const create = async (firstName, lastName, email, password, address, phoneNumber
 const getAll = async () => {
     const usersCollection = await users();
 
-    const usersArray = usersCollection.find().toArray();
+    const usersArray = await usersCollection.find().toArray();
     usersArray.forEach((user) => {
         user["passwordHash"] = "";
     });
@@ -61,7 +61,31 @@ const getAll = async () => {
     return usersArray;
 };
 
-const get = (userId) => {
+const get = async (userId) => {
+    checkInputStr(userId);
+
+    try {
+        userId = ObjectId(userId.trim());
+    } catch (e) {
+        throw {
+            statusCode: 400,
+            message: "Could not parse the id in to a valid ObjectId!"
+        }
+    }
+
+    const usersCollection = await users();
+
+    const user = await usersCollection.findOne({_id: userId});
+    if (user === null) {
+        throw {
+            statusCode: 404,
+            message: "No user was found with the given id!"
+        }
+    }
+
+    user["passwordHash"] = "";
+
+    return user;
 };
 
 const update = (userId, firstName, lastName, email, passwordHash, address, phoneNumber, isAdmin, sneakersListed, sneakersBought) => {
