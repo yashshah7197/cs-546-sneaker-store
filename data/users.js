@@ -29,7 +29,7 @@ const create = async (firstName, lastName, email, password, address, phoneNumber
     let newUser = {
         _id: ObjectId(),
         email: email,
-        password: await hashPassword(password),
+        passwordHash: await hashPassword(password),
         firstName: firstName,
         lastName: lastName,
         address: address,
@@ -50,7 +50,15 @@ const create = async (firstName, lastName, email, password, address, phoneNumber
     return {userInserted: true};
 };
 
-const getAll = () => {
+const getAll = async () => {
+    const usersCollection = await users();
+
+    const usersArray = usersCollection.find().toArray();
+    usersArray.forEach((user) => {
+        user["passwordHash"] = "";
+    });
+
+    return usersArray;
 };
 
 const get = (userId) => {
