@@ -88,7 +88,52 @@ const get = async (userId) => {
     return user;
 };
 
-const update = (userId, firstName, lastName, email, passwordHash, address, phoneNumber, isAdmin, sneakersListed, sneakersBought) => {
+const update = async (userId, firstName, lastName, email, password, address, phoneNumber, isAdmin, sneakersListed, sneakersBought) => {
+    checkInputStr(userId);
+    checkInputStr(firstName);
+    checkInputStr(lastName);
+    checkInputStr(email);
+    checkInputStr(password);
+    checkInputStr(address);
+    checkInputStr(phoneNumber);
+
+    try {
+        userId = ObjectId(userId.trim());
+    } catch (e) {
+        throw {
+            statusCode: 400,
+            message: "Could not parse the user id in to a valid ObjectId!"
+        }
+    }
+
+    const user = await get(userId.toString());
+    const updatedUser = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: await hashPassword(password),
+        address: address,
+        phoneNumber: phoneNumber,
+        isAdmin: isAdmin,
+        sneakersListed: sneakersListed,
+        sneakersBought: sneakersBought
+    };
+
+    const usersCollection = await users();
+
+    const updatedInfo = await usersCollection.updateOne(
+        {_id: userId},
+        {$set: updatedUser}
+    );
+
+    if (!updatedInfo.matchedCount && !updatedInfo.modifiedCount) {
+        throw {
+            statusCode: 500,
+            message: "Internal server error!"
+        }
+    }
+
+    return await get(userId.toString());
 };
 
 const remove = (userId) => {
