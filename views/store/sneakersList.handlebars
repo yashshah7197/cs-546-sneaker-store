@@ -1,5 +1,6 @@
 <div class="container">
   <div class="row">
+<<<<<<< HEAD
     <div class="card-deck">
       {{#each sneakers}}
         {{!-- <div class="col-sm-4">
@@ -36,5 +37,23 @@
         </div>
       {{/each}}
     </div>
+=======
+    {{#each sneakers}}
+      <div class="col-sm-4 border">
+
+        <form action="/sneakers/{{_id}}" method="get">
+          <h1>{{modelName}}</h1>
+          <p> {{brandName}} </p>
+          <img class="d-block w-100" src="../../public/images/LP1.jpeg" />
+
+          <p>Price : {{price}}$</p>
+
+          <input type="submit" value="BUY" />
+
+        </form>
+
+      </div>
+    {{/each}}
+>>>>>>> d05d74fc30d9e8cc02edef98ecfdf50beaf2079e
   </div>
 </div>
