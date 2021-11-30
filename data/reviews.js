@@ -33,11 +33,7 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
   }
 
   //Recalculate average rating
-<<<<<<< HEAD
-  // let avgRating = await calAvgRating(reviewFor);
-=======
-  //n let avgRating = await calAvgRating(reviewFor);
->>>>>>> d05d74fc30d9e8cc02edef98ecfdf50beaf2079e
+  //let avgRating = await calAvgRating(reviewFor);
 
   //Fetch objectId for newly created review
   const newId = insertInfo.insertedId;
