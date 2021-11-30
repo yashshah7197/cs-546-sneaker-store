@@ -92,7 +92,7 @@ const remove = async (sneakerId) => {
   return { Deleted: true };
 };
 
-const buySneaker = async (sneakerId) => {
+const buySneaker = async (sneakerId,userId) => {
  
 };
 

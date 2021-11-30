@@ -134,12 +134,6 @@ async function main() {
   } catch (e) {
     console.log(e);
   }
-
-<<<<<<< HEAD
-  
-
-=======
-<<<<<<< HEAD
   // try {
   //   let report = await reports.create(
   //     "619a6f6ffb3a89c138ee0563",
@@ -150,9 +144,6 @@ async function main() {
   //   console.log(e);
   // }
 
-=======
->>>>>>> d05d74fc30d9e8cc02edef98ecfdf50beaf2079e
->>>>>>> 48383238c34483bb47141c964014427ab3f8ed4f
   console.log("Done seeding database");
 
   await dbConnection.closeConnection();
