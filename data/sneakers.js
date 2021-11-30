@@ -92,6 +92,11 @@ const remove = async (sneakerId) => {
   return { Deleted: true };
 };
 
+const buySneaker = async (sneakerId,userId) => {
+ 
+};
+
+
 module.exports = {
   create,
   getAll,
@@ -100,4 +105,5 @@ module.exports = {
   remove,
   getAllListedBy,
   getName,
+  buySneaker
 };

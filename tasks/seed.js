@@ -134,6 +134,15 @@ async function main() {
   } catch (e) {
     console.log(e);
   }
+  // try {
+  //   let report = await reports.create(
+  //     "619a6f6ffb3a89c138ee0563",
+  //     "619a6f6ffb3a89c138ee0563",
+  //     "test"
+  //   );
+  // } catch (e) {
+  //   console.log(e);
+  // }
 
   console.log("Done seeding database");
 

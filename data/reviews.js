@@ -33,7 +33,7 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
   }
 
   //Recalculate average rating
-  //n let avgRating = await calAvgRating(reviewFor);
+  //let avgRating = await calAvgRating(reviewFor);
 
   //Fetch objectId for newly created review
   const newId = insertInfo.insertedId;
@@ -226,7 +226,7 @@ async function calAvgRating(productId) {
 
   const sneakerCollection = await sneakers();
 
-  //Check if the restaurant with the given id exists
+  //Check if the sneaker with the given id exists
   const sneaker = await sneakerCollection.findOne({ _id: parsedId });
   if (sneaker === null) {
     throw "No sneaker with that id.";
