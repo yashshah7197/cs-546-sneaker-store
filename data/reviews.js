@@ -226,7 +226,7 @@ async function calAvgRating(productId) {
 
   const sneakerCollection = await sneakers();
 
-  //Check if the restaurant with the given id exists
+  //Check if the sneaker with the given id exists
   const sneaker = await sneakerCollection.findOne({ _id: parsedId });
   if (sneaker === null) {
     throw "No sneaker with that id.";

@@ -1,5 +1,43 @@
 <div class="container">
   <div class="row">
+<<<<<<< HEAD
+    <div class="card-deck">
+      {{#each sneakers}}
+        {{!-- <div class="col-sm-4">
+
+        <form action="/sneakers/{{_id}}" method="get">
+          <h1> {{brandName}}</h1>
+          <p> {{modelName}}</p>
+          <img class="d-block w-100" src="../../public/images/LP1.jpeg" />
+
+          <p>Price : {{price}}$</p>
+
+          <input type="submit" value="BUY" />
+
+        </form>
+
+      </div> --}}
+        <div class="col-sm-4">
+          <div class="card">
+            <img
+              class="card-img-top"
+              src="../../public/images/LP1.jpeg"
+              alt="Card image cap"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{modelName}}</h5>
+              <p class="card-text">{{brandName}}</p>
+              <p>Price : {{price}}$</p>
+              <form action="/sneakers/{{_id}}" method="get">
+                <input type="submit" value="BUY" />
+
+              </form>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+=======
     {{#each sneakers}}
       <div class="col-sm-4 border">
 
@@ -16,5 +54,6 @@
 
       </div>
     {{/each}}
+>>>>>>> d05d74fc30d9e8cc02edef98ecfdf50beaf2079e
   </div>
 </div>
