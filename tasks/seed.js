@@ -135,6 +135,8 @@ async function main() {
     console.log(e);
   }
 
+  
+
   console.log("Done seeding database");
 
   await dbConnection.closeConnection();
