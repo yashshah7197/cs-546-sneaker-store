@@ -62,7 +62,7 @@ const get = async (sneakerId) => {
 };
 const getName = async (sneakerName) => {
   const sneaker = await sneakers();
-  const regEx = new RegExp(`^${sneakerName}/i`);
+  let regEx = new RegExp(sneakerName, "i");
   const sneakerList = await sneaker.find({ modelName: regEx }).toArray();
 
   return sneakerList;
