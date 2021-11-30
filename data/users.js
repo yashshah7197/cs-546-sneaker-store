@@ -136,7 +136,29 @@ const update = async (userId, firstName, lastName, email, password, address, pho
     return await get(userId.toString());
 };
 
-const remove = (userId) => {
+const remove = async (userId) => {
+    checkInputStr(userId);
+
+    try {
+        userId = ObjectId(userId.trim());
+    } catch (e) {
+        throw {
+            statusCode: 400,
+            message: "Could not parse the user id in to a valid ObjectId!"
+        }
+    }
+
+    const user = await get(userId.toString());
+
+    const usersCollection = await users();
+
+    const deletionInfo = await usersCollection.deleteOne({_id: userId});
+    if (deletionInfo.deletedCount === 0) {
+        throw {
+            statusCode: 500,
+            message: "Internal server error!"
+        }
+    }
 };
 
 const hashPassword = async (password) => {
