@@ -30,3 +30,25 @@
   color: White;
   font-size: xx-large;
 }
+
+.img-thumbnail {
+  width: 500px;
+}
+
+#sneakerBuyForm {
+  margin-top: 180px;
+}
+
+#reviewContainer {
+  margin-top: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+#QandAContainer {
+  margin-top: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+}

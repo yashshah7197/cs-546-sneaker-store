@@ -19,7 +19,6 @@ async function main() {
 
   try {
     let user = await users.create(
-     
       "Niyati",
       "Bavishi",
       "niyu6@gmail.com",
@@ -33,8 +32,6 @@ async function main() {
   } catch (e) {
     console.log(e);
   }
-
-
 
   try {
     let review = await reviews.create(

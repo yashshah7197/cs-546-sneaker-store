@@ -57,7 +57,9 @@ const create = async (
     };
   }
 
-  return { userInserted: true };
+  userInserted = get();
+
+  //return { userInserted: true };
 };
 
 const getAll = async () => {
