@@ -1,6 +1,8 @@
 const mongoCollections = require("../config/mongoCollections");
 const sneakers = mongoCollections.sneakers;
 const reviews = mongoCollections.reviews;
+const users = require("../data/users")
+
 
 const { ObjectId } = require("mongodb");
 
@@ -51,6 +53,18 @@ const getAllListedBy = async (listedBy) => {
   for (let x of sneakerList) x._id = x._id.toString();
   return sneakerList;
 };
+const getAllBuyList = async (userId) => {
+  const sneakersCollection = await sneakers();
+
+  const user = await users.get(userId);
+  const sneakerList=[];
+  for (const x of user.sneakersBought) {
+  const sneakerInfo=await sneakersCollection.findOne({ _id: ObjectId(x.sneakerId) });
+  sneakerInfo["boughtSize"]=x.size; 
+   sneakerList.push(sneakerInfo);
+  }
+  return sneakerList;
+};
 const get = async (sneakerId) => {
   const sneakersCollection = await sneakers();
   const review = await reviews();
@@ -92,7 +106,26 @@ const remove = async (sneakerId) => {
   return { Deleted: true };
 };
 
-const buySneaker = async (sneakerId,userId) => {
+const buySneaker = async (userId,sneakerId,size) => 
+{ 
+  // console.log("hell");
+  const userInfo=await users.get(userId);
+  // firstName: firstName,
+  // lastName: lastName,
+  // email: email,
+  // password: await hashPassword(password),
+  // address: address,
+  // phoneNumber: phoneNumber,
+  // isAdmin: isAdmin,
+  // sneakersListed: sneakersListed,
+  // sneakersBought: sneakersBought,
+  
+  userInfo.sneakersBought[userInfo.sneakersBought.length]={sneakerId:sneakerId,size:size};
+ 
+// console.log(userInfo.passwordHash);
+  const update=await users.update(userId,userInfo.firstName,userInfo.lastName,userInfo.email,userInfo.passwordHash,
+    userInfo.address,userInfo.phoneNumber,userInfo.isAdmin,userInfo.sneakersListed,userInfo.sneakersBought);
+  return update;
  
 };
 
@@ -100,7 +133,7 @@ const buySneaker = async (sneakerId,userId) => {
 module.exports = {
   create,
   getAll,
-  get,
+  get,getAllBuyList,
   update,
   remove,
   getAllListedBy,
