@@ -25,7 +25,7 @@ const create = async (
 
   const usersCollection = await users();
 
-  let user =await usersCollection.findOne({
+  let user = await usersCollection.findOne({
     email: email.toLowerCase(),
   });
 
