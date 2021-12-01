@@ -7,7 +7,7 @@ const qAndAData = data.qAndA;
 const users = data.users;
 
 const { ObjectId } = require("mongodb");
-
+//User listed sneakers
 router.get("/listedBy/:id", async (req, res) => {
   try {
     const sneakers = await sneakersData.getAllListedBy(req.params.id);
@@ -17,7 +17,7 @@ router.get("/listedBy/:id", async (req, res) => {
     res.sendStatus(500);
   }
 });
-
+//getall sneakers
 router.get("/", async (req, res) => {
   try {
     const sneakers = await sneakersData.getAll();
@@ -26,6 +26,7 @@ router.get("/", async (req, res) => {
     res.sendStatus(500);
   }
 });
+//get sneaker by id
 router.get("/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.get(req.params.id);
@@ -44,6 +45,7 @@ router.get("/:id", async (req, res) => {
     res.status(404).json({ message: " There is no Sneaker with that ID" + e });
   }
 });
+//User updates sneaker 
 router.get("/listedByUpdate/:id", async (req, res) => {
   try {
     console.log(req.params.id);
@@ -101,6 +103,7 @@ router.post("/buy", async (req, res) => {
     //   res.render("store/sneakersList", { sneakers: sneakers });
     res.redirect("/sneakers/BuyList/61a6ba5f5bbbf22fa2eb3341");
   } catch (e) {
+      console.log(e);
     res.sendStatus(500);
   }
 });
