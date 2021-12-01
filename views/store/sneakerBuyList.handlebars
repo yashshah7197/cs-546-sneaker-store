@@ -1,16 +1,16 @@
+<h1>Sneakers Bought</h1>
 <div class="container">
   <div class="row">
-    {{#each sneakers}}
+    {{#each sneaker}}
       <div class="col-sm-4 border">
 
         <form action="/sneakers/{{_id}}" method="get">
           <h1>{{modelName}}</h1>
           <p> {{brandName}} </p>
           <img class="d-block w-100" src="../../public/images/LP1.jpeg" />
-
-          <p>Price : {{price}}$</p>
-
-          <input type="submit" value="BUY" />
+          
+          <h4>Price : {{price}}$</h4>
+          <h5>Size : {{boughtSize}}</h5>
 
         </form>
 

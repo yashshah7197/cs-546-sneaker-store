@@ -25,7 +25,7 @@ const create = async (
 
   const usersCollection = await users();
 
-  let user = usersCollection.findOne({
+  let user = await usersCollection.findOne({
     email: email.toLowerCase(),
   });
 
@@ -93,7 +93,7 @@ const get = async (userId) => {
     };
   }
 
-  user["passwordHash"] = "";
+  //user["passwordHash"] = "";
 
   return user;
 };
@@ -132,7 +132,7 @@ const update = async (
     firstName: firstName,
     lastName: lastName,
     email: email,
-    password: await hashPassword(password),
+    passwordHash: await hashPassword(password),
     address: address,
     phoneNumber: phoneNumber,
     isAdmin: isAdmin,

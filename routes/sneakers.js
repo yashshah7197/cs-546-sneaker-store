@@ -3,6 +3,7 @@ const router = express.Router();
 const data = require("../data");
 const sneakersData = data.sneakers;
 const reviewData = data.reviews;
+const users = data.users;
 
 const { ObjectId } = require("mongodb");
 
@@ -44,11 +45,21 @@ router.get("/listedByUpdate/:id", async (req, res) => {
     console.log(sneaker);
 
     res.render("store/sneakerUpdate", { sneaker: sneaker });
-    console.log("hell2");
+  //  console.log("hell2");
   } catch (e) {
     res.status(404).json({ message: " There is no Sneaker with that ID" });
   }
 });
+router.get("/BuyList/:id", async (req, res) => {
+    try {
+      const sneaker = await sneakersData.getAllBuyList(req.params.id);
+  
+      res.render("store/sneakerBuyList", { sneaker: sneaker });
+     // console.log("hell2");
+    } catch (e) {
+      res.status(404).json({ message: " There is no Sneaker with that ID" });
+    }
+  });
 router.get("/delete/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.remove(req.params.id);
@@ -70,4 +81,17 @@ router.post("/search", async (req, res) => {
   }
 });
 
+router.post("/buy", async (req, res) => {
+    try {
+      let sneakerId = req.body.id;
+      let size = req.body.size;
+    //   console.log(req.body);
+       const sneakers = await sneakersData.buySneaker("61a6ba5f5bbbf22fa2eb3341",sneakerId,size);
+    //   console.log(sneakers);
+    //   res.render("store/sneakersList", { sneakers: sneakers });
+    res.redirect('/sneakers/BuyList/61a6ba5f5bbbf22fa2eb3341');
+    } catch (e) {
+      res.sendStatus(500);
+    }
+  });
 module.exports = router;

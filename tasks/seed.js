@@ -2,10 +2,39 @@ const dbConnection = require("../config/mongoConnection");
 const data = require("../data/");
 const reviews = data.reviews;
 const sneakers = data.sneakers;
-
+const users = data.users;
 async function main() {
   const db = await dbConnection.connectToDb();
   await db.dropDatabase();
+
+  // firstName,
+  // lastName,
+  // email,
+  // password,
+  // address,
+  // phoneNumber,
+  // isAdmin,
+  // sneakersListed,
+  // sneakersBought
+
+  try {
+    let user = await users.create(
+     
+      "Niyati",
+      "Bavishi",
+      "niyu6@gmail.com",
+      "619a6f6ffb3a89c138ee0560",
+      "40 Bowers",
+      "2016589809",
+      false,
+      [],
+      []
+    );
+  } catch (e) {
+    console.log(e);
+  }
+
+
 
   try {
     let review = await reviews.create(
