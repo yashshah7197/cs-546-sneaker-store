@@ -17,8 +17,30 @@ const upload = multer({ storage: fileStorageEngine });
 
 router.post("/photo/upload", upload.single("image"), async (req, res) => {
   try {
-    console.log(req);
-    res.send("Single File Upload Success");
+    let brandName = req.body.brandName;
+    let modelName = req.body.modelName;
+    let price = req.body.price;
+    let sizesAvailable = [
+      { size: 7, quantity: req.body.size7 },
+      { size: 8, quantity: req.body.size8 },
+      { size: 9, quantity: req.body.size9 },
+      { size: 10, quantity: req.body.size10 },
+      { size: 11, quantity: req.body.size11 },
+      { size: 12, quantity: req.body.size12 },
+    ];
+    let image = "../../" + req.file.path;
+    const sneakerAdded = await sneakersData.create(
+      brandName,
+      modelName,
+      sizesAvailable,
+      price,
+      image,
+      "UserId"
+    );
+    res.render("store/sneakerAdded", {
+      sneaker: sneakerAdded,
+      partial: "empty-scripts",
+    });
   } catch (e) {
     res.sendStatus(500);
   }
