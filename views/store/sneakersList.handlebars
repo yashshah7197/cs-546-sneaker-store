@@ -1,12 +1,18 @@
+{{#if error}}
+  <div class="alert alert-primary" role="alert">
+    {{error}}
+  </div>
+{{/if}}
+
 <div class="container">
   <div class="row">
     <div class="card-deck">
       {{#each sneakers}}
         {{!-- <div class="col-sm-4">
 
-        <form action="/sneakers/{{_id}}" method="get">
-          <h1> {{brandName}}</h1>
-          <p> {{modelName}}</p>
+        <form action="/sneakers/sneaker/{{_id}}" method="get">
+          <h1>{{modelName}}</h1>
+          <p> {{brandName}} </p>
           <img class="d-block w-100" src="../../public/images/LP1.jpeg" />
 
           <p>Price : {{price}}$</p>
