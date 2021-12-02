@@ -81,20 +81,48 @@ const getName = async (sneakerName) => {
 
   return sneakerList;
 };
-const update = (
-  sneakerId,
-  brandName,
-  modelName,
+const update = async (  sneakerId,  brandName,  modelName,  sizesAvailable,  price, 
+   images,  reviews,  overallRating,  qAndA,  listedBy,notify
+) => {
+  try {
+    sneakerId = ObjectId(sneakerId.trim());
+  } catch (e) {
+    throw {
+      statusCode: 400,
+      message: "Could not parse the user id in to a valid ObjectId!",
+    };
+  }
 
-  sizesAvailable,
-  price,
-  images,
-  reviews,
-  overallRating,
-  qAndA,
-  listedBy,
-  notify
-) => {};
+  const sneaker = await get(sneakerId.toString());
+  const updatedSneaker = {
+  brandName:brandName,
+  modelName:modelName,
+  sizesAvailable:sizesAvailable,
+  price:price,
+  images:images,
+  reviews:reviews,
+  overallRating:overallRating,
+  qAndA:qAndA,
+  listedBy:listedBy,  notify:notify
+  };
+
+  const sneakerscollection = await sneakers();
+
+  const updatedInfo = await sneakerscollection.updateOne(
+    { _id: ObjectId(sneakerId) },
+    { $set: updatedSneaker }
+  );
+
+  if (!updatedInfo.matchedCount && !updatedInfo.modifiedCount) {
+    throw {
+      statusCode: 500,
+      message: "Internal server error!",
+    };
+  }
+
+  return await get(sneakerId.toString());
+
+};
 
 const remove = async (sneakerId) => {
   const rest = await sneakers();
@@ -108,24 +136,46 @@ const remove = async (sneakerId) => {
 
 const buySneaker = async (userId,sneakerId,size) => 
 { 
-  // console.log("hell");
   const userInfo=await users.get(userId);
-  // firstName: firstName,
-  // lastName: lastName,
-  // email: email,
-  // password: await hashPassword(password),
-  // address: address,
-  // phoneNumber: phoneNumber,
-  // isAdmin: isAdmin,
-  // sneakersListed: sneakersListed,
-  // sneakersBought: sneakersBought,
-  
   userInfo.sneakersBought[userInfo.sneakersBought.length]={sneakerId:sneakerId,size:size};
- 
-// console.log(userInfo.passwordHash);
-  const update=await users.update(userId,userInfo.firstName,userInfo.lastName,userInfo.email,userInfo.passwordHash,
-    userInfo.address,userInfo.phoneNumber,userInfo.isAdmin,userInfo.sneakersListed,userInfo.sneakersBought);
-  return update;
+  const update1=await users.update(userId,userInfo.firstName,userInfo.lastName,userInfo.email,userInfo.passwordHash,
+  userInfo.address,userInfo.phoneNumber,userInfo.isAdmin,userInfo.sneakersListed,userInfo.sneakersBought);
+  const sneakerInfo=await get(sneakerId.toString());
+  let count=0,flag=false;
+
+  for (const x of sneakerInfo.sizesAvailable) 
+  {
+    if(x.size==size)
+    {
+      x.available=x.available-1;
+     
+      if(x.available==0)
+      {
+        flag=true;
+        break;
+      }
+    }
+    count++;
+  }
+  if(flag==true)
+  {
+    sneakerInfo.sizesAvailable.splice(count, 1);
+  }
+
+  const updateSneaker=await update(sneakerId,
+    sneakerInfo.brandName,
+    sneakerInfo.modelName,
+    sneakerInfo.sizesAvailable,
+    sneakerInfo.price,
+    sneakerInfo.images,
+    sneakerInfo.reviews,
+    sneakerInfo.overallRating,
+    sneakerInfo.qAndA,
+    sneakerInfo.listedBy,
+    sneakerInfo.notify
+  )
+
+  return update1;
  
 };
 
@@ -133,7 +183,8 @@ const buySneaker = async (userId,sneakerId,size) =>
 module.exports = {
   create,
   getAll,
-  get,getAllBuyList,
+  get,
+  getAllBuyList,
   update,
   remove,
   getAllListedBy,
