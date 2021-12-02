@@ -1,17 +1,10 @@
 (function ($) {
-  //var answerForm = $("#answerForm");
   var answerForm = $(".answerForm");
 
   answerForm.submit(function (event) {
     event.preventDefault();
     debugger;
     try {
-      // var $inputs = $(".answerForm :input");
-      // var values = {};
-      // $inputs.each(function () {
-      //   values[this.name] = $(this).val();
-      // });
-
       var values = {};
       $.each($(".answerForm").serializeArray(), function (i, field) {
         values[field.name] = field.value;
@@ -23,7 +16,7 @@
         dataType: "json",
         data: {
           answerBy: values["answerBy"],
-          answer: values["answer"],
+          answer: values["answerText"],
         },
       };
 

@@ -138,7 +138,7 @@ router.post("/search", async (req, res) => {
 router.get("/sell", async (req, res) => {
   try {
     res.render("store/sneakerSell", {
-      title: "Add Sneaker page",
+      title: "Add Sneaker",
       partial: "empty-scripts",
     });
   } catch (e) {

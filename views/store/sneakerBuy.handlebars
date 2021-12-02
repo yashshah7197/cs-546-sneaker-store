@@ -161,20 +161,14 @@
             {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
             <form class="answerForm" method="POST">
               <div class="mb-3">
-                <label for="answer" class="form-label">Answer this question</label>
-                <input
-                  name="answer"
-                  class="form-control"
-                  type="text"
-                  aria-label="default input example"
-                  value=""
-                />
+                <label for="answerText" class="form-label">Answer this question</label>
+                <input type="text" name="answerText" class="form-control" />
+                {{! To be changed to userId from cookie }}
+                <input type="hidden" value="User1" name="answerBy" />
+                <input type="hidden" value="{{_id}}" name="_id" />
+                <input type="hidden" name="_method" value="put" />
+                <input type="submit" value="Submit" />
               </div>
-              {{! To be changed to userId from cookie }}
-              <input type="hidden" value="User1" name="answerBy" />
-              <input type="hidden" value="{{_id}}" name="_id" />
-              <input type="hidden" name="_method" value="put" />
-              <input type="submit" value="Submit" id="answerSubmit" />
             </form>
           </div>
         </div>
