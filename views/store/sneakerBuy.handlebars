@@ -51,7 +51,7 @@
         <div
           id="collapse_{{_id}}"
           class="accordion-collapse collapse"
-          aria-labelledby="headingOne"
+          aria-labelledby="heading_{{_id}}"
           data-bs-parent="#accordionReviews"
         >
           <div class="accordion-body">
@@ -80,11 +80,11 @@
       <div
         id="collapsePostReview"
         class="accordion-collapse collapse"
-        aria-labelledby="headingOne"
+        aria-labelledby="heading_{{_id}}"
         data-bs-parent="#accordionPostReview"
       >
         <div class="accordion-body">
-          <form method="post" action="/reviews/">
+          <form id="addReviewForm" method="post" action="/reviews/">
             <div class="mb-3">
               <label for="reviewTitle" class="form-label">Title</label>
               <input
@@ -111,9 +111,9 @@
               />
             </div>
             {{! To be changed to userId from cookie }}
-            <input type="text" value="User1" name="reviewedBy" hidden />
-            <input type="text" value={{sneaker._id}} name="reviewFor" hidden />
-            <input type="submit" value="Submit" />
+            <input type="hidden" value="User1" name="reviewedBy" />
+            <input type="hidden" value={{sneaker._id}} name="reviewFor" />
+            <input type="submit" value="Submit" id="reviewSubmit" />
           </form>
         </div>
       </div>
@@ -155,7 +155,8 @@
               </div>
             {{/each}}
             <hr />
-            <form method="put" action="/qAndA/{{_id}}">
+            {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
+            <form class="answerForm" method="POST">
               <div class="mb-3">
                 <label for="answer" class="form-label">Answer this question</label>
                 <input
@@ -167,8 +168,10 @@
                 />
               </div>
               {{! To be changed to userId from cookie }}
-              <input type="text" value="User1" name="answerBy" hidden />
-              <input type="submit" value="Submit" />
+              <input type="hidden" value="User1" name="answerBy" />
+              <input type="hidden" value={{sneaker._id}} name="reviewFor" />
+              <input type="hidden" name="_method" value="put" />
+              <input type="submit" value="Submit" id="answerSubmit" />
             </form>
           </div>
         </div>
@@ -198,7 +201,7 @@
         data-bs-parent="#accordionPostQ"
       >
         <div class="accordion-body">
-          <form method="post" action="/qAndA/">
+          <form id="questionForm" id="" method="post" action="/qAndA/">
             <div class="mb-3">
               <label for="question" class="form-label">Question</label>
               <input
@@ -210,13 +213,12 @@
               />
             </div>
             {{! To be changed to userId from cookie }}
-            <input type="text" value="User1" name="questionBy" hidden />
-            <input type="text" value={{sneaker._id}} name="qAndAFor" hidden />
-            <input type="submit" value="Submit" />
+            <input type="hidden" value="User1" name="questionBy" />
+            <input type="hidden" value={{sneaker._id}} name="qAndAFor" />
+            <input type="submit" value="Submit" id="questionSubmit" />
           </form>
         </div>
       </div>
     </div>
   </div>
-
 </div>

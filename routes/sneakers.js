@@ -12,7 +12,10 @@ router.get("/listedBy/:id", async (req, res) => {
   try {
     const sneakers = await sneakersData.getAllListedBy(req.params.id);
 
-    res.render("store/sneakerListedby", { sneakers: sneakers });
+    res.render("store/sneakerListedby", {
+      sneakers: sneakers,
+      partial: "empty-scripts",
+    });
   } catch (e) {
     res.sendStatus(500);
   }
@@ -21,12 +24,15 @@ router.get("/listedBy/:id", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const sneakers = await sneakersData.getAll();
-    res.render("store/sneakersList", { sneakers: sneakers });
+    res.render("store/sneakersList", {
+      sneakers: sneakers,
+      partial: "empty-scripts",
+    });
   } catch (e) {
     res.sendStatus(500);
   }
 });
-router.get("/:id", async (req, res) => {
+router.get("sneaker/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.get(req.params.id);
     let rev = [];
@@ -36,9 +42,11 @@ router.get("/:id", async (req, res) => {
     let qAndA = await qAndAData.getAll(sneaker._id);
 
     res.render("store/sneakerBuy", {
+      title: "Shop",
       sneaker: sneaker,
       review: rev,
       qAndAs: qAndA,
+      partial: "shop-scripts",
     });
   } catch (e) {
     res.status(404).json({ message: " There is no Sneaker with that ID" + e });
@@ -50,7 +58,10 @@ router.get("/listedByUpdate/:id", async (req, res) => {
     const sneaker = await sneakersData.get(req.params.id);
     console.log(sneaker);
 
-    res.render("store/sneakerUpdate", { sneaker: sneaker });
+    res.render("store/sneakerUpdate", {
+      sneaker: sneaker,
+      partial: "empty-scripts",
+    });
     //  console.log("hell2");
   } catch (e) {
     res.status(404).json({ message: " There is no Sneaker with that ID" });
@@ -60,7 +71,11 @@ router.get("/BuyList/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.getAllBuyList(req.params.id);
 
-    res.render("store/sneakerBuyList", { sneaker: sneaker });
+    res.render("store/sneakerBuyList", {
+      title: "Shop",
+      sneaker: sneaker,
+      partial: "shop-scripts",
+    });
     // console.log("hell2");
   } catch (e) {
     res.status(404).json({ message: " There is no Sneaker with that ID" });
@@ -80,8 +95,19 @@ router.post("/search", async (req, res) => {
   try {
     let searchTerm = req.body.searchTerm;
     const sneakers = await sneakersData.getName(searchTerm);
-    console.log(sneakers);
-    res.render("store/sneakersList", { sneakers: sneakers });
+    //console.log(sneakers);
+    if (sneakers.length > 0) {
+      res.render("store/sneakersList", {
+        sneakers: sneakers,
+        partial: "empty-scripts",
+      });
+    } else {
+      res.render("store/sneakersList", {
+        sneakers: sneakers,
+        error: "No results found",
+        partial: "empty-scripts",
+      });
+    }
   } catch (e) {
     res.sendStatus(500);
   }

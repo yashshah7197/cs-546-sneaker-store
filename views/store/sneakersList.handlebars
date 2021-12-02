@@ -1,3 +1,9 @@
+{{#if error}}
+  <div class="alert alert-primary" role="alert">
+    {{error}}
+  </div>
+{{/if}}
+
 <div class="container">
   <div class="row">
     {{#each sneakers}}
@@ -18,4 +24,3 @@
     {{/each}}
   </div>
 </div>
-
