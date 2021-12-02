@@ -147,29 +147,32 @@
           data-bs-parent="#accordionReviews"
         >
           <div class="accordion-body">
+            {{#if answers}}
+              <h4> Answers</h4>
+            {{/if}}
             {{#each answers}}
-              <div> Answers</div>
+              <hr />
               <div>
-                <div>{{answer}}</div>
-                <div>{{answeredBy}}</div>
+                <div>Answer: {{answer}}</div>
+                <div>User: {{answeredBy}}</div>
               </div>
+              <hr />
             {{/each}}
-            <hr />
             {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
             <form class="answerForm" method="POST">
               <div class="mb-3">
                 <label for="answer" class="form-label">Answer this question</label>
                 <input
-                  id="answer"
                   name="answer"
                   class="form-control"
                   type="text"
                   aria-label="default input example"
+                  value=""
                 />
               </div>
               {{! To be changed to userId from cookie }}
               <input type="hidden" value="User1" name="answerBy" />
-              <input type="hidden" value={{sneaker._id}} name="reviewFor" />
+              <input type="hidden" value="{{_id}}" name="_id" />
               <input type="hidden" name="_method" value="put" />
               <input type="submit" value="Submit" id="answerSubmit" />
             </form>

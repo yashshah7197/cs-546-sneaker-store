@@ -4,8 +4,32 @@
 
   answerForm.submit(function (event) {
     event.preventDefault();
+    debugger;
     try {
-      alert("Submit");
+      // var $inputs = $(".answerForm :input");
+      // var values = {};
+      // $inputs.each(function () {
+      //   values[this.name] = $(this).val();
+      // });
+
+      var values = {};
+      $.each($(".answerForm").serializeArray(), function (i, field) {
+        values[field.name] = field.value;
+      });
+
+      var requestConfig = {
+        method: values["_method"],
+        url: "/qAndA/" + values["_id"],
+        dataType: "json",
+        data: {
+          answerBy: values["answerBy"],
+          answer: values["answer"],
+        },
+      };
+
+      $.ajax(requestConfig).then(function (responseMessage) {
+        location.reload();
+      });
     } catch (e) {
       console.log(e);
     }

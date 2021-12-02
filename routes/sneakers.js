@@ -32,7 +32,8 @@ router.get("/", async (req, res) => {
     res.sendStatus(500);
   }
 });
-router.get("sneaker/:id", async (req, res) => {
+//Changes from "/:id" to add search functionality || Hamza
+router.get("/sneaker/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.get(req.params.id);
     let rev = [];

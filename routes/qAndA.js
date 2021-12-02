@@ -76,7 +76,6 @@ router.put("/:id", async (req, res) => {
 
   try {
     await qAndAData.get(req.params.id);
-    res.redirect(`/sneakers/${req.params.id}`);
   } catch (e) {
     res.status(404).json({ Error: e });
     return;
@@ -88,7 +87,7 @@ router.put("/:id", async (req, res) => {
       qAndA.answerBy,
       qAndA.answer
     );
-    res.status(200).json(updatedQandA);
+    res.status(200).json(updatedQandA.answers);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
