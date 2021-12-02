@@ -2,7 +2,7 @@ const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 
 const { ObjectId } = require("mongodb");
-const { checkInputStr } = require("./validate");
+const { checkInputStr, checkIfBoolean, checkValidEmail, checkValidPassword, checkValidPhoneNumber} = require("./validate");
 const bcrypt = require("bcryptjs");
 
 const create = async (
@@ -23,10 +23,17 @@ const create = async (
   checkInputStr(address);
   checkInputStr(phoneNumber);
 
+  checkIfBoolean(isAdmin);
+
+  checkValidEmail(email.toLowerCase().trim());
+  checkValidPassword(password);
+
+  checkValidPhoneNumber(phoneNumber.trim());
+
   const usersCollection = await users();
 
   let user = await usersCollection.findOne({
-    email: email.toLowerCase(),
+    email: email.toLowerCase().trim(),
   });
 
   if (user) {
@@ -38,12 +45,12 @@ const create = async (
 
   let newUser = {
     _id: ObjectId(),
-    email: email,
+    email: email.toLowerCase().trim(),
     passwordHash: await hashPassword(password),
-    firstName: firstName,
-    lastName: lastName,
-    address: address,
-    phoneNumber: phoneNumber,
+    firstName: firstName.trim(),
+    lastName: lastName.trim(),
+    address: address.trim(),
+    phoneNumber: phoneNumber.trim(),
     isAdmin: isAdmin,
     sneakersListed: [],
     sneakersBought: [],
@@ -57,9 +64,7 @@ const create = async (
     };
   }
 
-  userInserted = get();
-
-  //return { userInserted: true };
+  return newUser;
 };
 
 const getAll = async () => {
@@ -95,8 +100,6 @@ const get = async (userId) => {
     };
   }
 
-  //user["passwordHash"] = "";
-
   return user;
 };
 
@@ -120,6 +123,13 @@ const update = async (
   checkInputStr(address);
   checkInputStr(phoneNumber);
 
+  checkIfBoolean(isAdmin);
+
+  checkValidEmail(email.toLowerCase().trim());
+  checkValidPassword(password);
+
+  checkValidPhoneNumber(phoneNumber.trim());
+
   try {
     userId = ObjectId(userId.trim());
   } catch (e) {
@@ -129,14 +139,15 @@ const update = async (
     };
   }
 
-  const user = await get(userId.toString());
+  await get(userId.toString());
+
   const updatedUser = {
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
+    firstName: firstName.trim(),
+    lastName: lastName.trim(),
+    email: email.toLowerCase.trim(),
     passwordHash: await hashPassword(password),
-    address: address,
-    phoneNumber: phoneNumber,
+    address: address.trim(),
+    phoneNumber: phoneNumber.trim(),
     isAdmin: isAdmin,
     sneakersListed: sneakersListed,
     sneakersBought: sneakersBought,
@@ -171,7 +182,7 @@ const remove = async (userId) => {
     };
   }
 
-  const user = await get(userId.toString());
+  await get(userId.toString());
 
   const usersCollection = await users();
 
