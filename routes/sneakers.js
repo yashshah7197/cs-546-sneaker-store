@@ -3,6 +3,26 @@ const router = express.Router();
 const data = require("../data");
 const sneakersData = data.sneakers;
 const reviewData = data.reviews;
+const multer = require("multer");
+
+const fileStorageEngine = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "--" + file.originalname);
+  },
+});
+const upload = multer({ storage: fileStorageEngine });
+
+router.post("/photo/upload", upload.single("image"), async (req, res) => {
+  try {
+    console.log(req);
+    res.send("Single File Upload Success");
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
 
 const { ObjectId } = require("mongodb");
 
@@ -24,7 +44,7 @@ router.get("/", async (req, res) => {
     res.sendStatus(500);
   }
 });
-router.get("/:id", async (req, res) => {
+router.get("buy/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.get(req.params.id);
     let rev = [];
@@ -70,4 +90,11 @@ router.post("/search", async (req, res) => {
   }
 });
 
+router.get("/sell", async (req, res) => {
+  try {
+    res.render("store/sneakerSell");
+  } catch (e) {
+    res.sendStatus(500);
+  }
+});
 module.exports = router;
