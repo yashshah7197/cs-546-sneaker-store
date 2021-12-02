@@ -1,8 +1,7 @@
 const mongoCollections = require("../config/mongoCollections");
 const sneakers = mongoCollections.sneakers;
 const reviews = mongoCollections.reviews;
-const users = require("../data/users")
-
+const users = require("../data/users");
 
 const { ObjectId } = require("mongodb");
 
@@ -12,11 +11,7 @@ const create = async (
   sizesAvailable,
   price,
   images,
-  reviews,
-  overallRating,
-  qAndA,
-  listedBy,
-  notify
+  listedBy
 ) => {
   const sneakersCollection = await sneakers();
 
@@ -57,11 +52,13 @@ const getAllBuyList = async (userId) => {
   const sneakersCollection = await sneakers();
 
   const user = await users.get(userId);
-  const sneakerList=[];
+  const sneakerList = [];
   for (const x of user.sneakersBought) {
-  const sneakerInfo=await sneakersCollection.findOne({ _id: ObjectId(x.sneakerId) });
-  sneakerInfo["boughtSize"]=x.size; 
-   sneakerList.push(sneakerInfo);
+    const sneakerInfo = await sneakersCollection.findOne({
+      _id: ObjectId(x.sneakerId),
+    });
+    sneakerInfo["boughtSize"] = x.size;
+    sneakerList.push(sneakerInfo);
   }
   return sneakerList;
 };
@@ -81,8 +78,18 @@ const getName = async (sneakerName) => {
 
   return sneakerList;
 };
-const update = async (  sneakerId,  brandName,  modelName,  sizesAvailable,  price, 
-   images,  reviews,  overallRating,  qAndA,  listedBy,notify
+const update = async (
+  sneakerId,
+  brandName,
+  modelName,
+  sizesAvailable,
+  price,
+  images,
+  reviews,
+  overallRating,
+  qAndA,
+  listedBy,
+  notify
 ) => {
   try {
     sneakerId = ObjectId(sneakerId.trim());
@@ -95,15 +102,16 @@ const update = async (  sneakerId,  brandName,  modelName,  sizesAvailable,  pri
 
   const sneaker = await get(sneakerId.toString());
   const updatedSneaker = {
-  brandName:brandName,
-  modelName:modelName,
-  sizesAvailable:sizesAvailable,
-  price:price,
-  images:images,
-  reviews:reviews,
-  overallRating:overallRating,
-  qAndA:qAndA,
-  listedBy:listedBy,  notify:notify
+    brandName: brandName,
+    modelName: modelName,
+    sizesAvailable: sizesAvailable,
+    price: price,
+    images: images,
+    reviews: reviews,
+    overallRating: overallRating,
+    qAndA: qAndA,
+    listedBy: listedBy,
+    notify: notify,
   };
 
   const sneakerscollection = await sneakers();
@@ -121,7 +129,6 @@ const update = async (  sneakerId,  brandName,  modelName,  sizesAvailable,  pri
   }
 
   return await get(sneakerId.toString());
-
 };
 
 const remove = async (sneakerId) => {
@@ -134,35 +141,45 @@ const remove = async (sneakerId) => {
   return { Deleted: true };
 };
 
-const buySneaker = async (userId,sneakerId,size) => 
-{ 
-  const userInfo=await users.get(userId);
-  userInfo.sneakersBought[userInfo.sneakersBought.length]={sneakerId:sneakerId,size:size};
-  const update1=await users.update(userId,userInfo.firstName,userInfo.lastName,userInfo.email,userInfo.passwordHash,
-  userInfo.address,userInfo.phoneNumber,userInfo.isAdmin,userInfo.sneakersListed,userInfo.sneakersBought);
-  const sneakerInfo=await get(sneakerId.toString());
-  let count=0,flag=false;
+const buySneaker = async (userId, sneakerId, size) => {
+  const userInfo = await users.get(userId);
+  userInfo.sneakersBought[userInfo.sneakersBought.length] = {
+    sneakerId: sneakerId,
+    size: size,
+  };
+  const update1 = await users.update(
+    userId,
+    userInfo.firstName,
+    userInfo.lastName,
+    userInfo.email,
+    userInfo.passwordHash,
+    userInfo.address,
+    userInfo.phoneNumber,
+    userInfo.isAdmin,
+    userInfo.sneakersListed,
+    userInfo.sneakersBought
+  );
+  const sneakerInfo = await get(sneakerId.toString());
+  let count = 0,
+    flag = false;
 
-  for (const x of sneakerInfo.sizesAvailable) 
-  {
-    if(x.size==size)
-    {
-      x.available=x.available-1;
-     
-      if(x.available==0)
-      {
-        flag=true;
+  for (const x of sneakerInfo.sizesAvailable) {
+    if (x.size == size) {
+      x.available = x.available - 1;
+
+      if (x.available == 0) {
+        flag = true;
         break;
       }
     }
     count++;
   }
-  if(flag==true)
-  {
+  if (flag == true) {
     sneakerInfo.sizesAvailable.splice(count, 1);
   }
 
-  const updateSneaker=await update(sneakerId,
+  const updateSneaker = await update(
+    sneakerId,
     sneakerInfo.brandName,
     sneakerInfo.modelName,
     sneakerInfo.sizesAvailable,
@@ -173,12 +190,10 @@ const buySneaker = async (userId,sneakerId,size) =>
     sneakerInfo.qAndA,
     sneakerInfo.listedBy,
     sneakerInfo.notify
-  )
+  );
 
   return update1;
- 
 };
-
 
 module.exports = {
   create,
@@ -189,5 +204,5 @@ module.exports = {
   remove,
   getAllListedBy,
   getName,
-  buySneaker
+  buySneaker,
 };
