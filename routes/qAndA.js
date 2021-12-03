@@ -39,8 +39,8 @@ router.post("/", async (req, res) => {
       qAndA.questionBy,
       qAndA.question
     );
-    res.redirect(`/sneakers/${qAndA.qAndAFor}`);
-    //res.status(200).json(newQandA);
+    //res.redirect(`/sneakers/${qAndA.qAndAFor}`);
+    res.status(200).json(newQandA);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
@@ -82,12 +82,12 @@ router.put("/:id", async (req, res) => {
   }
 
   try {
-    const updatedQandA = await qAndAData.update(
+    const answer = await qAndAData.update(
       req.params.id,
       qAndA.answerBy,
       qAndA.answer
     );
-    res.status(200).json(updatedQandA.answers);
+    res.status(200).json(answer);
   } catch (e) {
     res.status(500).json({ Error: e });
   }

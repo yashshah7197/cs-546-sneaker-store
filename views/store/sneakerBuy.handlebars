@@ -84,7 +84,7 @@
         data-bs-parent="#accordionPostReview"
       >
         <div class="accordion-body">
-          <form id="addReviewForm" method="post" action="/reviews/">
+          <form id="reviewForm" method="post" action="/reviews/">
             <div class="mb-3">
               <label for="reviewTitle" class="form-label">Title</label>
               <input
@@ -123,7 +123,7 @@
 
 <div class="container" id="QandAContainer">
   <h3>Q and A's</h3>
-  <div class="accordion" id="accordionReviews">
+  <div class="accordion" id="accordionQ">
     {{#each qAndAs}}
       <div class="accordion-item">
         <h4 class="accordion-header" id="heading_{{_id}}">
@@ -150,14 +150,17 @@
             {{#if answers}}
               <h4> Answers</h4>
             {{/if}}
-            {{#each answers}}
-              <hr />
-              <div>
-                <div>Answer: {{answer}}</div>
-                <div>User: {{answeredBy}}</div>
-              </div>
-              <hr />
-            {{/each}}
+            <div>
+              {{#each answers}}
+                <hr />
+                <div>
+                  <div>Answer: {{answer}}</div>
+                  <div>User: {{answeredBy}}</div>
+                </div>
+                <hr />
+              {{/each}}
+            </div>
+
             {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
             <form class="answerForm" method="POST">
               <div class="mb-3">

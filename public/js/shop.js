@@ -1,13 +1,84 @@
 (function ($) {
   var answerForm = $(".answerForm");
+  var questionForm = $("#questionForm");
+  var reviewForm = $("#reviewForm");
 
-  answerForm.submit(function (event) {
+  //Add review AJAX call
+  reviewForm.submit(function (event) {
     event.preventDefault();
     debugger;
     try {
       var values = {};
-      $.each($(".answerForm").serializeArray(), function (i, field) {
+
+      var x = $("#reviewForm").serializeArray();
+      $.each(x, function (i, field) {
         values[field.name] = field.value;
+      });
+
+      var requestConfig = {
+        method: "POST",
+        url: "/reviews/",
+        dataType: "json",
+        data: {
+          reviewedBy: values["reviewedBy"],
+          reviewFor: values["reviewFor"],
+          reviewTitle: values["reviewTitle"],
+          reviewText: values["reviewText"],
+          reviewRating: values["reviewRating"],
+        },
+      };
+
+      $.ajax(requestConfig).then(function (responseMessage) {
+        window.location.reload();
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  //Ask Question AJAX call
+  questionForm.submit(function (event) {
+    event.preventDefault();
+    debugger;
+    try {
+      var values = {};
+
+      var x = $("#questionForm").serializeArray();
+      $.each(x, function (i, field) {
+        values[field.name] = field.value;
+      });
+
+      var requestConfig = {
+        method: "POST",
+        url: "/qAndA/",
+        dataType: "json",
+        data: {
+          qAndAFor: values["qAndAFor"],
+          questionBy: values["questionBy"],
+          question: values["question"],
+        },
+      };
+
+      $.ajax(requestConfig).then(function (responseMessage) {
+        window.location.reload();
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  //Answer AJAX call
+  answerForm.submit(function (event) {
+    event.preventDefault();
+    try {
+      var answerField;
+      var values = {};
+      var x = $(".answerForm").serializeArray();
+      $.each(x, function (i, field) {
+        values[field.name] = field.value;
+        if (field.name == "answerText" && field.value != "") {
+          answerField = field.value;
+        }
       });
 
       var requestConfig = {
@@ -16,33 +87,23 @@
         dataType: "json",
         data: {
           answerBy: values["answerBy"],
-          answer: values["answerText"],
+          //answer: values["answerText"],
+          answer: answerField,
         },
       };
 
       $.ajax(requestConfig).then(function (responseMessage) {
-        location.reload();
+        // var newHTML = `<hr />
+        //         <div>
+        //           <div>Answer: ${responseMessage.answer}}</div>
+        //           <div>User: ${responseMessage.answeredBy}}</div>
+        //         </div>
+        //         <hr />`;
+        // answersDiv.append(newHTML);
+        window.location.reload();
       });
     } catch (e) {
       console.log(e);
     }
   });
-
-  //Function to check for Input string
-  function checkInputStr(str, varName) {
-    if (str == undefined) {
-      throw `${varName || "Input string"} is undefined.`;
-    }
-    checkIsChar(str, varName);
-    if (str.trim().length == 0) {
-      throw `${varName || "Input string"} is empty.`;
-    }
-  }
-
-  //Function to check for valid string
-  function checkIsChar(str, varName) {
-    if (typeof str != "string") {
-      throw `${varName || "Given variable"} is not a valid string.`;
-    }
-  }
 })(window.jQuery);

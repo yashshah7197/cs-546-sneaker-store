@@ -108,6 +108,7 @@ const get = async (qAndAId) => {
 };
 
 const update = async (qAndAId, answerBy, answer) => {
+  let result = {};
   validation.checkInputStr(qAndAId, "QandA Id");
   //validation.checkValidObjectId(qAndAId);
 
@@ -155,10 +156,18 @@ const update = async (qAndAId, answerBy, answer) => {
     _id: parsedId,
   });
 
-  //Convert objectId to string
-  updatedQandA._id = updatedQandA._id.toString();
+  let updatedAnswers = updatedQandA.answers;
 
-  return updatedQandA;
+  updatedAnswers.forEach((element) => {
+    if ((element._id = answerObj._id)) {
+      result = element;
+    }
+  });
+
+  //Convert objectId to string
+  result._id = result._id.toString();
+
+  return result;
 };
 
 const remove = async (qAndAId) => {
