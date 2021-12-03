@@ -51,7 +51,10 @@ function checkValidEmail(email) {
   const match = email.match(emailRegex);
 
   if (match === null) {
-    throw "Invalid email!";
+    throw {
+      statusCode: 400,
+      message: "Invalid email!"
+    };
   }
 }
 
@@ -60,7 +63,10 @@ function checkValidPassword(password) {
   const match = password.match(passwordRegex);
 
   if (match === null) {
-    throw "The password must be at least 6 characters long and consist only of alphanumeric and special characters!";
+    throw {
+        statusCode: 400,
+        message:"The password must be at least 6 characters long and consist only of alphanumeric and special characters!"
+    };
   }
 }
 
@@ -69,7 +75,10 @@ function checkValidPhoneNumber(phoneNumber) {
   const match = phoneNumber.match(phoneNumberRegex);
 
   if (match === null) {
-    throw "phoneNumber should be in the format xxx-xxx-xxxx where x is a digit from 0-9!";
+    throw {
+        statusCode: 400,
+        message: "phoneNumber should be in the format xxx-xxx-xxxx where x is a digit from 0-9!"
+    };
   }
 }
 
