@@ -143,11 +143,12 @@ const remove = async (sneakerId) => {
   return { Deleted: true };
 };
 
-const buySneaker = async (userId, sneakerId, size) => {
+const buySneaker = async (userId, sneakerId, size1) => {
+  let size=size1.split(',');
   const userInfo = await users.get(userId);
   userInfo.sneakersBought[userInfo.sneakersBought.length] = {
     sneakerId: sneakerId,
-    size: size,
+    size: size[0],
   };
   const update1 = await users.update(
     userId,
@@ -162,24 +163,12 @@ const buySneaker = async (userId, sneakerId, size) => {
     userInfo.sneakersBought
   );
   const sneakerInfo = await get(sneakerId.toString());
-  let count = 0,
-    flag = false;
-
+ 
   for (const x of sneakerInfo.sizesAvailable) {
-    if (x.size == size) {
-      x.available = x.available - 1;
-
-      if (x.available == 0) {
-        flag = true;
-        break;
-      }
+    if (x.size == size[0]) {
+      x.quantity = x.quantity - 1;
     }
-    count++;
-  }
-  if (flag == true) {
-    sneakerInfo.sizesAvailable.splice(count, 1);
-  }
-
+   }
   const updateSneaker = await update(
     sneakerId,
     sneakerInfo.brandName,
@@ -196,7 +185,27 @@ const buySneaker = async (userId, sneakerId, size) => {
 
   return update1;
 };
+const notifySneaker = async (userId, sneakerId, size1) => {
+  let size=size1.split(',');
+  const sneakerInfo = await get(sneakerId.toString());
+   sneakerInfo.notify[sneakerInfo.notify.length]=({userId:userId,size:Number(size[0])});
 
+  const updateSneaker = await update(
+    sneakerId,
+    sneakerInfo.brandName,
+    sneakerInfo.modelName,
+    sneakerInfo.sizesAvailable,
+    sneakerInfo.price,
+    sneakerInfo.images,
+    sneakerInfo.reviews,
+    sneakerInfo.overallRating,
+    sneakerInfo.qAndA,
+    sneakerInfo.listedBy,
+    sneakerInfo.notify
+  );
+
+  return updateSneaker;
+};
 module.exports = {
   create,
   getAll,
@@ -207,4 +216,5 @@ module.exports = {
   getAllListedBy,
   getName,
   buySneaker,
+  notifySneaker
 };
