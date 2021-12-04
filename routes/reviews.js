@@ -44,8 +44,8 @@ router.post("/", async (req, res) => {
       reviewData.reviewText,
       Number(reviewData.reviewRating)
     );
-    res.redirect(`/sneakers/${reviewData.reviewFor}`);
-    //res.status(200).json(review);
+    //res.redirect(`/sneakers/${reviewData.reviewFor}`);
+    res.status(200).json(review);
   } catch (e) {
     res.status(500).json({ Error: e });
   }

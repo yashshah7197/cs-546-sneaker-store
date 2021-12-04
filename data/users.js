@@ -16,19 +16,13 @@ const create = async (
   sneakersListed,
   sneakersBought
 ) => {
-  checkInputStr(firstName);
-  checkInputStr(lastName);
   checkInputStr(email);
   checkInputStr(password);
-  checkInputStr(address);
-  checkInputStr(phoneNumber);
 
   checkIfBoolean(isAdmin);
 
   checkValidEmail(email.toLowerCase().trim());
   checkValidPassword(password);
-
-  checkValidPhoneNumber(phoneNumber.trim());
 
   const usersCollection = await users();
 
@@ -50,7 +44,7 @@ const create = async (
     firstName: firstName.trim(),
     lastName: lastName.trim(),
     address: address.trim(),
-    phoneNumber: phoneNumber.trim(),
+    phoneNumber: phoneNumber,
     isAdmin: isAdmin,
     sneakersListed: [],
     sneakersBought: [],
@@ -116,19 +110,15 @@ const update = async (
   sneakersBought
 ) => {
   checkInputStr(userId);
-  checkInputStr(firstName);
-  checkInputStr(lastName);
   checkInputStr(email);
-  checkInputStr(password);
-  checkInputStr(address);
-  checkInputStr(phoneNumber);
 
   checkIfBoolean(isAdmin);
 
   checkValidEmail(email.toLowerCase().trim());
-  checkValidPassword(password);
 
-  checkValidPhoneNumber(phoneNumber.trim());
+  if (phoneNumber.length !== 0) {
+    checkValidPhoneNumber(phoneNumber.trim());
+  }
 
   try {
     userId = ObjectId(userId.trim());
@@ -139,7 +129,7 @@ const update = async (
     };
   }
 
-  await get(userId.toString());
+  let user = await get(userId.toString());
 
   const updatedUser = {
     firstName: firstName.trim(),
@@ -152,6 +142,13 @@ const update = async (
     sneakersListed: sneakersListed,
     sneakersBought: sneakersBought,
   };
+
+  if (password.length === 0) {
+    updatedUser["passwordHash"] = user["passwordHash"];
+  } else {
+    checkValidPassword(password);
+    updatedUser["passwordHash"] = await hashPassword(password);
+  }
 
   const usersCollection = await users();
 
@@ -195,6 +192,37 @@ const remove = async (userId) => {
   }
 };
 
+const checkUser = async (email, password) => {
+  checkInputStr(email);
+  checkInputStr(password);
+
+  checkValidEmail(email);
+  checkValidPassword(password);
+
+  const usersCollection = await users();
+
+  let user = await usersCollection.findOne({
+    email: email.toLowerCase().trim()
+  });
+
+  if (!user) {
+    throw {
+      statusCode: 400,
+      message: "Either the username or password is invalid"
+    }
+  }
+
+  let passwordMatch = await bcrypt.compare(password, user["passwordHash"]);
+  if (!passwordMatch) {
+    throw {
+      statusCode: 400,
+      message: "Either the username or password is invalid"
+    }
+  }
+
+  return user;
+}
+
 const hashPassword = async (password) => {
   const saltRounds = 16;
   return await bcrypt.hash(password, saltRounds);
@@ -206,4 +234,5 @@ module.exports = {
   get,
   update,
   remove,
+  checkUser
 };

@@ -1,222 +1,233 @@
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <h2>{{sneaker.modelName}}</h2>
-      <p> {{sneaker.brandName}} </p>
-      <img
-        class="img-thumbnail"
-        src="../../public/images/LP1.jpeg"
-        alt="{{sneaker.modelName}}"
-      />
-    </div>
-    <div class="col">
-      <form id="sneakerBuyForm" action="/sneakers/buy" method="post">
-        <div>
-          <p>Price : {{sneaker.price}}$</p>
-        </div>
-        <div>
-          <label for="size">Select size:</label>
-          <select name="size">
-              <option value="size">Size</option>  
-            {{#sneaker.sizesAvailable}}
-              <option value={{size}}>{{size}}</option>
-            {{/sneaker.sizesAvailable}}
-          </select>
-        </div>
-        <input type="text" value={{sneaker._id}} name="id" hidden />
-        <input type="submit" value="BUY" />
-      </form>
+{{#if error}}<div class="alert alert-danger" role="alert" id="buyPageError">
+    <h2>Error</h2>
+    <hr />
+    <p>{{error}}</p>
+  </div>{{/if}}
+
+{{#if sneaker}}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h2>{{sneaker.modelName}}</h2>
+        <p> {{sneaker.brandName}} </p>
+        <img
+          class="img-thumbnail"
+          src="../../public/images/LP1.jpeg"
+          alt="{{sneaker.modelName}}"
+        />
+      </div>
+      <div class="col">
+        <form id="sneakerBuyForm" action="/sneakers/buy" method="post">
+          <div>
+            <p>Price : {{sneaker.price}}$</p>
+          </div>
+          <div>
+            <label for="size">Select size:</label>
+            <select name="size">
+              {{#sneaker.sizesAvailable}}
+                <option value={{size}}>{{size}}</option>
+              {{/sneaker.sizesAvailable}}
+            </select>
+          </div>
+          <input type="text" value={{sneaker._id}} name="id" hidden />
+          <input type="submit" value="Buy" />
+        </form>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="container" id="reviewContainer">
-  <h3>Reviews</h3>
-  <div class="accordion" id="accordionReviews">
-    {{#each review}}
-      <div class="accordion-item">
-        <h4 class="accordion-header" id="heading_{{_id}}">
-          <button
-            class="accordion-button"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapse_{{_id}}"
-            aria-expanded="true"
-            aria-controls="collapse_{{_id}}"
+  <div class="container" id="reviewContainer">
+    <h3>Reviews</h3>
+    <div class="accordion" id="accordionReviews">
+      {{#each review}}
+        <div class="accordion-item">
+          <h4 class="accordion-header" id="heading_{{_id}}">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse_{{_id}}"
+              aria-expanded="true"
+              aria-controls="collapse_{{_id}}"
+            >
+              <div>{{title}}</div>
+              <div>&nbsp| &nbsp </div>
+              <div> Rating : {{rating}}</div>
+            </button>
+          </h4>
+          <div
+            id="collapse_{{_id}}"
+            class="accordion-collapse collapse"
+            aria-labelledby="heading_{{_id}}"
+            data-bs-parent="#accordionReviews"
           >
-            <div>{{title}}</div>
-            <div>&nbsp| &nbsp </div>
-            <div> Rating : {{rating}}</div>
-          </button>
-        </h4>
-        <div
-          id="collapse_{{_id}}"
-          class="accordion-collapse collapse"
-          aria-labelledby="heading_{{_id}}"
-          data-bs-parent="#accordionReviews"
-        >
-          <div class="accordion-body">
-            <div> Name : {{reviewedBy}} </div>
-            <div> {{review}}</div>
+            <div class="accordion-body">
+              <div> Name : {{reviewedBy}} </div>
+              <div> {{review}}</div>
+            </div>
           </div>
         </div>
-      </div>
-    {{/each}}
-  </div>
-  <br />
-  <div class="accordion" id="accordionPostReview">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingPostReview">
-        <button
-          class="accordion-button"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapsePostReview"
-          aria-expanded="true"
-          aria-controls="collapsePostReview"
-        >
-          Post a review
-        </button>
-      </h2>
-      <div
-        id="collapsePostReview"
-        class="accordion-collapse collapse"
-        aria-labelledby="heading_{{_id}}"
-        data-bs-parent="#accordionPostReview"
-      >
-        <div class="accordion-body">
-          <form id="addReviewForm" method="post" action="/reviews/">
-            <div class="mb-3">
-              <label for="reviewTitle" class="form-label">Title</label>
-              <input
-                id="reviewTitle"
-                name="reviewTitle"
-                class="form-control"
-                type="text"
-                aria-label="default input example"
-              />
-              <label for="reviewText" class="form-label">Review</label>
-              <textarea
-                class="form-control"
-                id="reviewText"
-                name="reviewText"
-                rows="3"
-              ></textarea>
-              <label for="reviewRating" class="form-label">Rating</label>
-              <input
-                id="reviewRating"
-                name="reviewRating"
-                class="form-control"
-                type="number"
-                aria-label="default input example"
-              />
-            </div>
-            {{! To be changed to userId from cookie }}
-            <input type="hidden" value="User1" name="reviewedBy" />
-            <input type="hidden" value={{sneaker._id}} name="reviewFor" />
-            <input type="submit" value="Submit" id="reviewSubmit" />
-          </form>
-        </div>
-      </div>
+      {{/each}}
     </div>
-  </div>
-</div>
-
-<div class="container" id="QandAContainer">
-  <h3>Q and A's</h3>
-  <div class="accordion" id="accordionReviews">
-    {{#each qAndAs}}
+    <br />
+    <div class="accordion" id="accordionPostReview">
       <div class="accordion-item">
-        <h4 class="accordion-header" id="heading_{{_id}}">
+        <h2 class="accordion-header" id="headingPostReview">
           <button
             class="accordion-button"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#collapse_{{_id}}"
+            data-bs-target="#collapsePostReview"
             aria-expanded="true"
-            aria-controls="collapse_{{_id}}"
+            aria-controls="collapsePostReview"
           >
-            <div>{{question}}</div>
-            <div>&nbsp| &nbsp </div>
-            <div> User : {{questionBy}}</div>
+            Post a review
           </button>
-        </h4>
+        </h2>
         <div
-          id="collapse_{{_id}}"
+          id="collapsePostReview"
           class="accordion-collapse collapse"
-          aria-labelledby="headingOne"
-          data-bs-parent="#accordionReviews"
+          aria-labelledby="heading_{{_id}}"
+          data-bs-parent="#accordionPostReview"
         >
           <div class="accordion-body">
-            {{#if answers}}
-              <h4> Answers</h4>
-            {{/if}}
-            {{#each answers}}
-              <hr />
-              <div>
-                <div>Answer: {{answer}}</div>
-                <div>User: {{answeredBy}}</div>
-              </div>
-              <hr />
-            {{/each}}
-            {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
-            <form class="answerForm" method="POST">
+            <form id="reviewForm" method="post" action="/reviews/">
               <div class="mb-3">
-                <label for="answerText" class="form-label">Answer this question</label>
-                <input type="text" name="answerText" class="form-control" />
-                {{! To be changed to userId from cookie }}
-                <input type="hidden" value="User1" name="answerBy" />
-                <input type="hidden" value="{{_id}}" name="_id" />
-                <input type="hidden" name="_method" value="put" />
-                <input type="submit" value="Submit" />
+                <label for="reviewTitle" class="form-label">Title</label>
+                <input
+                  id="reviewTitle"
+                  name="reviewTitle"
+                  class="form-control"
+                  type="text"
+                  aria-label="default input example"
+                />
+                <label for="reviewText" class="form-label">Review</label>
+                <textarea
+                  class="form-control"
+                  id="reviewText"
+                  name="reviewText"
+                  rows="3"
+                ></textarea>
+                <label for="reviewRating" class="form-label">Rating</label>
+                <input
+                  id="reviewRating"
+                  name="reviewRating"
+                  class="form-control"
+                  type="number"
+                  aria-label="default input example"
+                />
               </div>
+              {{! To be changed to userId from cookie }}
+              <input type="hidden" value="User1" name="reviewedBy" />
+              <input type="hidden" value={{sneaker._id}} name="reviewFor" />
+              <input type="submit" value="Submit" id="reviewSubmit" />
             </form>
           </div>
         </div>
       </div>
-    {{/each}}
+    </div>
   </div>
 
-  <br />
-  <div class="accordion" id="accordionPostQ">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingPostQ">
-        <button
-          class="accordion-button"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapsePostQ"
-          aria-expanded="true"
-          aria-controls="collapsePostQ"
-        >
-          Ask your questions
-        </button>
-      </h2>
-      <div
-        id="collapsePostQ"
-        class="accordion-collapse collapse"
-        aria-labelledby="headingOne"
-        data-bs-parent="#accordionPostQ"
-      >
-        <div class="accordion-body">
-          <form id="questionForm" id="" method="post" action="/qAndA/">
-            <div class="mb-3">
-              <label for="question" class="form-label">Question</label>
-              <input
-                id="question"
-                name="question"
-                class="form-control"
-                type="text"
-                aria-label="default input example"
-              />
+  <div class="container" id="QandAContainer">
+    <h3>Q and A's</h3>
+    <div class="accordion" id="accordionQ">
+      {{#each qAndAs}}
+        <div class="accordion-item">
+          <h4 class="accordion-header" id="heading_{{_id}}">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse_{{_id}}"
+              aria-expanded="true"
+              aria-controls="collapse_{{_id}}"
+            >
+              <div>{{question}}</div>
+              <div>&nbsp| &nbsp </div>
+              <div> User : {{questionBy}}</div>
+            </button>
+          </h4>
+          <div
+            id="collapse_{{_id}}"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingOne"
+            data-bs-parent="#accordionReviews"
+          >
+            <div class="accordion-body">
+              {{#if answers}}
+                <h4> Answers</h4>
+              {{/if}}
+              <div>
+                {{#each answers}}
+                  <hr />
+                  <div>
+                    <div>Answer: {{answer}}</div>
+                    <div>User: {{answeredBy}}</div>
+                  </div>
+                  <hr />
+                {{/each}}
+              </div>
+
+              {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
+              <form class="answerForm" method="POST">
+                <div class="mb-3">
+                  <label for="answerText" class="form-label">Answer this
+                    question</label>
+                  <input type="text" name="answerText" class="form-control" />
+                  {{! To be changed to userId from cookie }}
+                  <input type="hidden" value="User1" name="answerBy" />
+                  <input type="hidden" value="{{_id}}" name="_id" />
+                  <input type="hidden" name="_method" value="put" />
+                  <input type="submit" value="Submit" />
+                </div>
+              </form>
             </div>
-            {{! To be changed to userId from cookie }}
-            <input type="hidden" value="User1" name="questionBy" />
-            <input type="hidden" value={{sneaker._id}} name="qAndAFor" />
-            <input type="submit" value="Submit" id="questionSubmit" />
-          </form>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    <br />
+    <div class="accordion" id="accordionPostQ">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingPostQ">
+          <button
+            class="accordion-button"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapsePostQ"
+            aria-expanded="true"
+            aria-controls="collapsePostQ"
+          >
+            Ask your questions
+          </button>
+        </h2>
+        <div
+          id="collapsePostQ"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingOne"
+          data-bs-parent="#accordionPostQ"
+        >
+          <div class="accordion-body">
+            <form id="questionForm" id="" method="post" action="/qAndA/">
+              <div class="mb-3">
+                <label for="question" class="form-label">Question</label>
+                <input
+                  id="question"
+                  name="question"
+                  class="form-control"
+                  type="text"
+                  aria-label="default input example"
+                />
+              </div>
+              {{! To be changed to userId from cookie }}
+              <input type="hidden" value="User1" name="questionBy" />
+              <input type="hidden" value={{sneaker._id}} name="qAndAFor" />
+              <input type="submit" value="Submit" id="questionSubmit" />
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+{{/if}}

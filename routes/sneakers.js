@@ -49,6 +49,7 @@ const qAndAData = data.qAndA;
 const users = data.users;
 
 const { ObjectId } = require("mongodb");
+const { update } = require("../data/users");
 //User listed sneakers
 router.get("/listedBy/:id", async (req, res) => {
   try {
@@ -67,6 +68,7 @@ router.get("/", async (req, res) => {
   try {
     const sneakers = await sneakersData.getAll();
     res.render("store/sneakersList", {
+      title: "Shop",
       sneakers: sneakers,
       partial: "empty-scripts",
     });
@@ -85,14 +87,19 @@ router.get("/sneaker/:id", async (req, res) => {
     let qAndA = await qAndAData.getAll(sneaker._id);
 
     res.render("store/sneakerBuy", {
-      title: "Shop",
+      title: "Buy",
       sneaker: sneaker,
       review: rev,
       qAndAs: qAndA,
       partial: "shop-scripts",
     });
   } catch (e) {
-    res.status(404).json({ message: " There is no Sneaker with that ID" + e });
+    res.status(404).render("store/sneakerBuy", {
+      title: "Shop",
+      partial: "shop-scripts",
+      error: e,
+    });
+    //res.status(404).json({ message: " There is no Sneaker with that ID" + e });
   }
 });
 //User updates sneaker
@@ -103,6 +110,7 @@ router.get("/listedByUpdate/:id", async (req, res) => {
     console.log(sneaker);
 
     res.render("store/sneakerUpdate", {
+      title: "Update",
       sneaker: sneaker,
       partial: "empty-scripts",
     });
@@ -147,6 +155,7 @@ router.post("/search", async (req, res) => {
       });
     } else {
       res.render("store/sneakersList", {
+        title: "Shop",
         sneakers: sneakers,
         error: "No results found",
         partial: "empty-scripts",

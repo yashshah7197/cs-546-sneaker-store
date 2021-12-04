@@ -74,7 +74,9 @@ const get = async (sneakerId) => {
 const getName = async (sneakerName) => {
   const sneaker = await sneakers();
   let regEx = new RegExp(sneakerName, "i");
-  const sneakerList = await sneaker.find({ modelName: regEx }).toArray();
+  const sneakerList = await sneaker
+    .find({ $or: [{ modelName: regEx }, { brandName: regEx }] })
+    .toArray();
 
   return sneakerList;
 };

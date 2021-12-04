@@ -4,6 +4,7 @@ const connection = require("./config/mongoConnection");
 const configRoutes = require("./routes");
 const static = express.static(__dirname + "/public");
 const exphbs = require("express-handlebars");
+const session = require('express-session')
 
 app.use("/public", static);
 app.use(express.json());
@@ -41,6 +42,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(rewriteUnsupportedBrowserMethods);
 app.engine("handlebars", handlebarsInstance.engine);
 app.set("view engine", "handlebars");
+
+app.use(session({
+  name: 'AuthCookie',
+  secret: 'SoleSearchSecret!',
+  resave: false,
+  saveUninitialized: true
+}));
 
 configRoutes(app);
 
