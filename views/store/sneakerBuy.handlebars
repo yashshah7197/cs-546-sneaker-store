@@ -12,25 +12,34 @@
         <p> {{sneaker.brandName}} </p>
         <img
           class="img-thumbnail"
-          src="../../public/images/LP1.jpeg"
+          src={{sneaker.images}}
           alt="{{sneaker.modelName}}"
         />
       </div>
       <div class="col">
-        <form id="sneakerBuyForm" action="/sneakers/buy" method="post">
+        <form id="sneakerBuyForm"  method="post">
           <div>
             <p>Price : {{sneaker.price}}$</p>
           </div>
           <div>
             <label for="size">Select size:</label>
-            <select name="size">
+            <select name="size" id="size">
+               <option value=0>Size</option>
+
               {{#sneaker.sizesAvailable}}
-                <option value={{size}}>{{size}}</option>
+                <option value={{size}},{{quantity}} >{{size}}</option>
               {{/sneaker.sizesAvailable}}
             </select>
           </div>
           <input type="text" value={{sneaker._id}} name="id" hidden />
-          <input type="submit" value="Buy" />
+
+          <br>
+          <div>
+            
+          <input type="submit" value="Buy" id="buy" formaction="/sneakers/buy" disabled />
+          
+          <input type="submit" value="Notify" id="notify" formaction="/sneakers/notify" disabled />
+          </div>
         </form>
       </div>
     </div>

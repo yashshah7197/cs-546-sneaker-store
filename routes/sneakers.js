@@ -21,12 +21,12 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
     let modelName = req.body.modelName;
     let price = req.body.price;
     let sizesAvailable = [
-      { size: 7, quantity: req.body.size7 },
-      { size: 8, quantity: req.body.size8 },
-      { size: 9, quantity: req.body.size9 },
-      { size: 10, quantity: req.body.size10 },
-      { size: 11, quantity: req.body.size11 },
-      { size: 12, quantity: req.body.size12 },
+      { size: 7, quantity: Number(req.body.size7) },
+      { size: 8, quantity: Number(req.body.size8) },
+      { size: 9, quantity: Number(req.body.size9) },
+      { size: 10, quantity: Number(req.body.size10) },
+      { size: 11, quantity: Number(req.body.size11) },
+      { size: 12, quantity: Number(req.body.size12) },
     ];
     let image = "../../" + req.file.path;
     const sneakerAdded = await sneakersData.create(
@@ -180,15 +180,28 @@ router.post("/buy", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
-    //   console.log(req.body);
     const sneakers = await sneakersData.buySneaker(
       "61a6ba5f5bbbf22fa2eb3341",
       sneakerId,
       size
     );
-    //   console.log(sneakers);
-    //   res.render("store/sneakersList", { sneakers: sneakers });
     res.redirect("/sneakers/BuyList/61a6ba5f5bbbf22fa2eb3341");
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
+router.post("/notify", async (req, res) => {
+  try {
+    let sneakerId = req.body.id;
+    let size = req.body.size;
+    const sneakers = await sneakersData.notifySneaker(
+      "61a6ba5f5bbbf22fa2eb3341",
+      sneakerId,
+      size
+    );
+    res.redirect("/sneakers//sneaker/"+sneakerId);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
