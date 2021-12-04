@@ -157,15 +157,18 @@ const update = async (qAndAId, answerBy, answer) => {
   });
 
   let updatedAnswers = updatedQandA.answers;
-
+  let newAnswer = {};
   updatedAnswers.forEach((element) => {
     if ((element._id = answerObj._id)) {
-      result = element;
+      newAnswer = element;
+      newAnswer._id = newAnswer._id.toString();
     }
   });
 
+  result["_id"] = updatedQandA._id.toString();
+
   //Convert objectId to string
-  result._id = result._id.toString();
+  result["answer"] = newAnswer;
 
   return result;
 };

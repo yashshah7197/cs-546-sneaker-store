@@ -151,33 +151,54 @@
             id="collapse_{{_id}}"
             class="accordion-collapse collapse"
             aria-labelledby="headingOne"
-            data-bs-parent="#accordionReviews"
+            data-bs-parent="#accordionQ"
           >
-            <div class="accordion-body">
-              {{#if answers}}
-                <h4> Answers</h4>
-              {{/if}}
-              <div>
-                {{#each answers}}
+            <div class="accordion-body" id="answerBody_{{_id}}">
+              <h4>Answers</h4>
+              <div id="answerPanel_{{_id}}">
+                {{#if answers}}
+                  {{#each answers}}
+                    <div class="answerBlock">
+                      <hr />
+                      <div>
+                        <div>Answer: {{answer}}</div>
+                        <div>User: {{answeredBy}}</div>
+                      </div>
+                      <hr />
+                    </div>
+                  {{/each}}
+                {{else}}
                   <hr />
-                  <div>
-                    <div>Answer: {{answer}}</div>
-                    <div>User: {{answeredBy}}</div>
-                  </div>
+                  <div>No answers</div>
                   <hr />
-                {{/each}}
+                {{/if}}
+
               </div>
 
               {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
-              <form class="answerForm" method="POST">
+              <form class="answerForm" id="answerForm_{{_id}}" method="POST">
                 <div class="mb-3">
                   <label for="answerText" class="form-label">Answer this
                     question</label>
-                  <input type="text" name="answerText" class="form-control" />
+                  <input
+                    type="text"
+                    name="answerText"
+                    class="form-control"
+                    id="answerText_{{_id}}"
+                  />
                   {{! To be changed to userId from cookie }}
-                  <input type="hidden" value="User1" name="answerBy" />
-                  <input type="hidden" value="{{_id}}" name="_id" />
-                  <input type="hidden" name="_method" value="put" />
+                  <input
+                    type="hidden"
+                    value="User1"
+                    name="answerBy"
+                    id="answerBy_{{_id}}"
+                  />
+                  <input
+                    type="hidden"
+                    name="_method"
+                    value="put"
+                    id="method_{{_id}}"
+                  />
                   <input type="submit" value="Submit" />
                 </div>
               </form>
