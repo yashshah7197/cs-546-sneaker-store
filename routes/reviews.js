@@ -27,10 +27,10 @@ router.post("/", async (req, res) => {
   try {
     validation.checkInputStr(reviewData.reviewedBy, "Reviewed By");
     validation.checkInputStr(reviewData.reviewFor, "Review For");
-    validation.checkInputStr(reviewData.title, "Title");
-    validation.checkInputStr(reviewData.review, "Review");
-    validation.checkIsNumber(reviewData.rating, "Rating");
-    validation.checkRating(reviewData.rating);
+    validation.checkInputStr(reviewData.reviewTitle, "Title");
+    validation.checkInputStr(reviewData.reviewText, "Review");
+    validation.checkIsNumber(Number(reviewData.reviewRating), "Rating");
+    validation.checkRating(Number(reviewData.reviewRating));
   } catch (e) {
     res.status(400).json({ Error: e });
     return;
@@ -40,10 +40,11 @@ router.post("/", async (req, res) => {
     const review = await reviewsData.create(
       reviewData.reviewedBy,
       reviewData.reviewFor,
-      reviewData.title,
-      reviewData.review,
-      reviewData.rating
+      reviewData.reviewTitle,
+      reviewData.reviewText,
+      Number(reviewData.reviewRating)
     );
+    //res.redirect(`/sneakers/${reviewData.reviewFor}`);
     res.status(200).json(review);
   } catch (e) {
     res.status(500).json({ Error: e });

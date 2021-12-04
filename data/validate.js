@@ -40,9 +40,55 @@ function checkValidObjectId(id) {
   }
 }
 
+function checkIfBoolean(val) {
+  if (typeof val !== 'boolean') {
+    throw 'Value should be boolean!';
+  }
+}
+
+function checkValidEmail(email) {
+  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const match = email.match(emailRegex);
+
+  if (match === null) {
+    throw {
+      statusCode: 400,
+      message: "Invalid email!"
+    };
+  }
+}
+
+function checkValidPassword(password) {
+  const passwordRegex = /^[^\s]{6,}$/;
+  const match = password.match(passwordRegex);
+
+  if (match === null) {
+    throw {
+        statusCode: 400,
+        message:"The password must be at least 6 characters long and consist only of alphanumeric and special characters!"
+    };
+  }
+}
+
+function checkValidPhoneNumber(phoneNumber) {
+  const phoneNumberRegex = /^\d{3}-\d{3}-\d{4}$/;
+  const match = phoneNumber.match(phoneNumberRegex);
+
+  if (match === null) {
+    throw {
+        statusCode: 400,
+        message: "phoneNumber should be in the format xxx-xxx-xxxx where x is a digit from 0-9!"
+    };
+  }
+}
+
 module.exports = {
   checkInputStr,
   checkIsNumber,
   checkRating,
   checkValidObjectId,
+  checkIfBoolean,
+  checkValidEmail,
+  checkValidPassword,
+  checkValidPhoneNumber
 };

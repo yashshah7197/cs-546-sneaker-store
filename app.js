@@ -4,25 +4,28 @@ const connection = require("./config/mongoConnection");
 const configRoutes = require("./routes");
 const static = express.static(__dirname + "/public");
 const exphbs = require("express-handlebars");
+const session = require('express-session')
 
 app.use("/public", static);
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 
-app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
+// app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
+// app.set("view engine", "handlebars");
 
+const Handlebars = require("handlebars");
 
 const handlebarsInstance = exphbs.create({
-  defaultLayout: 'main',
+  defaultLayout: "main",
   helpers: {
     asJSON: (obj, spacing) => {
-      if (typeof spacing === 'number')
+      if (typeof spacing === "number")
         return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
 
       return new Handlebars.SafeString(JSON.stringify(obj));
-    }
-  }
+    },
+  },
+  partialsDir: ["views/partials/"],
 });
 
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
@@ -37,8 +40,15 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
 // app.use('/public', static);
 app.use(express.urlencoded({ extended: true }));
 app.use(rewriteUnsupportedBrowserMethods);
-app.engine('handlebars', handlebarsInstance.engine);
-app.set('view engine', 'handlebars');
+app.engine("handlebars", handlebarsInstance.engine);
+app.set("view engine", "handlebars");
+
+app.use(session({
+  name: 'AuthCookie',
+  secret: 'SoleSearchSecret!',
+  resave: false,
+  saveUninitialized: true
+}));
 
 configRoutes(app);
 

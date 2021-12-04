@@ -1,33 +1,25 @@
+{{#if error}}
+  <div class="alert alert-primary" role="alert">
+    {{error}}
+  </div>
+{{/if}}
 
-
-
-<div class="container" >
+<div class="container">
   <div class="row">
-       {{#each sneakers}}
-    <div class="col-sm-4">
-      
-     
-<form action="/sneakers/{{_id}}" method="get"> 
-     <h1> {{brandName}}</h1> 
-       <p> {{modelName}}</p>
-       <img
-        class="d-block w-100"
-        src="../../public/images/LP1.jpeg"
-      />
-    
-
-       <p>Price : {{price}}$</p>
-
-
-<input type="submit" value="BUY" >
-    
-    
-    
-    </form>
-
-   
-    </div>
-        {{/each}}
+    {{#each sneakers}}
+      <div class="col-sm-4">
+        <div class="card">
+          <img class="card-img-top" src="{{images}}" alt="Card image cap" />
+          <div class="card-body">
+            <h5 class="card-title">{{modelName}}</h5>
+            <p class="card-text">{{brandName}}</p>
+            <p>Price : {{price}}$</p>
+            <form action="/sneakers/sneaker/{{_id}}" method="get">
+              <input type="submit" value="View" />
+            </form>
+          </div>
+        </div>
+      </div>
+    {{/each}}
   </div>
 </div>
- 

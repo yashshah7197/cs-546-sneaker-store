@@ -1,5 +1,6 @@
 const mongoCollections = require("../config/mongoCollections");
 const qAndA = mongoCollections.qAndA;
+const sneakers = mongoCollections.sneakers;
 const validation = require("./validate");
 
 const { ObjectId } = require("mongodb");
@@ -29,6 +30,29 @@ const create = async (qAndAFor, questionBy, question) => {
 
   //Fetch objectId for newly created question
   const newId = insertInfo.insertedId;
+
+  const sneakerCollection = await sneakers();
+
+  let sneakerId = ObjectId(qAndAFor);
+
+  //Check if the restaurant with the given id exists
+  const sneaker = await sneakerCollection.findOne({ _id: sneakerId });
+  if (sneaker === null) {
+    throw "No sneaker with that id.";
+  }
+
+  let newQandA = sneaker.qAndA;
+
+  newQandA.push(newId.toString());
+
+  //Update new review object to review collection
+  const updateInfo = await sneakerCollection.updateOne(
+    { _id: sneakerId },
+    { $set: { qAndA: newQandA } }
+  );
+  if (updateInfo.modifiedCount === 0) {
+    throw "Could not add QandA to sneaker.";
+  }
 
   //Fetch the newly created reviquestionew object
   const addedQuestion = await qAndACollection.findOne({ _id: newId });
@@ -84,6 +108,7 @@ const get = async (qAndAId) => {
 };
 
 const update = async (qAndAId, answerBy, answer) => {
+  let result = {};
   validation.checkInputStr(qAndAId, "QandA Id");
   //validation.checkValidObjectId(qAndAId);
 
@@ -131,10 +156,21 @@ const update = async (qAndAId, answerBy, answer) => {
     _id: parsedId,
   });
 
-  //Convert objectId to string
-  updatedQandA._id = updatedQandA._id.toString();
+  let updatedAnswers = updatedQandA.answers;
+  let newAnswer = {};
+  updatedAnswers.forEach((element) => {
+    if ((element._id = answerObj._id)) {
+      newAnswer = element;
+      newAnswer._id = newAnswer._id.toString();
+    }
+  });
 
-  return updatedQandA;
+  result["_id"] = updatedQandA._id.toString();
+
+  //Convert objectId to string
+  result["answer"] = newAnswer;
+
+  return result;
 };
 
 const remove = async (qAndAId) => {
