@@ -133,6 +133,7 @@ router.get("/BuyList/:id", async (req, res) => {
     res.status(404).json({ message: " There is no Sneaker with that ID" });
   }
 });
+
 router.get("/delete/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.remove(req.params.id);
@@ -207,4 +208,5 @@ router.post("/notify", async (req, res) => {
     res.sendStatus(500);
   }
 });
+
 module.exports = router;
