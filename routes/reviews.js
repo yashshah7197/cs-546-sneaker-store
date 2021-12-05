@@ -3,6 +3,7 @@ const router = express.Router();
 const data = require("../data");
 const reviewsData = data.reviews;
 const validation = require("../data/validate");
+const xss = require("xss");
 
 const { ObjectId } = require("mongodb");
 
@@ -10,7 +11,7 @@ router.get("/product/:id", async (req, res) => {
   try {
     validation.checkInputStr(req.params.id, "Review Id");
     //validation.checkValidObjectId(req.params.id);
-    const reviews = await reviewsData.getAll(req.params.id);
+    const reviews = await reviewsData.getAll(xss(req.params.id));
     if (reviews.length > 0) {
       res.status(200).json(reviews);
     } else {

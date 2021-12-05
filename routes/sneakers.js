@@ -79,6 +79,11 @@ router.get("/", async (req, res) => {
 //Changes from "/:id" to add search functionality || Hamza
 router.get("/sneaker/:id", async (req, res) => {
   try {
+    if (!req.session.user) {
+      res.redirect("/users/login");
+      return;
+    }
+
     const sneaker = await sneakersData.get(req.params.id);
     let rev = [];
     for (const x of sneaker.reviews) {
@@ -88,6 +93,7 @@ router.get("/sneaker/:id", async (req, res) => {
 
     res.render("store/sneakerBuy", {
       title: "Buy",
+      userID: req.session.user,
       sneaker: sneaker,
       review: rev,
       qAndAs: qAndA,
@@ -96,6 +102,7 @@ router.get("/sneaker/:id", async (req, res) => {
   } catch (e) {
     res.status(404).render("store/sneakerBuy", {
       title: "Shop",
+      userID: req.session.user,
       partial: "shop-scripts",
       error: e,
     });
@@ -201,7 +208,7 @@ router.post("/notify", async (req, res) => {
       sneakerId,
       size
     );
-    res.redirect("/sneakers//sneaker/"+sneakerId);
+    res.redirect("/sneakers//sneaker/" + sneakerId);
   } catch (e) {
     console.log(e);
     res.sendStatus(500);

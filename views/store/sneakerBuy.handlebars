@@ -59,9 +59,7 @@
               aria-expanded="true"
               aria-controls="collapse_{{_id}}"
             >
-              <div>{{title}}</div>
-              <div>&nbsp| &nbsp </div>
-              <div> Rating : {{rating}}</div>
+              {{title}} - Rating : {{rating}}
             </button>
           </h4>
           <div
@@ -71,8 +69,8 @@
             data-bs-parent="#accordionReviews"
           >
             <div class="accordion-body">
-              <div> Name : {{reviewedBy}} </div>
-              <div> {{review}}</div>
+              <div> User: {{reviewedBy}} </div>
+              <div> Review: {{review}}</div>
             </div>
           </div>
         </div>
@@ -96,7 +94,7 @@
         <div
           id="collapsePostReview"
           class="accordion-collapse collapse"
-          aria-labelledby="heading_{{_id}}"
+          aria-labelledby="headingPostReview"
           data-bs-parent="#accordionPostReview"
         >
           <div class="accordion-body">
@@ -127,8 +125,8 @@
                 />
               </div>
               {{! To be changed to userId from cookie }}
-              <input type="hidden" value="User1" name="reviewedBy" />
-              <input type="hidden" value={{sneaker._id}} name="reviewFor" />
+              <input type="hidden" value="{{userID}}" name="reviewedBy" />
+              <input type="hidden" value="{{sneaker._id}}" name="reviewFor" />
               <input type="submit" value="Submit" id="reviewSubmit" />
             </form>
           </div>
@@ -151,15 +149,13 @@
               aria-expanded="true"
               aria-controls="collapse_{{_id}}"
             >
-              <div>{{question}}</div>
-              <div>&nbsp| &nbsp </div>
-              <div> User : {{questionBy}}</div>
+            {{question}} - User : {{questionBy}}
             </button>
           </h4>
           <div
             id="collapse_{{_id}}"
             class="accordion-collapse collapse"
-            aria-labelledby="headingOne"
+            aria-labelledby="heading_{{_id}}"
             data-bs-parent="#accordionQ"
           >
             <div class="accordion-body" id="answerBody_{{_id}}">
@@ -185,9 +181,9 @@
               </div>
 
               {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
-              <form class="answerForm" id="answerForm_{{_id}}" method="POST">
+              <form class="answerForm" id="answerForm_{{_id}}" method="POST" onclick="submitAnswer(event)">
                 <div class="mb-3">
-                  <label for="answerText" class="form-label">Answer this
+                  <label for="answerText_{{_id}}" class="form-label">Answer this
                     question</label>
                   <input
                     type="text"
@@ -198,7 +194,7 @@
                   {{! To be changed to userId from cookie }}
                   <input
                     type="hidden"
-                    value="User1"
+                    value="{{../userID}}"
                     name="answerBy"
                     id="answerBy_{{_id}}"
                   />
@@ -235,11 +231,11 @@
         <div
           id="collapsePostQ"
           class="accordion-collapse collapse"
-          aria-labelledby="headingOne"
+          aria-labelledby="headingPostQ"
           data-bs-parent="#accordionPostQ"
         >
           <div class="accordion-body">
-            <form id="questionForm" id="" method="post" action="/qAndA/">
+            <form id="questionForm" method="post">
               <div class="mb-3">
                 <label for="question" class="form-label">Question</label>
                 <input
@@ -251,8 +247,8 @@
                 />
               </div>
               {{! To be changed to userId from cookie }}
-              <input type="hidden" value="User1" name="questionBy" />
-              <input type="hidden" value={{sneaker._id}} name="qAndAFor" />
+              <input type="hidden" value="{{userID}}" name="questionBy" />
+              <input type="hidden" value="{{sneaker._id}}" name="qAndAFor" />
               <input type="submit" value="Submit" id="questionSubmit" />
             </form>
           </div>

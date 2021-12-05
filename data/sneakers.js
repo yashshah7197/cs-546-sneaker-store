@@ -1,7 +1,7 @@
 const mongoCollections = require("../config/mongoCollections");
 const sneakers = mongoCollections.sneakers;
 const reviews = mongoCollections.reviews;
-const users = require("../data/users");
+const users = mongoCollections.users;
 
 const { ObjectId } = require("mongodb");
 
@@ -33,7 +33,41 @@ const create = async (
 
   // const newId = insertInfo.insertedId;
   // const sneaker = await get(String(newId));
-  return true;
+
+  //Added by Hamza || To update user Sneakers Listed field on sneaker creation
+
+  const newId = insertInfo.insertedId;
+
+  let sneaker = await get(newId);
+
+  const usersCollection = await users();
+
+  //Check if the restaurant with the given id exists
+  const userInfo = await usersCollection.findOne({
+    _id: ObjectId(sneaker.listedBy),
+  });
+  if (userInfo === null) {
+    throw "No user with that id.";
+  }
+
+  let userSneakerListed = userInfo.sneakersListed;
+
+  userSneakerListed.push(newId);
+
+  //Update new review object to review collection
+  const updateInfo = await usersCollection.updateOne(
+    { _id: userInfo._id },
+    { $set: { sneakersListed: userSneakerListed } }
+  );
+  if (updateInfo.modifiedCount === 0) {
+    throw "Could not add sneaker to the user document.";
+  }
+
+  sneaker = await get(newId);
+
+  sneaker._id = sneaker._id.toString();
+
+  return sneaker;
 };
 
 const getAll = async () => {
@@ -144,7 +178,7 @@ const remove = async (sneakerId) => {
 };
 
 const buySneaker = async (userId, sneakerId, size1) => {
-  let size=size1.split(',');
+  let size = size1.split(",");
   const userInfo = await users.get(userId);
   userInfo.sneakersBought[userInfo.sneakersBought.length] = {
     sneakerId: sneakerId,
@@ -163,12 +197,12 @@ const buySneaker = async (userId, sneakerId, size1) => {
     userInfo.sneakersBought
   );
   const sneakerInfo = await get(sneakerId.toString());
- 
+
   for (const x of sneakerInfo.sizesAvailable) {
     if (x.size == size[0]) {
       x.quantity = x.quantity - 1;
     }
-   }
+  }
   const updateSneaker = await update(
     sneakerId,
     sneakerInfo.brandName,
@@ -186,9 +220,12 @@ const buySneaker = async (userId, sneakerId, size1) => {
   return update1;
 };
 const notifySneaker = async (userId, sneakerId, size1) => {
-  let size=size1.split(',');
+  let size = size1.split(",");
   const sneakerInfo = await get(sneakerId.toString());
-   sneakerInfo.notify[sneakerInfo.notify.length]=({userId:userId,size:Number(size[0])});
+  sneakerInfo.notify[sneakerInfo.notify.length] = {
+    userId: userId,
+    size: Number(size[0]),
+  };
 
   const updateSneaker = await update(
     sneakerId,
@@ -216,5 +253,5 @@ module.exports = {
   getAllListedBy,
   getName,
   buySneaker,
-  notifySneaker
+  notifySneaker,
 };

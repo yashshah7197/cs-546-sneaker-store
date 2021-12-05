@@ -40,20 +40,18 @@
               aria-expanded="true"
               aria-controls="collapse_${responseMessage._id}"
             >
-              <div>${responseMessage.title}</div>
-              <div>&nbsp| &nbsp </div>
-              <div> Rating : ${responseMessage.rating}</div>
+              ${responseMessage.title} - Rating : ${responseMessage.rating}
             </button>
           </h4>
           <div
             id="collapse_${responseMessage._id}"
-            class="accordion-collapse collapse show"
+            class="accordion-collapse collapse"
             aria-labelledby="heading_${responseMessage._id}"
             data-bs-parent="#accordionReviews"
           >
             <div class="accordion-body">
-              <div> Name : ${responseMessage.reviewedBy} </div>
-              <div> ${responseMessage.review}</div>
+              <div> User: ${responseMessage.reviewedBy} </div>
+              <div> Review: ${responseMessage.review}</div>
             </div>
           </div>
         </div>`;
@@ -62,8 +60,6 @@
         $("#reviewTitle").val("");
         $("#reviewText").val("");
         $("#reviewRating").val("");
-
-        //window.location.reload();
       });
     } catch (e) {
       console.log(e);
@@ -104,19 +100,16 @@
               aria-expanded="true"
               aria-controls="collapse_${responseMessage._id}"
             >
-              <div>${responseMessage.question}</div>
-              <div>&nbsp| &nbsp </div>
-              <div> User : ${responseMessage.questionBy}</div>
+            ${responseMessage.question} - User : ${responseMessage.questionBy}
             </button>
           </h4>
           <div
             id="collapse_${responseMessage._id}"
             class="accordion-collapse collapse"
-            aria-labelledby="headingOne"
+            aria-labelledby="heading_${responseMessage._id}"
             data-bs-parent="#accordionQ"
           >
-
-          <div class="accordion-body" id="answerBody_${responseMessage._id}">
+            <div class="accordion-body" id="answerBody_${responseMessage._id}">
               <h4>Answers</h4>
               <div id="answerPanel_${responseMessage._id}">
                   <hr />
@@ -124,9 +117,9 @@
                   <hr />
               </div>
 
-              <form class="answerForm" id="answerForm_${responseMessage._id}" method="POST">
+              <form class="answerForm" id="answerForm_${responseMessage._id}" method="POST" onclick="submitAnswer(event)">
                 <div class="mb-3">
-                  <label for="answerText" class="form-label">Answer this
+                  <label for="answerText_${responseMessage._id}" class="form-label">Answer this
                     question</label>
                   <input
                     type="text"
@@ -134,10 +127,9 @@
                     class="form-control"
                     id="answerText_${responseMessage._id}"
                   />
-                  
                   <input
                     type="hidden"
-                    value="User1"
+                    value="${responseMessage.questionBy}"
                     name="answerBy"
                     id="answerBy_${responseMessage._id}"
                   />
@@ -157,6 +149,7 @@
         $("#collapsePostQ").removeClass("show");
         $("#question").val("");
       });
+      window.location.reload();
     } catch (e) {
       console.log(e);
     }
@@ -205,3 +198,46 @@
     }
   });
 })(window.jQuery);
+
+//Answer AJAX call
+// function submitAnswer(event) {
+//   event.preventDefault();
+//   try {
+//     var qID = event.currentTarget.id;
+//     qID = qID.replace("answerForm_", "");
+//     var requestConfig = {
+//       method: $("#method_" + qID).val(),
+//       url: "/qAndA/" + qID,
+//       dataType: "json",
+//       data: {
+//         answerBy: $("#answerBy_" + qID).val(),
+//         //answer: values["answerText"],
+//         answer: $("#answerText_" + qID).val(),
+//       },
+//     };
+
+//     $.ajax(requestConfig).then(function (responseMessage) {
+//       if ($(`#answerPanel_${responseMessage._id} .answerBlock`).length > 0) {
+//         var newHTML = `<hr />
+//                   <div>
+//                     <div>Answer: ${responseMessage.answer.answer}</div>
+//                     <div>User: ${responseMessage.answer.answeredBy}</div>
+//                   </div>
+//                   <hr />`;
+//         $(`#answerPanel_${responseMessage._id}`).append(newHTML);
+//       } else {
+//         var newHTML = `<hr />
+//                   <div>
+//                     <div>Answer: ${responseMessage.answer.answer}</div>
+//                     <div>User: ${responseMessage.answer.answeredBy}</div>
+//                   </div>
+//                   <hr />`;
+//         $(`#answerPanel_${responseMessage._id}`).empty().append(newHTML);
+//       }
+
+//       $("#answerText_" + qID).val("");
+//     });
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
