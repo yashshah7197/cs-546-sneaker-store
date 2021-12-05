@@ -3,7 +3,10 @@
 
     
 $(document).ready(function(){
+    $('.alert').alert('close')
     $("select").change(function(){
+        $('.alert').alert('close')
+
         // alert("The text has been changed."+$("#size").val());
         var nameArr = $("#size").val().split(',');
         console.log(nameArr[0]);
@@ -28,9 +31,13 @@ $(document).ready(function(){
     });
 
   });
+  $("#buy").click(function(event) {
+    alert("Order has been Placed!");
+
+});
 
   $("#notify").click(function(event) {
-      alert("You will be Notified by Email when stock is updated.!!!!!");
+      $('.alert').alert()
 
   });
 })(window.jQuery);

@@ -103,10 +103,10 @@ router.get("/sneaker/:id", async (req, res) => {
   }
 });
 //User updates sneaker
-router.get("/listedByUpdate/:id", async (req, res) => {
+router.get("/listedByUpdate", async (req, res) => {
   try {
-    console.log(req.params.id);
-    const sneaker = await sneakersData.get(req.params.id);
+    
+    const sneaker = await sneakersData.get(req.session.user);
     console.log(sneaker);
 
     res.render("store/sneakerUpdate", {
@@ -181,12 +181,19 @@ router.post("/buy", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
+    if(!req.session.user)
+    {
+        res.redirect("/users/login")
+    }
+    else
+    {
     const sneakers = await sneakersData.buySneaker(
-      "61a6ba5f5bbbf22fa2eb3341",
+      req.session.user,
       sneakerId,
       size
     );
-    res.redirect("/sneakers/BuyList/61a6ba5f5bbbf22fa2eb3341");
+    res.redirect("/sneakers/BuyList/"+req.session.user);
+    }
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -197,12 +204,19 @@ router.post("/notify", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
+    if(!req.session.user)
+    {
+        res.redirect("/users/login")
+    }
+    else
+    {
     const sneakers = await sneakersData.notifySneaker(
-      "61a6ba5f5bbbf22fa2eb3341",
+      req.session.user,
       sneakerId,
       size
     );
     res.redirect("/sneakers//sneaker/"+sneakerId);
+    }
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
