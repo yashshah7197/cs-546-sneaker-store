@@ -39,6 +39,7 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
     );
     res.render("store/sneakerAdded", {
       sneaker: sneakerAdded,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -57,6 +58,7 @@ router.get("/listedBy/:id", async (req, res) => {
 
     res.render("store/sneakerListedby", {
       sneakers: sneakers,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -70,6 +72,7 @@ router.get("/", async (req, res) => {
     res.render("store/sneakersList", {
       title: "Shop",
       sneakers: sneakers,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -91,6 +94,7 @@ router.get("/sneaker/:id", async (req, res) => {
       sneaker: sneaker,
       review: rev,
       qAndAs: qAndA,
+      isLoggedIn: !!req.session.user,
       partial: "shop-scripts",
     });
   } catch (e) {
@@ -112,6 +116,7 @@ router.get("/listedByUpdate/:id", async (req, res) => {
     res.render("store/sneakerUpdate", {
       title: "Update",
       sneaker: sneaker,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
     //  console.log("hell2");
@@ -126,6 +131,7 @@ router.get("/BuyList/:id", async (req, res) => {
     res.render("store/sneakerBuyList", {
       title: "Shop",
       sneaker: sneaker,
+      isLoggedIn: !!req.session.user,
       partial: "shop-scripts",
     });
     // console.log("hell2");
@@ -152,12 +158,14 @@ router.post("/search", async (req, res) => {
     if (sneakers.length > 0) {
       res.render("store/sneakersList", {
         sneakers: sneakers,
+        isLoggedIn: !!req.session.user,
         partial: "empty-scripts",
       });
     } else {
       res.render("store/sneakersList", {
         title: "Shop",
         sneakers: sneakers,
+        isLoggedIn: !!req.session.user,
         error: "No results found",
         partial: "empty-scripts",
       });
@@ -171,6 +179,7 @@ router.get("/sell", async (req, res) => {
   try {
     res.render("store/sneakerSell", {
       title: "Add Sneaker",
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
