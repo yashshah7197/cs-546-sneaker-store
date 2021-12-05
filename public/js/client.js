@@ -9,19 +9,19 @@ $(document).ready(function(){
         console.log(nameArr[0]);
         if( $("#size").val()==0)
         {
-            $("#notify").attr("disabled", true);  
+            document.getElementById("notify").hidden=true;
             $("#buy").attr("disabled", true);  
         }
         else if(nameArr[1]<=0)
         {
-            $("#notify").attr("disabled", false);  
+            document.getElementById("notify").hidden=false;
             $("#buy").attr("disabled", true);  
 
 
          }        
         else
         {
-            $("#notify").attr("disabled", true);  
+            document.getElementById("notify").hidden=true;
             $("#buy").attr("disabled", false);  
             
         }
