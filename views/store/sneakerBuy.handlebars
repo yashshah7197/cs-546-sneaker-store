@@ -5,36 +5,42 @@
   </div>{{/if}}
 
 {{#if sneaker}}
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h2>{{sneaker.modelName}}</h2>
-        <p> {{sneaker.brandName}} </p>
-        <img
-          class="img-thumbnail"
-          src={{sneaker.images}}
-          alt="{{sneaker.modelName}}"
-        />
-      </div>
-      <div class="col">
-        <form id="sneakerBuyForm"  method="post">
-          <div>
-            <p>Price : {{sneaker.price}}$</p>
-          </div>
-          <div>
-            <label for="size">Select size:</label>
-            <select name="size" id="size">
-               <option value=0>Size</option>
+    <div class="row align-items-center justify-content-center g-0 min-vh-100 mt-4 mb-4">
+        <div class="col-lg-10 col-md-8 py-8 py-xl-0">
+            <!-- Card -->
+            <div class="card shadow ">
+                <!-- Card body -->
+                <div class="card-body p-6">
+                    <div class="mb-4">
+                        <div class="row">
+                            <div class="col">
+                                <h2>{{sneaker.modelName}}</h2>
+                                <p> {{sneaker.brandName}} </p>
+                                <img
+                                        class="img-thumbnail"
+                                        src="/public/images/shoe2.png"
+                                        alt="{{sneaker.modelName}}"
+                                />
+                            </div>
+                            <div class="col">
+                                <form id="sneakerBuyForm"  method="post">
+                                    <div>
+                                        <p>Price : {{sneaker.price}}$</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="size" class="form-label">Select Size</label>
+                                        <select class="form-select" id="size" required="" name="size">
+                                            <option value=0>Size</option>
+                                            {{#sneaker.sizesAvailable}}
+                                                <option value={{size}},{{quantity}} >{{size}}</option>
+                                            {{/sneaker.sizesAvailable}}
+                                        </select>
+                                    </div>
 
-              {{#sneaker.sizesAvailable}}
-                <option value={{size}},{{quantity}} >{{size}}</option>
-              {{/sneaker.sizesAvailable}}
-            </select>
-          </div>
-          <input type="text" value={{sneaker._id}} name="id" hidden />
+                                    <input type="text" value={{sneaker._id}} name="id" hidden />
 
-          <br>
-          <div>
+                                    <br>
+                                    <div>
 
           <input type="submit" value="Buy" id="buy" formaction="/sneakers/buy" disabled />
           
@@ -179,89 +185,8 @@
                       </div>
                       <hr />
                     </div>
-                  {{/each}}
-                {{else}}
-                  <hr />
-                  <div>No answers</div>
-                  <hr />
-                {{/if}}
-
-              </div>
-
-              {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
-              <form class="answerForm" id="answerForm_{{_id}}" method="POST">
-                <div class="mb-3">
-                  <label for="answerText" class="form-label">Answer this
-                    question</label>
-                  <input
-                    type="text"
-                    name="answerText"
-                    class="form-control"
-                    id="answerText_{{_id}}"
-                  />
-                  {{! To be changed to userId from cookie }}
-                  <input
-                    type="hidden"
-                    value="User1"
-                    name="answerBy"
-                    id="answerBy_{{_id}}"
-                  />
-                  <input
-                    type="hidden"
-                    name="_method"
-                    value="put"
-                    id="method_{{_id}}"
-                  />
-                  <input type="submit" value="Submit" />
                 </div>
-              </form>
             </div>
-          </div>
         </div>
-      {{/each}}
     </div>
-
-    <br />
-    <div class="accordion" id="accordionPostQ">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingPostQ">
-          <button
-            class="accordion-button"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapsePostQ"
-            aria-expanded="true"
-            aria-controls="collapsePostQ"
-          >
-            Ask your questions
-          </button>
-        </h2>
-        <div
-          id="collapsePostQ"
-          class="accordion-collapse collapse"
-          aria-labelledby="headingOne"
-          data-bs-parent="#accordionPostQ"
-        >
-          <div class="accordion-body">
-            <form id="questionForm" id="" method="post" action="/qAndA/">
-              <div class="mb-3">
-                <label for="question" class="form-label">Question</label>
-                <input
-                  id="question"
-                  name="question"
-                  class="form-control"
-                  type="text"
-                  aria-label="default input example"
-                />
-              </div>
-              {{! To be changed to userId from cookie }}
-              <input type="hidden" value="User1" name="questionBy" />
-              <input type="hidden" value={{sneaker._id}} name="qAndAFor" />
-              <input type="submit" value="Submit" id="questionSubmit" />
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 {{/if}}
