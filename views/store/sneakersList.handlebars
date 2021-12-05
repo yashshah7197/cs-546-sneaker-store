@@ -1,25 +1,30 @@
 {{#if error}}
-  <div class="alert alert-primary" role="alert">
-    {{error}}
-  </div>
+    <div class="alert alert-primary" role="alert">
+        {{error}}
+    </div>
 {{/if}}
 
-<div class="container">
-  <div class="row">
-    {{#each sneakers}}
-      <div class="col-sm-4">
-        <div class="card">
-          <img class="card-img-top" src="{{images}}" alt="Card image cap" />
-          <div class="card-body">
-            <h5 class="card-title">{{modelName}}</h5>
-            <p class="card-text">{{brandName}}</p>
-            <p>Price : {{price}}$</p>
-            <form action="/sneakers/sneaker/{{_id}}" method="get">
-              <input type="submit" value="View" />
-            </form>
-          </div>
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {{#each sneakers}}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img src="public/images/shoe2.png" alt="shoe" width="200" class="card-img-top">
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{modelName}}</h5>
+                            <p class="card-text">{{brandName}}</p>
+                            <p class="card-text">${{price}}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="/sneakers/sneaker/{{_id}}" class="btn btn-sm btn-outline-primary">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
         </div>
-      </div>
-    {{/each}}
-  </div>
+    </div>
 </div>
