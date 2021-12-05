@@ -39,6 +39,7 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
     );
     res.render("store/sneakerAdded", {
       sneaker: sneakerAdded,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -57,6 +58,7 @@ router.get("/listedBy/:id", async (req, res) => {
 
     res.render("store/sneakerListedby", {
       sneakers: sneakers,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -70,6 +72,7 @@ router.get("/", async (req, res) => {
     res.render("store/sneakersList", {
       title: "Shop",
       sneakers: sneakers,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -97,6 +100,7 @@ router.get("/sneaker/:id", async (req, res) => {
       sneaker: sneaker,
       review: rev,
       qAndAs: qAndA,
+      isLoggedIn: !!req.session.user,
       partial: "shop-scripts",
     });
   } catch (e) {
@@ -110,15 +114,15 @@ router.get("/sneaker/:id", async (req, res) => {
   }
 });
 //User updates sneaker
-router.get("/listedByUpdate/:id", async (req, res) => {
+router.get("/listedByUpdate", async (req, res) => {
   try {
-    console.log(req.params.id);
-    const sneaker = await sneakersData.get(req.params.id);
+    const sneaker = await sneakersData.get(req.session.user);
     console.log(sneaker);
 
     res.render("store/sneakerUpdate", {
       title: "Update",
       sneaker: sneaker,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
     //  console.log("hell2");
@@ -133,6 +137,7 @@ router.get("/BuyList/:id", async (req, res) => {
     res.render("store/sneakerBuyList", {
       title: "Shop",
       sneaker: sneaker,
+      isLoggedIn: !!req.session.user,
       partial: "shop-scripts",
     });
     // console.log("hell2");
@@ -140,6 +145,7 @@ router.get("/BuyList/:id", async (req, res) => {
     res.status(404).json({ message: " There is no Sneaker with that ID" });
   }
 });
+
 router.get("/delete/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.remove(req.params.id);
@@ -158,12 +164,14 @@ router.post("/search", async (req, res) => {
     if (sneakers.length > 0) {
       res.render("store/sneakersList", {
         sneakers: sneakers,
+        isLoggedIn: !!req.session.user,
         partial: "empty-scripts",
       });
     } else {
       res.render("store/sneakersList", {
         title: "Shop",
         sneakers: sneakers,
+        isLoggedIn: !!req.session.user,
         error: "No results found",
         partial: "empty-scripts",
       });
@@ -177,6 +185,7 @@ router.get("/sell", async (req, res) => {
   try {
     res.render("store/sneakerSell", {
       title: "Add Sneaker",
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -187,12 +196,16 @@ router.post("/buy", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
-    const sneakers = await sneakersData.buySneaker(
-      "61a6ba5f5bbbf22fa2eb3341",
-      sneakerId,
-      size
-    );
-    res.redirect("/sneakers/BuyList/61a6ba5f5bbbf22fa2eb3341");
+    if (!req.session.user) {
+      res.redirect("/users/login");
+    } else {
+      const sneakers = await sneakersData.buySneaker(
+        req.session.user,
+        sneakerId,
+        size
+      );
+      res.redirect("/sneakers/BuyList/" + req.session.user);
+    }
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
@@ -203,15 +216,20 @@ router.post("/notify", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
-    const sneakers = await sneakersData.notifySneaker(
-      "61a6ba5f5bbbf22fa2eb3341",
-      sneakerId,
-      size
-    );
-    res.redirect("/sneakers//sneaker/" + sneakerId);
+    if (!req.session.user) {
+      res.redirect("/users/login");
+    } else {
+      const sneakers = await sneakersData.notifySneaker(
+        req.session.user,
+        sneakerId,
+        size
+      );
+      res.redirect("/sneakers//sneaker/" + sneakerId);
+    }
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
 });
+
 module.exports = router;

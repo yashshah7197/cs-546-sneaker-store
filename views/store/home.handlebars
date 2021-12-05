@@ -1,87 +1,142 @@
-<div>
-  <div
-    id="carouselExampleCaptions"
-    class="carousel slide"
-    data-bs-ride="carousel"
-  >
+<div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
-      <button
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide-to="0"
-        class="active"
-        aria-current="true"
-        aria-label="Slide 1"
-      ></button>
-      <button
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide-to="1"
-        aria-label="Slide 2"
-      ></button>
-      <button
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide-to="2"
-        aria-label="Slide 3"
-      ></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+                aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
     <div class="carousel-inner">
-      <div class="carousel-item active">
-        <a href="/sneakers/"><img
-            src="../../public/images/LP1.jpeg"
-            class="d-block w-100"
-            alt="Air Force 1"
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>WELCOME</h5>
-            <p>The new WORLD of Sneakers</p>
-          </div></a>
+        <div class="carousel-item active">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <rect width="100%" height="100%" fill="#212529"/>
+            </svg>
 
-      </div>
-      <div class="carousel-item">
-        <a href="/sneakers/">
-          <img
-            src="../../public/images/LP2.jpeg"
-            class="d-block w-100"
-            alt="..."
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>BUY</h5>
-            <p>Buy your favorite kicks</p>
-          </div></a>
-      </div>
-      <div class="carousel-item">
-        <a href="/sneakers/sell">
-          <img
-            src="../../public/images/LP3.jpeg"
-            class="d-block w-100"
-            alt="..."
-          />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>SELL</h5>
-            <p>Sell your own sneakers</p>
-          </div>
-        </a>
-      </div>
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>Snag The Latest Air Jordan 1s!</h1>
+                    <p>Now at a mouthwatering FLAT 50% off!</p>
+                    <p><a class="btn btn-lg btn-primary" href="/sneakers">Buy Now</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <rect width="100%" height="100%" fill="#212529"/>
+            </svg>
+
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>Check out the latest sneakers!</h1>
+                    <p>Browse our latest collection of Adidas, Nike and Puma sneakers!</p>
+                    <p><a class="btn btn-lg btn-primary" href="/sneakers">Go To Catalog</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                 aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <rect width="100%" height="100%" fill="#212529"/>
+            </svg>
+
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>Sell Your Own Sneakers!</h1>
+                    <p>Show off your sneakers and make some money!</p>
+                    <p><a class="btn btn-lg btn-primary" href="/sneakers ">Sell Now</a></p>
+                </div>
+            </div>
+        </div>
     </div>
-    <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#carouselExampleCaptions"
-      data-bs-slide="prev"
-    >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
     </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#carouselExampleCaptions"
-      data-bs-slide="next"
-    >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
     </button>
-  </div>
 </div>
+
+
+<!-- Marketing messaging and featurettes
+================================================== -->
+<!-- Wrap the rest of the page in another container to center all the content. -->
+
+<div class="container marketing">
+
+    <div class="title">
+        <h1>Our Top Brands</h1>
+    </div>
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row">
+        <div class="col-lg-4">
+            <img src="public/images/adidas.png" alt="adidas" height="240">
+            <h2>Adidas</h2>
+            <p>Browse our latest collection of Adidas sneakers!</p>
+            <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+            <img src="public/images/nike.png" alt="nike" height="240">
+
+            <h2>Nike</h2>
+            <p>Browse our latest collection of awesome Nike sneakers!</p>
+            <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+            <img src="public/images/puma.jpeg" alt="puma" width="240", height="240">
+
+            <h2>Puma</h2>
+            <p>Browse our latest collection of Puma sneakers!</p>
+            <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">Best in class. <span
+                    class="text-muted">It’ll blow your mind!</span></h2>
+            <p class="lead">You won't find better quality sneakers. Guaranteed!</p>
+        </div>
+        <div class="col-md-5">
+            <img src="public/images/shoe3.png" width="500" height="500" alt="shoe">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Want more colors? <span class="text-muted">Unlimited variety!</span>
+            </h2>
+            <p class="lead">We have sneakers in all shapes, sizes and colors! Take your pick!</p>
+        </div>
+        <div class="col-md-5 order-md-1">
+            <img src="public/images/shoe1.png" width="500" height="500" alt="shoe">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">Fits like a glove. <span class="text-muted">Perfectly!</span></h2>
+            <p class="lead">The fit of our sneakers is so good, you won't buy them from anywhere else henceforth!</p>
+        </div>
+        <div class="col-md-5">
+            <img src="public/images/shoe2.png" width="500" height="500" alt="shoe">
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <!-- /END THE FEATURETTES -->
+
+</div><!-- /.container -->
