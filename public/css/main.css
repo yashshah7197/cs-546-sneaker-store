@@ -56,3 +56,7 @@
 .accordion-body {
   background-color: beige;
 }
+
+#reviewFormError {
+  display: none;
+}

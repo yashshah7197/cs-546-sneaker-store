@@ -2,29 +2,43 @@
   var answerForm = $(".answerForm");
   var questionForm = $("#questionForm");
   var reviewForm = $("#reviewForm");
+  var reviewFormError = $("#reviewFormError");
+  var reviewErrorMsg = $("#reviewErrorMsg");
 
   //Add review AJAX call
   reviewForm.submit(function (event) {
     event.preventDefault();
     debugger;
     try {
-      var values = {};
+      var reviewedByElem = $("#reviewedBy");
+      var reviewForElem = $("#reviewFor");
+      var reviewTitleElem = $("#reviewTitle");
+      var reviewTextElem = $("#reviewText");
+      var reviewRatingElem = $("#reviewRating");
 
-      var x = $("#reviewForm").serializeArray();
-      $.each(x, function (i, field) {
-        values[field.name] = field.value;
-      });
+      checkInputStr(reviewedByElem.val(), "reviewedBy");
+      checkInputStr(reviewForElem.val(), "reviewFor");
+      checkInputStr(reviewTitleElem.val(), "reviewTitle");
+      checkInputStr(reviewTextElem.val(), "reviewText");
+      checkIsNumber(Number(reviewRatingElem.val()), "reviewRating");
+      checkRating(Number(reviewRatingElem.val()));
+
+      // var values = {};
+      // var x = $("#reviewForm").serializeArray();
+      // $.each(x, function (i, field) {
+      //   values[field.name] = field.value;
+      // });
 
       var requestConfig = {
         method: "POST",
         url: "/reviews/",
         dataType: "json",
         data: {
-          reviewedBy: values["reviewedBy"],
-          reviewFor: values["reviewFor"],
-          reviewTitle: values["reviewTitle"],
-          reviewText: values["reviewText"],
-          reviewRating: values["reviewRating"],
+          reviewedBy: reviewedByElem.val(),
+          reviewFor: reviewForElem.val(),
+          reviewTitle: reviewTitleElem.val(),
+          reviewText: reviewTextElem.val(),
+          reviewRating: reviewRatingElem.val(),
         },
       };
 
@@ -63,6 +77,9 @@
       });
     } catch (e) {
       console.log(e);
+      const message = typeof e === "string" ? e : e.message;
+      reviewErrorMsg.innerText = message;
+      //reviewFormError.style.display = "block";
     }
   });
 

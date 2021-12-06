@@ -108,8 +108,12 @@
           data-bs-parent="#accordionPostReview"
         >
           <div class="accordion-body">
-            <form id="reviewForm" method="post" action="/reviews/">
+            <form id="reviewForm" method="post" action="/reviews/" >
               <div class="mb-3">
+                 {{!-- <div class="alert alert-danger" id="reviewFormError" role="alert">
+                  Error!
+                  <div id="reviewErrorMsg">error message</div>
+                  </div>  --}}
                 <label for="reviewTitle" class="form-label">Title</label>
                 <input
                   id="reviewTitle"
@@ -135,8 +139,8 @@
                 />
               </div>
               {{! To be changed to userId from cookie }}
-              <input type="hidden" value="{{userID}}" name="reviewedBy" />
-              <input type="hidden" value="{{sneaker._id}}" name="reviewFor" />
+              <input type="hidden" value="{{userID}}" name="reviewedBy" id="reviewedBy" />
+              <input type="hidden" value="{{sneaker._id}}" name="reviewFor" id="reviewFor" />
               <input type="submit" value="Submit" id="reviewSubmit" />
             </form>
           </div>
@@ -192,7 +196,7 @@
 
               {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
               <form class="answerForm" id="answerForm_{{_id}}" method="POST" onclick="submitAnswer(event)">
-                <div class="mb-3">
+                <div class="mb-3">   
                   <label for="answerText_{{_id}}" class="form-label">Answer this
                     question</label>
                   <input
@@ -227,7 +231,7 @@
       <div class="accordion-item">
         <h2 class="accordion-header" id="headingPostQ">
           <button
-            class="accordion-button"
+            git class="accordion-button"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#collapsePostQ"
