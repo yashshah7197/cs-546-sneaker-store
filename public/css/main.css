@@ -57,6 +57,6 @@
   background-color: beige;
 }
 
-#reviewFormError {
-  display: none;
+.sneakerListImg {
+  width: 350px !important;
 }

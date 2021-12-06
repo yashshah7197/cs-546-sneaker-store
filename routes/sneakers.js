@@ -183,6 +183,10 @@ router.post("/search", async (req, res) => {
 
 router.get("/sell", async (req, res) => {
   try {
+    if (!req.session.user) {
+      res.redirect("/users/login");
+      return;
+    }
     res.render("store/sneakerSell", {
       title: "Add Sneaker",
       isLoggedIn: !!req.session.user,

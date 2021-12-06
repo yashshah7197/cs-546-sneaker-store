@@ -18,7 +18,7 @@
                                 <p> {{sneaker.brandName}} </p>
                                 <img
                                         class="img-thumbnail"
-                                        src="/public/images/shoe2.png"
+                                        src="{{sneaker.images}}"
                                         alt="{{sneaker.modelName}}"
                                 />
                             </div>
@@ -110,10 +110,10 @@
           <div class="accordion-body">
             <form id="reviewForm" method="post" action="/reviews/" >
               <div class="mb-3">
-                 {{!-- <div class="alert alert-danger" id="reviewFormError" role="alert">
-                  Error!
-                  <div id="reviewErrorMsg">error message</div>
-                  </div>  --}}
+                <div class="alert alert-danger d-none" role="alert" id="reviewFormError">
+                  Error
+                  <p id="reviewErrorMsg"></p>
+                </div>
                 <label for="reviewTitle" class="form-label">Title</label>
                 <input
                   id="reviewTitle"
@@ -196,7 +196,11 @@
 
               {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
               <form class="answerForm" id="answerForm_{{_id}}" method="POST" onclick="submitAnswer(event)">
-                <div class="mb-3">   
+                <div class="mb-3">
+                   {{!-- <div class="alert alert-danger d-none" role="alert" id="ansFormError_{{_id}}">
+                    Error
+                    <p id="ansErrorMsg_{{_id}}"></p>
+                  </div> --}}
                   <label for="answerText_{{_id}}" class="form-label">Answer this
                     question</label>
                   <input
@@ -249,7 +253,12 @@
         >
           <div class="accordion-body">
             <form id="questionForm" method="post">
+              
               <div class="mb-3">
+                <div class="alert alert-danger d-none" role="alert" id="quesFormError">
+                  Error
+                  <p id="quesErrorMsg"></p>
+                </div>
                 <label for="question" class="form-label">Question</label>
                 <input
                   id="question"
