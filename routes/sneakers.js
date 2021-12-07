@@ -125,12 +125,15 @@ router.get("/sneaker/:id", async (req, res) => {
     //res.status(404).json({ message: " There is no Sneaker with that ID" + e });
   }
 });
-//User updates sneaker
-router.get("/listedByUpdate", async (req, res) => {
-  try {
-    const sneaker = await sneakersData.get(req.session.user);
-    console.log(sneaker);
 
+
+
+//User updates sneaker
+router.get("/listedByUpdate/:id", async (req, res) => {
+  try {
+    const sneaker = await sneakersData.get(req.params.id);
+    console.log(sneaker);
+  
     res.render("store/sneakerUpdate", {
       title: "Update",
       sneaker: sneaker,
@@ -142,6 +145,31 @@ router.get("/listedByUpdate", async (req, res) => {
     res.status(404).json({ message: " There is no Sneaker with that ID" });
   }
 });
+
+router.post("/updateSneakerNotifyBuyer", async (req, res) => {
+  try {
+    let x=req.body.id;
+    const sneaker = await sneakersData.get(x);
+    console.log(sneaker);
+    // const update=await sneakersData(sneakerId,
+    // brandName,
+    // modelName,
+    // sizesAvailable,
+    // price,
+    // images,
+    // reviews,
+    // overallRating,
+    // qAndA,
+    // listedBy,
+    // notify);
+    
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
+
 router.get("/BuyList", async (req, res) => {
   try {
     let id=req.session.user;
@@ -215,8 +243,8 @@ router.post("/buy", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
-    validation.checkInputStr(sneakerId);
-    validation.checkInputStr(size);
+    // validation.checkInputStr(sneakerId);
+    // validation.checkInputStr(size);
     if (!req.session.user) {
       res.redirect("/users/login");
     } else {

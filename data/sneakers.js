@@ -47,36 +47,36 @@ const create = async (
 
   //Added by Hamza || To update user Sneakers Listed field on sneaker creation
 
-  // const newId = insertInfo.insertedId;
+  const newId = insertInfo.insertedId;
 
-  // let sneaker = await get(newId);
+  let sneaker = await get(newId);
 
-  // const usersCollection = await users();
+  const usersCollection = await users();
 
-  // //Check if the restaurant with the given id exists
-  // const userInfo = await usersCollection.findOne({
-  //   _id: ObjectId(sneaker.listedBy),
-  // });
-  // if (userInfo === null) {
-  //   throw "No user with that id.";
-  // }
+  //Check if the restaurant with the given id exists
+  const userInfo = await usersCollection.findOne({
+    _id: ObjectId(sneaker.listedBy),
+  });
+  if (userInfo === null) {
+    throw "No user with that id.";
+  }
 
-  // let userSneakerListed = userInfo.sneakersListed;
+  let userSneakerListed = userInfo.sneakersListed;
 
-  // userSneakerListed.push(newId);
+  userSneakerListed.push(newId);
 
   //Update new review object to review collection
-  // const updateInfo = await usersCollection.updateOne(
-  //   { _id: userInfo._id },
-  //   { $set: { sneakersListed: userSneakerListed } }
-  // );
-  // if (updateInfo.modifiedCount === 0) {
-  //   throw "Could not add sneaker to the user document.";
-  // }
+  const updateInfo = await usersCollection.updateOne(
+    { _id: userInfo._id },
+    { $set: { sneakersListed: userSneakerListed } }
+  );
+  if (updateInfo.modifiedCount === 0) {
+    throw "Could not add sneaker to the user document.";
+  }
 
-  // sneaker = await get(newId);
+  sneaker = await get(newId);
 
-  // sneaker._id = sneaker._id.toString();
+  sneaker._id = sneaker._id.toString();
 
   return insertInfo.insertedCount;
 };
@@ -95,7 +95,6 @@ const getAllListedBy = async (listedBy) => {
 };
 const getAllBuyList = async (userId) => {
   const sneakersCollection = await sneakers();
-  validation.checkInputStr(userId);
 
   const u = await user.get(userId);
   const sneakerList = [];
@@ -111,7 +110,6 @@ const getAllBuyList = async (userId) => {
 const get = async (sneakerId) => {
   const sneakersCollection = await sneakers();
   const review = await reviews();
-  validation.checkInputStr(sneakerId);
 
   const rest = await sneakersCollection.findOne({ _id: ObjectId(sneakerId) });
   if (rest === null) throw "No Sneakers with that id";
@@ -142,20 +140,7 @@ const update = async (
   notify
 ) => {
   try {
-    validation.checkInputStr(sneakerId);
-    validation.checkInputStr(reviews);
-    validation.checkInputStr(sneakerId);
-    validation.checkInputStr(overallRating);
-    validation.checkInputStr(qAndA);
-    validation.checkInputStr(listedBy);
-    validation.checkInputStr(notify);
-    validation.checkInputStr(brandName);
-    validation.checkInputStr(modelName);
-    validation.checkInputStr(price);
-    validation.checkInputStr(images);
-    validation.checkIsChar(brandName);
-    validation.checkIsChar(modelName);
-    validation.checkIsChar(images);
+   
   
     sneakerId = ObjectId(sneakerId.trim());
   } catch (e) {
@@ -164,6 +149,14 @@ const update = async (
       message: "Could not parse the user id in to a valid ObjectId!",
     };
   }
+  validation.checkInputStr(listedBy);
+  validation.checkInputStr(brandName);
+  validation.checkInputStr(modelName);
+  validation.checkInputStr(price);
+  validation.checkInputStr(images);
+  validation.checkIsChar(brandName);
+  validation.checkIsChar(modelName);
+  validation.checkIsChar(images);
 
   const sneaker = await get(sneakerId.toString());
   const updatedSneaker = {
@@ -198,7 +191,6 @@ const update = async (
 
 const remove = async (sneakerId) => {
   const rest = await sneakers();
-validation.checkInputStr(sneakerId);
   const deletionInfo = await rest.deleteOne({ _id: ObjectId(sneakerId) });
   if (deletionInfo.deletedCount === 0) {
     throw `Could not delete post with id of ${id}`;
@@ -208,11 +200,11 @@ validation.checkInputStr(sneakerId);
 
 const buySneaker = async (userId, sneakerId, size1) => {
   let size = size1.split(",");
-  validation.checkInputStr(sneakerId);
-  validation.checkInputStr(size);
-  validation.checkInputStr(userId);
+  // validation.checkInputStr(sneakerId);
+  // validation.checkInputStr(size);
+  // validation.checkInputStr(userId);
 
-  const userInfo = await user.get(userId);
+  const userInfo = await user.get(userId.toString());
   userInfo.sneakersBought[userInfo.sneakersBought.length] = {
     sneakerId: sneakerId,
     size: size[0],
@@ -254,10 +246,7 @@ const buySneaker = async (userId, sneakerId, size1) => {
 };
 const notifySneaker = async (userId, sneakerId, size1) => {
   let size = size1.split(",");
-  validation.checkInputStr(sneakerId);
   validation.checkInputStr(size);
-  validation.checkInputStr(userId);
-
   const sneakerInfo = await get(sneakerId.toString());
   sneakerInfo.notify[sneakerInfo.notify.length] = {
     userId: userId,
@@ -280,6 +269,16 @@ const notifySneaker = async (userId, sneakerId, size1) => {
 
   return updateSneaker;
 };
+
+const notifybuyerWithEmail= async () => 
+{
+
+
+};
+
+
+
+
 module.exports = {
   create,
   getAll,
@@ -290,5 +289,5 @@ module.exports = {
   getAllListedBy,
   getName,
   buySneaker,
-  notifySneaker,
+  notifySneaker,notifybuyerWithEmail
 };
