@@ -2,7 +2,7 @@ const mongoCollections = require("../config/mongoCollections");
 const sneakers = mongoCollections.sneakers;
 const reviews = mongoCollections.reviews;
 const users = mongoCollections.users;
-
+const user=require("../data/users")
 const { ObjectId } = require("mongodb");
 
 const create = async (
@@ -85,9 +85,9 @@ const getAllListedBy = async (listedBy) => {
 const getAllBuyList = async (userId) => {
   const sneakersCollection = await sneakers();
 
-  const user = await users.get(userId);
+  const u = await user.get(userId);
   const sneakerList = [];
-  for (const x of user.sneakersBought) {
+  for (const x of u.sneakersBought) {
     const sneakerInfo = await sneakersCollection.findOne({
       _id: ObjectId(x.sneakerId),
     });
@@ -179,17 +179,17 @@ const remove = async (sneakerId) => {
 
 const buySneaker = async (userId, sneakerId, size1) => {
   let size = size1.split(",");
-  const userInfo = await users.get(userId);
+  const userInfo = await user.get(userId);
   userInfo.sneakersBought[userInfo.sneakersBought.length] = {
     sneakerId: sneakerId,
     size: size[0],
   };
-  const update1 = await users.update(
+  const update1 = await user.update(
     userId,
     userInfo.firstName,
     userInfo.lastName,
     userInfo.email,
-    userInfo.passwordHash,
+    "",
     userInfo.address,
     userInfo.phoneNumber,
     userInfo.isAdmin,

@@ -4,6 +4,8 @@ const data = require("../data");
 const sneakersData = data.sneakers;
 const reviewData = data.reviews;
 const multer = require("multer");
+const validation = require("../data/validate");
+
 
 const fileStorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -29,6 +31,15 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
       { size: 12, quantity: Number(req.body.size12) },
     ];
     let image = "../../" + req.file.path;
+    // validation.checkInputStr(brandName);
+    // validation.checkInputStr(modelName);
+    // validation.checkInputStr(price);
+    // validation.checkInputStr(image);
+    // validation.checkIsChar(brandName);
+    // validation.checkIsChar(modelName);
+    // validation.checkIsChar(image);
+  
+        
     const sneakerAdded = await sneakersData.create(
       brandName,
       modelName,
@@ -54,7 +65,8 @@ const { update } = require("../data/users");
 //User listed sneakers
 router.get("/listedBy/:id", async (req, res) => {
   try {
-    const sneakers = await sneakersData.getAllListedBy(req.params.id);
+    let id=req.params.id;
+    const sneakers = await sneakersData.getAllListedBy(id);
 
     res.render("store/sneakerListedby", {
       sneakers: sneakers,
@@ -82,12 +94,13 @@ router.get("/", async (req, res) => {
 //Changes from "/:id" to add search functionality || Hamza
 router.get("/sneaker/:id", async (req, res) => {
   try {
+    let id=req.params.id;
     if (!req.session.user) {
       res.redirect("/users/login");
       return;
     }
 
-    const sneaker = await sneakersData.get(req.params.id);
+    const sneaker = await sneakersData.get(id);
     let rev = [];
     for (const x of sneaker.reviews) {
       rev.push(await reviewData.get(x));
@@ -132,8 +145,8 @@ router.get("/listedByUpdate", async (req, res) => {
 });
 router.get("/BuyList/:id", async (req, res) => {
   try {
-    const sneaker = await sneakersData.getAllBuyList(req.params.id);
-
+    let id=req.params.id;
+    const sneaker = await sneakersData.getAllBuyList(id);
     res.render("store/sneakerBuyList", {
       title: "Shop",
       sneaker: sneaker,
@@ -147,7 +160,9 @@ router.get("/BuyList/:id", async (req, res) => {
 });
 
 router.get("/delete/:id", async (req, res) => {
+
   try {
+    let id=req.params.id;
     const sneaker = await sneakersData.remove(req.params.id);
     res.redirect("/sneakers/");
   } catch (e) {
@@ -159,6 +174,7 @@ router.get("/delete/:id", async (req, res) => {
 router.post("/search", async (req, res) => {
   try {
     let searchTerm = req.body.searchTerm;
+    validation.checkIsChar(searchTerm);
     const sneakers = await sneakersData.getName(searchTerm);
     //console.log(sneakers);
     if (sneakers.length > 0) {
@@ -200,6 +216,8 @@ router.post("/buy", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
+    validation.checkInputStr(sneakerId);
+    validation.checkInputStr(size);
     if (!req.session.user) {
       res.redirect("/users/login");
     } else {
@@ -220,6 +238,8 @@ router.post("/notify", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
+    validation.checkInputStr(sneakerId);
+    validation.checkInputStr(size);
     if (!req.session.user) {
       res.redirect("/users/login");
     } else {
@@ -228,7 +248,7 @@ router.post("/notify", async (req, res) => {
         sneakerId,
         size
       );
-      res.redirect("/sneakers//sneaker/" + sneakerId);
+      res.redirect("/sneakers/sneaker/" + sneakerId);
     }
   } catch (e) {
     console.log(e);

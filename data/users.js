@@ -141,7 +141,6 @@ const update = async (
     firstName: firstName.trim(),
     lastName: lastName.trim(),
     email: email.toLowerCase().trim(),
-    passwordHash: await hashPassword(password),
     address: address.trim(),
     phoneNumber: phoneNumber.trim(),
     isAdmin: isAdmin,
