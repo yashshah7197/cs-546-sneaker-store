@@ -8,18 +8,18 @@
                     <h1 class="mb-1 fw-bold">Sell a sneaker</h1>
                 </div>
                 <!-- Form -->
-                <form action="/sneakers/updateSneakerNotifyBuyer" method="POST" id="sell-form" enctype="multipart/form-data">
+                <form action="/sneakers/updateSneakerNotifyBuyer" method="POST" >
                     <div class="mb-3">
                                     <input type="text" value="{{sneaker._id}}" name="id" id="id" hidden >
                      
                         <label for="brandName" class="form-label">Brand Name</label>
                         <input type="text" id="brandName" class="form-control" name="brandName"
-                               placeholder="Brand name here" required="">
+                               value="{{sneaker.brandName}}" required="">
                     </div>
                     <div class="mb-3">
                         <label for="modelName" class="form-label">Model Name</label>
                         <input type="text" id="modelName" class="form-control" name="modelName"
-                               placeholder="Model name here" required="">
+                               value="{{sneaker.modelName}}" required="">
                     </div>
                     <div class="mb-3">
                         <label for="size7" class="form-label">Size 7</label>
@@ -52,6 +52,8 @@
                                placeholder="Quantity available here" required="">
                     </div>
                       <label for="price">Price:</label><br />
+                      <input type="number" id="price" class="form-control" name="price"
+                               value="{{sneaker.price}}" required="">
                       <div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">Submit</button>

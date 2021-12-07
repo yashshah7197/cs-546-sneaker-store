@@ -148,20 +148,27 @@ router.get("/listedByUpdate/:id", async (req, res) => {
 
 router.post("/updateSneakerNotifyBuyer", async (req, res) => {
   try {
-    let x=req.body.id;
-    const sneaker = await sneakersData.get(x);
-    console.log(sneaker);
-    // const update=await sneakersData(sneakerId,
-    // brandName,
-    // modelName,
-    // sizesAvailable,
-    // price,
-    // images,
-    // reviews,
-    // overallRating,
-    // qAndA,
-    // listedBy,
-    // notify);
+    const sneaker = await sneakersData.get(req.body.id);
+    let sizesAvailable = [
+      { size: 7, quantity: Number(req.body.size7) },
+      { size: 8, quantity: Number(req.body.size8) },
+      { size: 9, quantity: Number(req.body.size9) },
+      { size: 10, quantity: Number(req.body.size10) },
+      { size: 11, quantity: Number(req.body.size11) },
+      { size: 12, quantity: Number(req.body.size12) },
+    ];
+    const update=await sneakersData.update(req.body.id,
+      req.body.brandName,
+      req.body.modelName,
+    sizesAvailable,
+    req.body.price,
+    sneaker.images,
+    sneaker.reviews,
+    sneaker.overallRating,
+    sneaker.qAndA,
+    sneaker.listedBy,
+    sneaker.notify);
+
     
   } catch (e) {
     console.log(e);
