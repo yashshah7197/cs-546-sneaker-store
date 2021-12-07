@@ -3,6 +3,8 @@ const sneakers = mongoCollections.sneakers;
 const reviews = mongoCollections.reviews;
 const users = mongoCollections.users;
 const user=require("../data/users")
+const validation=require("../data/validate")
+
 const { ObjectId } = require("mongodb");
 
 const create = async (
@@ -14,7 +16,16 @@ const create = async (
   listedBy
 ) => {
   const sneakersCollection = await sneakers();
+  validation.checkInputStr(brandName);
+  validation.checkInputStr(modelName);
+  validation.checkInputStr(price);
+  validation.checkInputStr(listedBy);
+  validation.checkInputStr(images);
+  validation.checkIsChar(brandName);
+  validation.checkIsChar(modelName);
+  validation.checkIsChar(images);
 
+  
   let newSneaker = {
     brandName: brandName,
     modelName: modelName,
@@ -36,38 +47,38 @@ const create = async (
 
   //Added by Hamza || To update user Sneakers Listed field on sneaker creation
 
-  const newId = insertInfo.insertedId;
+  // const newId = insertInfo.insertedId;
 
-  let sneaker = await get(newId);
+  // let sneaker = await get(newId);
 
-  const usersCollection = await users();
+  // const usersCollection = await users();
 
-  //Check if the restaurant with the given id exists
-  const userInfo = await usersCollection.findOne({
-    _id: ObjectId(sneaker.listedBy),
-  });
-  if (userInfo === null) {
-    throw "No user with that id.";
-  }
+  // //Check if the restaurant with the given id exists
+  // const userInfo = await usersCollection.findOne({
+  //   _id: ObjectId(sneaker.listedBy),
+  // });
+  // if (userInfo === null) {
+  //   throw "No user with that id.";
+  // }
 
-  let userSneakerListed = userInfo.sneakersListed;
+  // let userSneakerListed = userInfo.sneakersListed;
 
-  userSneakerListed.push(newId);
+  // userSneakerListed.push(newId);
 
   //Update new review object to review collection
-  const updateInfo = await usersCollection.updateOne(
-    { _id: userInfo._id },
-    { $set: { sneakersListed: userSneakerListed } }
-  );
-  if (updateInfo.modifiedCount === 0) {
-    throw "Could not add sneaker to the user document.";
-  }
+  // const updateInfo = await usersCollection.updateOne(
+  //   { _id: userInfo._id },
+  //   { $set: { sneakersListed: userSneakerListed } }
+  // );
+  // if (updateInfo.modifiedCount === 0) {
+  //   throw "Could not add sneaker to the user document.";
+  // }
 
-  sneaker = await get(newId);
+  // sneaker = await get(newId);
 
-  sneaker._id = sneaker._id.toString();
+  // sneaker._id = sneaker._id.toString();
 
-  return sneaker;
+  return insertInfo.insertedCount;
 };
 
 const getAll = async () => {
@@ -84,6 +95,7 @@ const getAllListedBy = async (listedBy) => {
 };
 const getAllBuyList = async (userId) => {
   const sneakersCollection = await sneakers();
+  validation.checkInputStr(userId);
 
   const u = await user.get(userId);
   const sneakerList = [];
@@ -99,6 +111,7 @@ const getAllBuyList = async (userId) => {
 const get = async (sneakerId) => {
   const sneakersCollection = await sneakers();
   const review = await reviews();
+  validation.checkInputStr(sneakerId);
 
   const rest = await sneakersCollection.findOne({ _id: ObjectId(sneakerId) });
   if (rest === null) throw "No Sneakers with that id";
@@ -106,6 +119,7 @@ const get = async (sneakerId) => {
   return rest;
 };
 const getName = async (sneakerName) => {
+  validation.checkInputStr(sneakerName);
   const sneaker = await sneakers();
   let regEx = new RegExp(sneakerName, "i");
   const sneakerList = await sneaker
@@ -128,6 +142,21 @@ const update = async (
   notify
 ) => {
   try {
+    validation.checkInputStr(sneakerId);
+    validation.checkInputStr(reviews);
+    validation.checkInputStr(sneakerId);
+    validation.checkInputStr(overallRating);
+    validation.checkInputStr(qAndA);
+    validation.checkInputStr(listedBy);
+    validation.checkInputStr(notify);
+    validation.checkInputStr(brandName);
+    validation.checkInputStr(modelName);
+    validation.checkInputStr(price);
+    validation.checkInputStr(images);
+    validation.checkIsChar(brandName);
+    validation.checkIsChar(modelName);
+    validation.checkIsChar(images);
+  
     sneakerId = ObjectId(sneakerId.trim());
   } catch (e) {
     throw {
@@ -169,7 +198,7 @@ const update = async (
 
 const remove = async (sneakerId) => {
   const rest = await sneakers();
-
+validation.checkInputStr(sneakerId);
   const deletionInfo = await rest.deleteOne({ _id: ObjectId(sneakerId) });
   if (deletionInfo.deletedCount === 0) {
     throw `Could not delete post with id of ${id}`;
@@ -179,6 +208,10 @@ const remove = async (sneakerId) => {
 
 const buySneaker = async (userId, sneakerId, size1) => {
   let size = size1.split(",");
+  validation.checkInputStr(sneakerId);
+  validation.checkInputStr(size);
+  validation.checkInputStr(userId);
+
   const userInfo = await user.get(userId);
   userInfo.sneakersBought[userInfo.sneakersBought.length] = {
     sneakerId: sneakerId,
@@ -221,6 +254,10 @@ const buySneaker = async (userId, sneakerId, size1) => {
 };
 const notifySneaker = async (userId, sneakerId, size1) => {
   let size = size1.split(",");
+  validation.checkInputStr(sneakerId);
+  validation.checkInputStr(size);
+  validation.checkInputStr(userId);
+
   const sneakerInfo = await get(sneakerId.toString());
   sneakerInfo.notify[sneakerInfo.notify.length] = {
     userId: userId,

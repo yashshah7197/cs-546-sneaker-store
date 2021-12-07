@@ -33,6 +33,16 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="/sneakers/sell">Sell</a>
                     </li>
+                    {{#if isLoggedIn}}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/sneakers/BuyList">Purchase History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/sneakers/listedBy">Listed Sneakers</a>
+                    </li>
+                    
+                    {{/if}}
+
                 </ul>
                 <form action="/sneakers/search" method="POST" class="d-flex">
                     <input class="form-control me-2" type="search" name="searchTerm" placeholder="Search" aria-label="Search">

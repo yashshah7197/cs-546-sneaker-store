@@ -31,22 +31,21 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
       { size: 12, quantity: Number(req.body.size12) },
     ];
     let image = "../../" + req.file.path;
-    // validation.checkInputStr(brandName);
-    // validation.checkInputStr(modelName);
-    // validation.checkInputStr(price);
-    // validation.checkInputStr(image);
-    // validation.checkIsChar(brandName);
-    // validation.checkIsChar(modelName);
-    // validation.checkIsChar(image);
+    validation.checkInputStr(brandName);
+    validation.checkInputStr(modelName);
+    validation.checkInputStr(price);
+    validation.checkInputStr(image);
+    validation.checkIsChar(brandName);
+    validation.checkIsChar(modelName);
+    validation.checkIsChar(image);
   
-        
     const sneakerAdded = await sneakersData.create(
       brandName,
       modelName,
       sizesAvailable,
       price,
       image,
-      "UserId"
+      req.session.user
     );
     res.render("store/sneakerAdded", {
       sneaker: sneakerAdded,
@@ -63,9 +62,9 @@ const users = data.users;
 const { ObjectId } = require("mongodb");
 const { update } = require("../data/users");
 //User listed sneakers
-router.get("/listedBy/:id", async (req, res) => {
+router.get("/listedBy", async (req, res) => {
   try {
-    let id=req.params.id;
+    let id=req.session.user;
     const sneakers = await sneakersData.getAllListedBy(id);
 
     res.render("store/sneakerListedby", {
@@ -143,9 +142,9 @@ router.get("/listedByUpdate", async (req, res) => {
     res.status(404).json({ message: " There is no Sneaker with that ID" });
   }
 });
-router.get("/BuyList/:id", async (req, res) => {
+router.get("/BuyList", async (req, res) => {
   try {
-    let id=req.params.id;
+    let id=req.session.user;
     const sneaker = await sneakersData.getAllBuyList(id);
     res.render("store/sneakerBuyList", {
       title: "Shop",
@@ -226,7 +225,7 @@ router.post("/buy", async (req, res) => {
         sneakerId,
         size
       );
-      res.redirect("/sneakers/BuyList/" + req.session.user);
+      res.redirect("/sneakers/BuyList" );
     }
   } catch (e) {
     console.log(e);
