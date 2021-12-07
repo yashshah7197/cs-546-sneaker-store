@@ -2,11 +2,13 @@ const mongoCollections = require("../config/mongoCollections");
 const reviews = mongoCollections.reviews;
 const sneakers = mongoCollections.sneakers;
 const validation = require("./validate");
+const usersData = require("./users");
 
 const { ObjectId } = require("mongodb");
 
 const create = async (reviewedBy, reviewFor, title, review, rating) => {
   validation.checkInputStr(reviewedBy, "Reviewed By");
+  //let userID = await usersData.getUserID(reviewedBy);
   //validation.checkValidObjectId(reviewedBy);
   validation.checkInputStr(reviewFor, "Review For");
   //validation.checkValidObjectId(reviewFor);
@@ -64,6 +66,9 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
   //Fetch the newly created review object
   const addedReview = await reviewCollection.findOne({ _id: newId });
 
+  let user = await usersData.get(reviewedBy);
+
+  addedReview.reviewedBy = user.email;
   //Convert objectId to string
   addedReview._id = addedReview._id.toString();
 
@@ -77,7 +82,7 @@ const getAll = async (reviewFor) => {
   //validation.checkValidObjectId(reviewFor);
   const reviewCollection = await reviews();
 
-  const reviewList = await reviewCollection
+  let reviewList = await reviewCollection
     .find({ reviewFor: reviewFor })
     .toArray();
 
@@ -86,8 +91,9 @@ const getAll = async (reviewFor) => {
     return emptyResult;
   }
 
-  reviewList.forEach((obj) => {
-    //Convert objectId to string
+  reviewList.forEach(async (obj) => {
+    let userInfo = await usersData.get(obj.reviewedBy);
+    obj.reviewedBy = userInfo.email;
     obj._id = obj._id.toString();
   });
 
@@ -105,12 +111,15 @@ const get = async (reviewId) => {
   let parsedId = ObjectId(reviewId.trim());
 
   //Check if the review with the given id exists
-  const review = await reviewCollection.findOne({ _id: parsedId });
+  let review = await reviewCollection.findOne({ _id: parsedId });
   if (review === null) {
     throw "No review with that id.";
   }
 
+  let userInfo = await usersData.get(review.reviewedBy);
+
   //Convert ObjectId to string
+  review.reviewedBy = userInfo.email;
   review._id = review._id.toString();
   return review;
 };

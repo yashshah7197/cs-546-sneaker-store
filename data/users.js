@@ -2,7 +2,13 @@ const mongoCollections = require("../config/mongoCollections");
 const users = mongoCollections.users;
 
 const { ObjectId } = require("mongodb");
-const { checkInputStr, checkIfBoolean, checkValidEmail, checkValidPassword, checkValidPhoneNumber} = require("./validate");
+const {
+  checkInputStr,
+  checkIfBoolean,
+  checkValidEmail,
+  checkValidPassword,
+  checkValidPhoneNumber,
+} = require("./validate");
 const bcrypt = require("bcryptjs");
 
 const create = async (
@@ -135,7 +141,6 @@ const update = async (
     firstName: firstName.trim(),
     lastName: lastName.trim(),
     email: email.toLowerCase().trim(),
-    passwordHash: await hashPassword(password),
     address: address.trim(),
     phoneNumber: phoneNumber.trim(),
     isAdmin: isAdmin,
@@ -202,37 +207,53 @@ const checkUser = async (email, password) => {
   const usersCollection = await users();
 
   let user = await usersCollection.findOne({
-    email: email.toLowerCase().trim()
+    email: email.toLowerCase().trim(),
   });
 
   if (!user) {
     throw {
       statusCode: 400,
-      message: "Either the username or password is invalid"
-    }
+      message: "Either the username or password is invalid",
+    };
   }
 
   let passwordMatch = await bcrypt.compare(password, user["passwordHash"]);
   if (!passwordMatch) {
     throw {
       statusCode: 400,
-      message: "Either the username or password is invalid"
-    }
+      message: "Either the username or password is invalid",
+    };
   }
 
   return user;
-}
+};
 
 const hashPassword = async (password) => {
   const saltRounds = 16;
   return await bcrypt.hash(password, saltRounds);
 };
 
+const getUserID = async (username) => {
+  checkInputStr(username);
+
+  const usersCollection = await users();
+
+  const user = await usersCollection.findOne({ email: username });
+  if (user === null) {
+    throw {
+      statusCode: 404,
+      message: "No user was found with the given id!",
+    };
+  }
+
+  return user._id.toString();
+};
 module.exports = {
   create,
   getAll,
   get,
   update,
   remove,
-  checkUser
+  checkUser,
+  getUserID,
 };
