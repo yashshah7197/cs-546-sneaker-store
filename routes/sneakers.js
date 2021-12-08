@@ -21,12 +21,12 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
     let modelName = req.body.modelName;
     let price = req.body.price;
     let sizesAvailable = [
-      { size: 7, quantity: req.body.size7 },
-      { size: 8, quantity: req.body.size8 },
-      { size: 9, quantity: req.body.size9 },
-      { size: 10, quantity: req.body.size10 },
-      { size: 11, quantity: req.body.size11 },
-      { size: 12, quantity: req.body.size12 },
+      { size: 7, quantity: Number(req.body.size7) },
+      { size: 8, quantity: Number(req.body.size8) },
+      { size: 9, quantity: Number(req.body.size9) },
+      { size: 10, quantity: Number(req.body.size10) },
+      { size: 11, quantity: Number(req.body.size11) },
+      { size: 12, quantity: Number(req.body.size12) },
     ];
     let image = "../../" + req.file.path;
     const sneakerAdded = await sneakersData.create(
