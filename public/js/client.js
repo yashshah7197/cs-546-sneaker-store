@@ -21,14 +21,4 @@
   $("#notify").click(function (event) {
     $(".alert").alert();
   });
-
-  // var gimage = document.querySelector("#gimg");
-  var gname = document.querySelector("#gname");
-  var gmail = document.querySelector("#gmail");
-  var gso = document.querySelector("#signout");
-
-  gimage.style.visibility = "hidden";
-  gname.style.visibility = "hidden";
-  gmail.style.visibility = "hidden";
-  gso.style.visibility = "hidden";
 })(window.jQuery);

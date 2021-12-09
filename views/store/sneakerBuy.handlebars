@@ -14,7 +14,7 @@
                     <div class="mb-4">
                         <div class="row">
                             <div class="col">
-                                <h2>{{sneaker.modelName}}</h2>
+                                <h1>{{sneaker.modelName}}</h1>
                                 <p> {{sneaker.brandName}} </p>
                                 <img
                                         class="img-thumbnail"
@@ -30,7 +30,7 @@
                                     <div class="col-md-4">
                                         <label for="size" class="form-label">Select Size</label>
                                         <select class="form-select" id="size" required="" name="size">
-                                            <option value=0>Size</option>
+                                            <option value=0></option>
                                             {{#sneaker.sizesAvailable}}
                                                 <option value={{size}},{{quantity}} >{{size}}</option>
                                             {{/sneaker.sizesAvailable}}
@@ -235,7 +235,7 @@
       <div class="accordion-item">
         <h2 class="accordion-header" id="headingPostQ">
           <button
-            git class="accordion-button"
+            class="accordion-button"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#collapsePostQ"

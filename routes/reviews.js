@@ -3,7 +3,6 @@ const router = express.Router();
 const data = require("../data");
 const reviewsData = data.reviews;
 const validation = require("../data/validate");
-const xss = require("xss");
 
 const { ObjectId } = require("mongodb");
 
@@ -39,12 +38,12 @@ router.post("/", async (req, res) => {
 
   try {
     const review = await reviewsData.create(
-      xss(reviewData.reviewedBy),
-      xss(reviewData.reviewFor),
-      xss(reviewData.reviewTitle),
-      xss(reviewData.reviewText),
+      reviewData.reviewedBy,
+      reviewData.reviewFor,
+      reviewData.reviewTitle,
+      reviewData.reviewText,
       //Number(reviewData.reviewRating)
-      xss(Number(reviewData.reviewRating))
+      Number(reviewData.reviewRating)
     );
     //res.redirect(`/sneakers/${reviewData.reviewFor}`);
     res.status(200).json(review);

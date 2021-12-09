@@ -38,9 +38,10 @@
         },
       };
 
-      $.ajax(requestConfig).then(function (responseMessage) {
-        var accordionReviews = $("#accordionReviews");
-        var newHTML = `<div class="accordion-item">
+      $.ajax(requestConfig)
+        .then(function (responseMessage) {
+          var accordionReviews = $("#accordionReviews");
+          var newHTML = `<div class="accordion-item">
           <h4 class="accordion-header" id="heading_${responseMessage._id}">
             <button
               class="accordion-button"
@@ -65,12 +66,16 @@
             </div>
           </div>
         </div>`;
-        accordionReviews.append(newHTML);
-        $("#collapsePostReview").removeClass("show");
-        $("#reviewTitle").val("");
-        $("#reviewText").val("");
-        $("#reviewRating").val("");
-      });
+          accordionReviews.append(newHTML);
+          $("#collapsePostReview").removeClass("show");
+          $("#reviewTitle").val("");
+          $("#reviewText").val("");
+          $("#reviewRating").val("");
+        })
+        .catch(function (e) {
+          reviewErrorMsg.empty().append(e);
+          reviewFormError.removeClass("d-none");
+        });
     } catch (e) {
       //console.log(e);
       reviewErrorMsg.empty().append(e);
