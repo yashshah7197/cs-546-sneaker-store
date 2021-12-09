@@ -1,0 +1,112 @@
+[
+  {
+    "firstName": "Patrick",
+    "lastName": "Hill",
+    "email": "phill@stevens.edu",
+    "password": "Patrick@1234",
+    "address": "Somewhere in a land, far far away...",
+    "phoneNumber": "123-456-7890",
+    "isAdmin": true,
+    "sneakersListed": [],
+    "sneakersBought": []
+  },
+  {
+    "firstName": "Yash",
+    "lastName": "Shah",
+    "email": "yshah22@stevens.edu",
+    "password": "YashShah@1234",
+    "address": "64 Beach Street, Jersey City, NJ 07307",
+    "phoneNumber": "201-850-0356",
+    "isAdmin": false,
+    "sneakersListed": [],
+    "sneakersBought": []
+  },
+  {
+    "firstName": "Hamza",
+    "lastName": "Buch",
+    "email": "hbuch@stevens.edu",
+    "password": "Hamza@1234",
+    "address": "69 Sherman Avenue, Jersey City, NJ 07307",
+    "phoneNumber": "201-724-9196",
+    "isAdmin": false,
+    "sneakersListed": [],
+    "sneakersBought": []
+  },
+  {
+    "firstName": "Niyati",
+    "lastName": "Bavishi",
+    "email": "nbavish@stevens.edu",
+    "password": "Niyu@1234",
+    "address": "42 Bowers Street, Jersey City, NJ 07307",
+    "phoneNumber": "201-689-6809",
+    "isAdmin": false,
+    "sneakersListed": [],
+    "sneakersBought": []
+  },
+  {
+    "firstName": "Kheevar",
+    "lastName": "Choudhary",
+    "email": "kchoudh@stevens.edu",
+    "password": "Kheevar@1234",
+    "address": "64 Beach Street Unit #2, Jersey City, NJ 07307",
+    "phoneNumber": "201-850-0356",
+    "isAdmin": false,
+    "sneakersListed": [],
+    "sneakersBought": []
+  },
+  {
+    "firstName": "Yash",
+    "lastName": "Gilda",
+    "email": "ygilda@stevens.edu",
+    "password": "YashGilda@1234",
+    "address": "491 Palisade Avenue, Jersey City, NJ 07307",
+    "phoneNumber": "551-689-7766",
+    "isAdmin": false,
+    "sneakersListed": [],
+    "sneakersBought": []
+  },
+  {
+    "firstName": "Malay",
+    "lastName": "Shah",
+    "email": "mshah@stevens.edu",
+    "password": "Malay@1234",
+    "address": "64 Beach Street, Jersey City, NJ 07307",
+    "phoneNumber": "551-689-6931",
+    "isAdmin": false,
+    "sneakersListed": [],
+    "sneakersBought": []
+  },
+  {
+    "firstName": "Meet",
+    "lastName": "Vanani",
+    "email": "mvanani@stevens.edu",
+    "password": "Vanani@1234",
+    "address": "51 Hancock Avenue, Jersey City, NJ 07307",
+    "phoneNumber": "201-279-2275",
+    "isAdmin": false,
+    "sneakersListed": [],
+    "sneakersBought": []
+  },
+  {
+    "firstName": "Pallavi",
+    "lastName": "Jaiswal",
+    "email": "pjaiswal@stevens.edu",
+    "password": "Pallavi@1234",
+    "address": "52 Hancock Avenue, Jersey City, NJ 07307",
+    "phoneNumber": "201-850-0356",
+    "isAdmin": false,
+    "sneakersListed": [],
+    "sneakersBought": []
+  },
+  {
+    "firstName": "Samuel",
+    "lastName": "Williams",
+    "email": "library@stevens.edu",
+    "password": "Samuel@1234",
+    "address": "1 Castle Point Terrace, Hoboken, NJ 07307",
+    "phoneNumber": "201-216-5200",
+    "isAdmin": false,
+    "sneakersListed": [],
+    "sneakersBought": []
+  }
+]
