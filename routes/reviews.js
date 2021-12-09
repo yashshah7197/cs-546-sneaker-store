@@ -10,7 +10,7 @@ router.get("/product/:id", async (req, res) => {
   try {
     validation.checkInputStr(req.params.id, "Review Id");
     //validation.checkValidObjectId(req.params.id);
-    const reviews = await reviewsData.getAll(xss(req.params.id));
+    const reviews = await reviewsData.getAll(req.params.id);
     if (reviews.length > 0) {
       res.status(200).json(reviews);
     } else {
@@ -61,7 +61,7 @@ router.get("/:id", async (req, res) => {
     return;
   }
   try {
-    const review = await reviewsData.get(xss(req.params.id));
+    const review = await reviewsData.get(req.params.id);
     res.status(200).json(review);
   } catch (e) {
     res.status(404).json({ Error: e });
@@ -88,7 +88,7 @@ router.put("/:id", async (req, res) => {
   }
 
   try {
-    await reviewsData.get(xss(req.params.id));
+    await reviewsData.get(req.params.id);
   } catch (e) {
     res.status(404).json({ Error: e });
     return;
@@ -96,12 +96,12 @@ router.put("/:id", async (req, res) => {
 
   try {
     const review = await reviewsData.update(
-      xss(req.params.id),
-      xss(reviewData.reviewedBy),
-      xss(reviewData.reviewFor),
-      xss(reviewData.title),
-      xss(reviewData.review),
-      xss(reviewData.rating)
+      req.params.id,
+      reviewData.reviewedBy,
+      reviewData.reviewFor,
+      reviewData.title,
+      reviewData.review,
+      reviewData.rating
     );
     res.status(200).json(review);
   } catch (e) {
@@ -119,13 +119,13 @@ router.delete("/:id", async (req, res) => {
   }
 
   try {
-    await reviewsData.get(xss(req.params.id));
+    await reviewsData.get(req.params.id);
   } catch (e) {
     res.status(404).json({ Error: e });
     return;
   }
   try {
-    const review = await reviewsData.remove(xss(req.params.id));
+    const review = await reviewsData.remove(req.params.id);
     res.status(200).json(review);
   } catch (e) {
     res.status(500).json({ Error: e });
