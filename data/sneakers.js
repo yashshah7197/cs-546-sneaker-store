@@ -269,6 +269,35 @@ const notifySneaker = async (userId, userName, sneakerId, size1) => {
   return updateSneaker;
 };
 
+const getBrands = async () => {
+  const sneakers = await getAll();
+  return new Set(sneakers.map((s) => s.brandName));
+}
+
+const filter = async (brandName, size, price) => {
+  let sneakers = await getAll();
+
+  if (brandName) {
+    sneakers = sneakers.filter((s) => s.brandName === brandName);
+  }
+
+  if (size) {
+    sneakers = sneakers.filter((s) => {
+      for (let obj of s.sizesAvailable) {
+        if (obj["size"] === size && obj["quantity"] !== 0) {
+          return true;
+        }
+      }
+    });
+  }
+
+  if (price) {
+    sneakers = sneakers.filter((s) => Number(s.price) < price);
+  }
+
+  return sneakers;
+}
+
 const notifybuyerWithEmail = async () => {};
 
 module.exports = {
@@ -283,4 +312,6 @@ module.exports = {
   buySneaker,
   notifySneaker,
   notifybuyerWithEmail,
+  getBrands,
+  filter
 };

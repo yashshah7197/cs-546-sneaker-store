@@ -71,6 +71,7 @@ const users = data.users;
 
 const { ObjectId } = require("mongodb");
 const { update } = require("../data/users");
+const {getBrands} = require("../data/sneakers");
 //User listed sneakers
 router.get("/listedBy", async (req, res) => {
   try {
@@ -90,6 +91,7 @@ router.get("/listedBy", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     let sneakers = await sneakersData.getAll();
+    let brands = await sneakersData.getBrands();
 
     if (!!req.session.user) {
       sneakers = sneakers.filter(s => s.listedBy !== req.session.user);
@@ -98,6 +100,7 @@ router.get("/", async (req, res) => {
     res.render("store/sneakersList", {
       title: "Shop",
       sneakers: sneakers,
+      brands: brands,
       isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
@@ -350,4 +353,29 @@ router.post("/notify", async (req, res) => {
   }
 });
 
+router.post('/filter', async (req, res) => {
+  let filterOptions = req.body;
+
+  let brandName = filterOptions.brandName;
+  let size = filterOptions.size;
+  let price = filterOptions.price;
+
+  try {
+    let filteredData = await sneakersData.filter(brandName, Number(size), Number(price));
+    let brands = await getBrands();
+
+    res.render("store/sneakersList", {
+      title: "Shop",
+      sneakers: filteredData,
+      brands: brands,
+      isLoggedIn: !!req.session.user,
+      partial: "empty-scripts",
+    });
+
+  } catch (e) {
+    res.redirect('/');
+  }
+});
+
 module.exports = router;
+
