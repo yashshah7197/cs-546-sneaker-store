@@ -43,8 +43,8 @@ router.post("/", async (req, res) => {
       xss(reviewData.reviewFor),
       xss(reviewData.reviewTitle),
       xss(reviewData.reviewText),
-      Number(reviewData.reviewRating)
-      //xss(Number(reviewData.reviewRating))
+      //Number(reviewData.reviewRating)
+      xss(Number(reviewData.reviewRating))
     );
     //res.redirect(`/sneakers/${reviewData.reviewFor}`);
     res.status(200).json(review);

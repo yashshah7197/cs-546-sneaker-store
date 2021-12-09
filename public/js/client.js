@@ -22,7 +22,7 @@
     $(".alert").alert();
   });
 
-  var gimage = document.querySelector("#gimg");
+  // var gimage = document.querySelector("#gimg");
   var gname = document.querySelector("#gname");
   var gmail = document.querySelector("#gmail");
   var gso = document.querySelector("#signout");
