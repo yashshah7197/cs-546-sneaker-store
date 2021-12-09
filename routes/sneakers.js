@@ -89,7 +89,12 @@ router.get("/listedBy", async (req, res) => {
 //getall sneakers
 router.get("/", async (req, res) => {
   try {
-    const sneakers = await sneakersData.getAll();
+    let sneakers = await sneakersData.getAll();
+
+    if (!!req.session.user) {
+      sneakers = sneakers.filter(s => s.listedBy !== req.session.user);
+    }
+
     res.render("store/sneakersList", {
       title: "Shop",
       sneakers: sneakers,
