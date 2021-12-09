@@ -24,6 +24,10 @@
                             </div>
                             <div class="col">
                                 <form id="sneakerBuyForm"  method="post">
+                                  <div class="alert alert-danger d-none" role="alert" id="buyFormError">
+                                  Error
+                                 <p id="buyErrorMsg"></p>
+                                  </div>
                                     <div>
                                         <p>Price : {{sneaker.price}}$</p>
                                     </div>
