@@ -1,0 +1,19 @@
+[
+  {
+    "brandName": "Nike",
+    "modelName": "Air Flare",
+    "sizesAvailable": {
+      "7": 1,
+      "8": 2,
+      "9": 3,
+      "10": 4,
+      "11": 5,
+      "12": 6
+    },
+    "price": 199,
+    "images": [],
+    "reviews": [],
+    "overallRating": 4.5,
+
+  }
+]

@@ -80,6 +80,8 @@
           >
             <div class="accordion-body">
               <div> User: {{reviewedBy}} </div>
+              <div class="revReportBtn">
+              <a id = "revReportBtn_{{_id}}" onClick ="reportReview(event,{{userID}})" href="">Report</a></div>
               <div> Review: {{review}}</div>
             </div>
           </div>
