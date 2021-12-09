@@ -87,8 +87,8 @@ async function main() {
       "Nike",
       "Air Force 1",
       [
-        { size: 8, available: 20 },
-        { size: 9, available: 12 },
+        { size: 8, quantity: 20 },
+        { size: 9, quantity: 12 },
       ],
       90,
       ["../../public/uploads/AF1.jpeg"],
@@ -135,9 +135,9 @@ async function main() {
       "adidas",
       "Yeezy Boost 350",
       [
-        { size: 8, available: 10 },
-        { size: 9, available: 25 },
-        { size: 10, available: 15 },
+        { size: 8, quantity: 10 },
+        { size: 9, quantity: 25 },
+        { size: 10, quantity: 15 },
       ],
       250,
       ["../../public/uploads/Yeezy350.jpeg"],

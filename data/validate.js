@@ -90,5 +90,6 @@ module.exports = {
   checkIfBoolean,
   checkValidEmail,
   checkValidPassword,
-  checkValidPhoneNumber
+  checkValidPhoneNumber,
+  checkIsChar
 };

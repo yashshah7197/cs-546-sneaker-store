@@ -1,37 +1,72 @@
-// (function ($) {
-//   // Let's start writing AJAX calls!
+(function ($) {
+  $(document).ready(function () {
+    $(".alert").alert("close");
+    $("select").change(function () {
+      $(".alert").alert("close");
+      var nameArr = $("#size").val().split(",");
+      console.log(nameArr[0]);
+      if ($("#size").val() == 0) {
+        document.getElementById("notify").hidden = true;
+        $("#buy").attr("disabled", true);
+      } else if (nameArr[1] <= 0) {
+        document.getElementById("notify").hidden = false;
+        $("#buy").attr("disabled", true);
+      } else {
+        document.getElementById("notify").hidden = true;
+        $("#buy").attr("disabled", false);
+      }
+    });
+  });
 
-//   $(document).ready(function () {
-//     $(".alert").alert("close");
-//     $("select").change(function () {
-//       $(".alert").alert("close");
+  $("#notify").click(function (event) {
+    $(".alert").alert();
+  });
 
-//       // alert("The text has been changed."+$("#size").val());
-//       var nameArr = $("#size").val().split(",");
-//       console.log(nameArr[0]);
-//       if ($("#size").val() == 0) {
-//         document.getElementById("notify").hidden = true;
-//         $("#buy").attr("disabled", true);
-//       } else if (nameArr[1] <= 0) {
-//         document.getElementById("notify").hidden = false;
-//         $("#buy").attr("disabled", true);
+  var gimage = document.querySelector("#gimg");
+  var gname = document.querySelector("#gname");
+  var gmail = document.querySelector("#gmail");
+  var gso = document.querySelector("#signout");
 
-//         //          }
-//         //         else
-//         //         {
-//         //             $("#notify").attr("disabled", true);
-//         //             $("#buy").attr("disabled", false);
-//       } else {
-//         document.getElementById("notify").hidden = true;
-//         $("#buy").attr("disabled", false);
-//       }
-//     });
-//   });
-//   $("#buy").click(function (event) {
-//     alert("Order has been Placed!");
-//   });
+  gimage.style.visibility = "hidden";
+  gname.style.visibility = "hidden";
+  gmail.style.visibility = "hidden";
+  gso.style.visibility = "hidden";
 
-//   $("#notify").click(function (event) {
-//     $(".alert").alert();
-//   });
-// })(window.jQuery);
+  function onSuccess(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    gimage.setAttribute("src", profile.getImageUrl());
+    gname.innerText = "Name: " + profile.getName();
+    gmail.innerText = "Email: " + profile.getEmail();
+
+    gimage.style.visibility = "visible";
+    gname.style.visibility = "visible";
+    gmail.style.visibility = "visible";
+    gso.style.visibility = "visible";
+  }
+
+  function onFailure(error) {
+    console.log(error);
+  }
+
+  function renderButton() {
+    gapi.signin2.render("my-signin2", {
+      scope: "profile email",
+      width: 240,
+      height: 50,
+      longtitle: true,
+      theme: "dark",
+      onsuccess: onSuccess,
+      onfailure: onFailure,
+    });
+  }
+
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      gimage.style.visibility = "hidden";
+      gname.style.visibility = "hidden";
+      gmail.style.visibility = "hidden";
+      gso.style.visibility = "hidden";
+    });
+  }
+})(window.jQuery);
