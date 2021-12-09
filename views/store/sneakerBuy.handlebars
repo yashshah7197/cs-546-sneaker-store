@@ -81,7 +81,8 @@
             <div class="accordion-body">
               <div> User: {{reviewedBy}} </div>
               <div class="revReportBtn">
-              <a id = "revReportBtn_{{_id}}" onClick ="reportReview(event,{{userID}})" href="">Report</a></div>
+              {{!-- <a id = "revReportBtn_{{_id}}" onclick ="reportReview(event,{{../userID}})" href="">Report</a></div> --}}
+              <a id = "revReportBtn_{{_id}}" onclick ="reportReview(event)" href="">Report</a></div>
               <div> Review: {{review}}</div>
             </div>
           </div>
@@ -197,12 +198,12 @@
               </div>
 
               {{!-- <form id="answerForm" method="post" action="/qAndA/{{_id}}"> --}}
-              <form class="answerForm" id="answerForm_{{_id}}" method="POST" onclick="submitAnswer(event)">
+              <form class="answerForm" id="answerForm_{{_id}}" method="POST" onsubmit="submitAnswer(event)">
                 <div class="mb-3">
-                   {{!-- <div class="alert alert-danger d-none" role="alert" id="ansFormError_{{_id}}">
+                   <div class="alert alert-danger d-none" role="alert" id="ansFormError_{{_id}}">
                     Error
                     <p id="ansErrorMsg_{{_id}}"></p>
-                  </div> --}}
+                  </div>
                   <label for="answerText_{{_id}}" class="form-label">Answer this
                     question</label>
                   <input
@@ -226,10 +227,12 @@
                   />
                   <input type="submit" value="Submit" />
                 </div>
+              </form>
             </div>
           </div>
         </div>
       {{/each}}
+
     </div>
 
     <br />
@@ -255,7 +258,6 @@
         >
           <div class="accordion-body">
             <form id="questionForm" method="post">
-              
               <div class="mb-3">
                 <div class="alert alert-danger d-none" role="alert" id="quesFormError">
                   Error
