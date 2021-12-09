@@ -1,6 +1,7 @@
 const mongoCollections = require("../config/mongoCollections");
 const qAndA = mongoCollections.qAndA;
 const sneakers = mongoCollections.sneakers;
+const usersData = require("./users");
 const validation = require("./validate");
 
 const { ObjectId } = require("mongodb");
@@ -57,6 +58,9 @@ const create = async (qAndAFor, questionBy, question) => {
   //Fetch the newly created reviquestionew object
   const addedQuestion = await qAndACollection.findOne({ _id: newId });
 
+  let user = await usersData.get(questionBy);
+
+  addedQuestion.questionBy = user.email;
   //Convert objectId to string
   addedQuestion._id = addedQuestion._id.toString();
 
@@ -70,18 +74,27 @@ const getAll = async (qAndAFor) => {
   //validation.checkValidObjectId(reviewFor);
   const qAndACollection = await qAndA();
 
-  const qAndAList = await qAndACollection
-    .find({ qAndAFor: qAndAFor })
-    .toArray();
+  let qAndAList = await qAndACollection.find({ qAndAFor: qAndAFor }).toArray();
 
   //Return an empty array if no restaurants present in the DB
   if (qAndAList.length <= 0) {
     return emptyResult;
   }
 
-  qAndAList.forEach((obj) => {
+  qAndAList.forEach(async (obj) => {
+    let userInfo = await usersData.get(obj.questionBy);
     //Convert objectId to string
+    obj.questionBy = userInfo.email;
     obj._id = obj._id.toString();
+  });
+
+  qAndAList.forEach(async (obj) => {
+    obj.answers.forEach(async (element) => {
+      let user = await usersData.get(element.answeredBy);
+      //Convert objectId to string
+      element.answeredBy = user.email;
+      element._id = element._id.toString();
+    });
   });
 
   return qAndAList;
@@ -102,12 +115,27 @@ const get = async (qAndAId) => {
     throw "No review with that id.";
   }
 
+  let userInfo = await usersData.get(qAndAItem.questionBy);
+  qAndAItem.questionBy = userInfo.email;
+
+  let answersList = qAndAItem.answers;
+
+  answersList.forEach(async (obj) => {
+    let userInfo = await usersData.get(obj.answeredBy);
+    //Convert objectId to string
+    obj.answeredBy = userInfo.email;
+    obj._id = obj._id.toString();
+  });
+
+  qAndAItem.answers = answersList;
+
   //Convert ObjectId to string
   qAndAItem._id = qAndAItem._id.toString();
   return qAndAItem;
 };
 
 const update = async (qAndAId, answerBy, answer) => {
+  let result = {};
   validation.checkInputStr(qAndAId, "QandA Id");
   //validation.checkValidObjectId(qAndAId);
 
@@ -133,14 +161,6 @@ const update = async (qAndAId, answerBy, answer) => {
   };
   newAnswers.push(answerObj);
 
-  //   //Create new review object
-  //   let updateAnswer = {
-  //     qAndAFor: existingQandA.qAndAFor,
-  //     questionBy: existingQandA.questionBy,
-  //     question: existingQandA.question,
-  //     answers: answers,
-  //   };
-
   //Update new review object to review collection
   const updateInfo = await qAndACollection.updateOne(
     { _id: parsedId },
@@ -155,10 +175,24 @@ const update = async (qAndAId, answerBy, answer) => {
     _id: parsedId,
   });
 
-  //Convert objectId to string
-  updatedQandA._id = updatedQandA._id.toString();
+  let updatedAnswers = updatedQandA.answers;
+  let newAnswer = {};
+  updatedAnswers.forEach((element) => {
+    if ((element._id = answerObj._id)) {
+      newAnswer = element;
+    }
+  });
 
-  return updatedQandA;
+  result["_id"] = updatedQandA._id.toString();
+
+  newAnswer._id = newAnswer._id.toString();
+  let user = await usersData.get(newAnswer.answeredBy);
+  newAnswer.answerBy = user.email;
+
+  //Convert objectId to string
+  result["answer"] = newAnswer;
+
+  return result;
 };
 
 const remove = async (qAndAId) => {

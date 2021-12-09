@@ -3,7 +3,19 @@ const router = express.Router();
 const data = require("../data");
 const sneakersData = data.sneakers;
 const reviewData = data.reviews;
+const usersData = data.users;
 const multer = require("multer");
+const validation = require("../data/validate");
+const nodemailer = require("nodemailer");
+
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'demo60700@gmail.com',
+    pass: 'D60@@D60'
+  }
+});
 
 const fileStorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -29,16 +41,25 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
       { size: 12, quantity: Number(req.body.size12) },
     ];
     let image = "../../" + req.file.path;
+    validation.checkInputStr(brandName);
+    validation.checkInputStr(modelName);
+    validation.checkInputStr(price);
+    validation.checkInputStr(image);
+    validation.checkIsChar(brandName);
+    validation.checkIsChar(modelName);
+    validation.checkIsChar(image);
+
     const sneakerAdded = await sneakersData.create(
       brandName,
       modelName,
       sizesAvailable,
       price,
       image,
-      "UserId"
+      req.session.user
     );
     res.render("store/sneakerAdded", {
       sneaker: sneakerAdded,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -49,13 +70,16 @@ const qAndAData = data.qAndA;
 const users = data.users;
 
 const { ObjectId } = require("mongodb");
+const { update } = require("../data/users");
 //User listed sneakers
-router.get("/listedBy/:id", async (req, res) => {
+router.get("/listedBy", async (req, res) => {
   try {
-    const sneakers = await sneakersData.getAllListedBy(req.params.id);
+    let id = req.session.user;
+    const sneakers = await sneakersData.getAllListedBy(id);
 
     res.render("store/sneakerListedby", {
       sneakers: sneakers,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -67,7 +91,9 @@ router.get("/", async (req, res) => {
   try {
     const sneakers = await sneakersData.getAll();
     res.render("store/sneakersList", {
+      title: "Shop",
       sneakers: sneakers,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -77,7 +103,13 @@ router.get("/", async (req, res) => {
 //Changes from "/:id" to add search functionality || Hamza
 router.get("/sneaker/:id", async (req, res) => {
   try {
-    const sneaker = await sneakersData.get(req.params.id);
+    let id = req.params.id;
+    if (!req.session.user) {
+      res.redirect("/users/login");
+      return;
+    }
+
+    const sneaker = await sneakersData.get(id);
     let rev = [];
     for (const x of sneaker.reviews) {
       rev.push(await reviewData.get(x));
@@ -85,25 +117,35 @@ router.get("/sneaker/:id", async (req, res) => {
     let qAndA = await qAndAData.getAll(sneaker._id);
 
     res.render("store/sneakerBuy", {
-      title: "Shop",
+      title: "Buy",
+      userID: req.session.user,
       sneaker: sneaker,
       review: rev,
       qAndAs: qAndA,
+      isLoggedIn: !!req.session.user,
       partial: "shop-scripts",
     });
   } catch (e) {
-    res.status(404).json({ message: " There is no Sneaker with that ID" + e });
+    res.status(404).render("store/sneakerBuy", {
+      title: "Shop",
+      userID: req.session.user,
+      partial: "shop-scripts",
+      error: e,
+    });
+    //res.status(404).json({ message: " There is no Sneaker with that ID" + e });
   }
 });
+
 //User updates sneaker
 router.get("/listedByUpdate/:id", async (req, res) => {
   try {
-    console.log(req.params.id);
     const sneaker = await sneakersData.get(req.params.id);
     console.log(sneaker);
 
     res.render("store/sneakerUpdate", {
+      title: "Update",
       sneaker: sneaker,
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
     //  console.log("hell2");
@@ -111,13 +153,92 @@ router.get("/listedByUpdate/:id", async (req, res) => {
     res.status(404).json({ message: " There is no Sneaker with that ID" });
   }
 });
-router.get("/BuyList/:id", async (req, res) => {
-  try {
-    const sneaker = await sneakersData.getAllBuyList(req.params.id);
 
+router.post("/updateSneakerNotifyBuyer", async (req, res) => {
+  try {
+    const sneaker = await sneakersData.get(req.body.id);
+    let sizesAvailable = [
+      { size: 7, quantity: Number(req.body.size7) },
+      { size: 8, quantity: Number(req.body.size8) },
+      { size: 9, quantity: Number(req.body.size9) },
+      { size: 10, quantity: Number(req.body.size10) },
+      { size: 11, quantity: Number(req.body.size11) },
+      { size: 12, quantity: Number(req.body.size12) },
+    ];
+
+      let s7 = Number(req.body.size7);
+      let s8 = Number(req.body.size8);
+      let s9 = Number(req.body.size9);
+      let s10 = Number(req.body.size10);
+      let s11 = Number(req.body.size11);
+      let s12 = Number(req.body.size12);
+      let mailList = [];
+      let myArr = [];
+      for(let i=0;i<sneaker.notify.length;i++)
+      {
+        if((sneaker.notify[i].size == '7' && s7 >  0) 
+        || (sneaker.notify[i].size == '8' && s8 > 0) 
+        || (sneaker.notify[i].size == '9' && s9 > 0) 
+        || (sneaker.notify[i].size == '10' && s10 > 0) 
+        || (sneaker.notify[i].size == '11' && s11 > 0) 
+        || (sneaker.notify[i].size == '12' && s12 > 0))
+        {
+          mailList.push(sneaker.notify[i].userName);
+        }
+        else{
+          myArr.push(sneaker.notify[i]);
+        }
+      }
+
+    const update = await sneakersData.update(
+      req.body.id,
+      req.body.brandName,
+      req.body.modelName,
+      sizesAvailable,
+      req.body.price,
+      sneaker.images,
+      sneaker.reviews,
+      sneaker.overallRating,
+      sneaker.qAndA,
+      sneaker.listedBy,
+      myArr
+    );
+      
+
+
+    var mailOptions = {
+      from: 'demo60700@gmail.com',
+      to: mailList,
+      subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock.`,
+      text: 'Hurry up and Order Now!'
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      }
+    });
+
+
+    res.render("store/sneakerUpdatedSuccessfully", {
+      title: "Updated Successfully",
+      isLoggedIn: !!req.session.user,
+      partial: "empty-scripts",
+    });
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
+router.get("/BuyList", async (req, res) => {
+  try {
+    let id = req.session.user;
+    const sneaker = await sneakersData.getAllBuyList(id);
     res.render("store/sneakerBuyList", {
       title: "Shop",
       sneaker: sneaker,
+      isLoggedIn: !!req.session.user,
       partial: "shop-scripts",
     });
     // console.log("hell2");
@@ -125,8 +246,10 @@ router.get("/BuyList/:id", async (req, res) => {
     res.status(404).json({ message: " There is no Sneaker with that ID" });
   }
 });
+
 router.get("/delete/:id", async (req, res) => {
   try {
+    let id = req.params.id;
     const sneaker = await sneakersData.remove(req.params.id);
     res.redirect("/sneakers/");
   } catch (e) {
@@ -138,16 +261,20 @@ router.get("/delete/:id", async (req, res) => {
 router.post("/search", async (req, res) => {
   try {
     let searchTerm = req.body.searchTerm;
+    validation.checkIsChar(searchTerm);
     const sneakers = await sneakersData.getName(searchTerm);
     //console.log(sneakers);
     if (sneakers.length > 0) {
       res.render("store/sneakersList", {
         sneakers: sneakers,
+        isLoggedIn: !!req.session.user,
         partial: "empty-scripts",
       });
     } else {
       res.render("store/sneakersList", {
+        title: "Shop",
         sneakers: sneakers,
+        isLoggedIn: !!req.session.user,
         error: "No results found",
         partial: "empty-scripts",
       });
@@ -159,8 +286,13 @@ router.post("/search", async (req, res) => {
 
 router.get("/sell", async (req, res) => {
   try {
+    if (!req.session.user) {
+      res.redirect("/users/login");
+      return;
+    }
     res.render("store/sneakerSell", {
       title: "Add Sneaker",
+      isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -171,18 +303,46 @@ router.post("/buy", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
-    //   console.log(req.body);
-    const sneakers = await sneakersData.buySneaker(
-      "61a6ba5f5bbbf22fa2eb3341",
-      sneakerId,
-      size
-    );
-    //   console.log(sneakers);
-    //   res.render("store/sneakersList", { sneakers: sneakers });
-    res.redirect("/sneakers/BuyList/61a6ba5f5bbbf22fa2eb3341");
+    // validation.checkInputStr(sneakerId);
+    // validation.checkInputStr(size);
+    if (!req.session.user) {
+      res.redirect("/users/login");
+    } else {
+      const sneakers = await sneakersData.buySneaker(
+        req.session.user,
+        sneakerId,
+        size
+      );
+      res.redirect("/sneakers/BuyList");
+    }
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
 });
+
+router.post("/notify", async (req, res) => {
+  try {
+    let sneakerId = req.body.id;
+    let size = req.body.size;
+    // validation.checkInputStr(sneakerId);
+    // validation.checkInputStr(size);
+    if (!req.session.user) {
+      res.redirect("/users/login");
+    } else {
+      const user = await usersData.get(req.session.user);
+      const sneakers = await sneakersData.notifySneaker(
+        req.session.user,
+        user.email,
+        sneakerId,
+        size
+      );
+      res.redirect("/sneakers/sneaker/" + sneakerId);
+    }
+  } catch (e) {
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
 module.exports = router;

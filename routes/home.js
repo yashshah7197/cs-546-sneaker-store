@@ -5,7 +5,10 @@ const data = require("../data");
 const { ObjectId } = require("mongodb");
 
 router.get("/", (req, res) => {
-  res.render("store/home", { title: "Home", partial: "empty-scripts" });
+  res.render("store/home", {
+    title: "Home",
+    isLoggedIn: !!req.session.user,
+    partial: "empty-scripts" });
 });
 
 module.exports = router;
