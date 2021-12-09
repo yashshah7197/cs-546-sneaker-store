@@ -2,8 +2,8 @@ const mongoCollections = require("../config/mongoCollections");
 const sneakers = mongoCollections.sneakers;
 const reviews = mongoCollections.reviews;
 const users = mongoCollections.users;
-const user=require("../data/users")
-const validation=require("../data/validate")
+const user = require("../data/users");
+const validation = require("../data/validate");
 
 const { ObjectId } = require("mongodb");
 
@@ -25,7 +25,6 @@ const create = async (
   validation.checkIsChar(modelName);
   validation.checkIsChar(images);
 
-  
   let newSneaker = {
     brandName: brandName,
     modelName: modelName,
@@ -140,8 +139,6 @@ const update = async (
   notify
 ) => {
   try {
-   
-  
     sneakerId = ObjectId(sneakerId.trim());
   } catch (e) {
     throw {
@@ -244,12 +241,14 @@ const buySneaker = async (userId, sneakerId, size1) => {
 
   return update1;
 };
-const notifySneaker = async (userId, sneakerId, size1) => {
+const notifySneaker = async (userId, userName, sneakerId, size1) => {
   let size = size1.split(",");
-  validation.checkInputStr(size);
+  // validation.checkInputStr(size);
+  // validation.checkValidEmail(userName);
   const sneakerInfo = await get(sneakerId.toString());
   sneakerInfo.notify[sneakerInfo.notify.length] = {
     userId: userId,
+    userName: userName,
     size: Number(size[0]),
   };
 
@@ -270,14 +269,7 @@ const notifySneaker = async (userId, sneakerId, size1) => {
   return updateSneaker;
 };
 
-const notifybuyerWithEmail= async () => 
-{
-
-
-};
-
-
-
+const notifybuyerWithEmail = async () => {};
 
 module.exports = {
   create,
@@ -289,5 +281,6 @@ module.exports = {
   getAllListedBy,
   getName,
   buySneaker,
-  notifySneaker,notifybuyerWithEmail
+  notifySneaker,
+  notifybuyerWithEmail,
 };

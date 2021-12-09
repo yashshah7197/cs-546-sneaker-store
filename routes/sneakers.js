@@ -3,9 +3,19 @@ const router = express.Router();
 const data = require("../data");
 const sneakersData = data.sneakers;
 const reviewData = data.reviews;
+const usersData = data.users;
 const multer = require("multer");
 const validation = require("../data/validate");
+const nodemailer = require("nodemailer");
 
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'demo60700@gmail.com',
+    pass: 'D60@@D60'
+  }
+});
 
 const fileStorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -38,7 +48,7 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
     validation.checkIsChar(brandName);
     validation.checkIsChar(modelName);
     validation.checkIsChar(image);
-  
+
     const sneakerAdded = await sneakersData.create(
       brandName,
       modelName,
@@ -64,7 +74,7 @@ const { update } = require("../data/users");
 //User listed sneakers
 router.get("/listedBy", async (req, res) => {
   try {
-    let id=req.session.user;
+    let id = req.session.user;
     const sneakers = await sneakersData.getAllListedBy(id);
 
     res.render("store/sneakerListedby", {
@@ -93,7 +103,7 @@ router.get("/", async (req, res) => {
 //Changes from "/:id" to add search functionality || Hamza
 router.get("/sneaker/:id", async (req, res) => {
   try {
-    let id=req.params.id;
+    let id = req.params.id;
     if (!req.session.user) {
       res.redirect("/users/login");
       return;
@@ -126,14 +136,12 @@ router.get("/sneaker/:id", async (req, res) => {
   }
 });
 
-
-
 //User updates sneaker
 router.get("/listedByUpdate/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.get(req.params.id);
     console.log(sneaker);
-  
+
     res.render("store/sneakerUpdate", {
       title: "Update",
       sneaker: sneaker,
@@ -157,29 +165,75 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
       { size: 11, quantity: Number(req.body.size11) },
       { size: 12, quantity: Number(req.body.size12) },
     ];
-    const update=await sneakersData.update(req.body.id,
+
+      let s7 = Number(req.body.size7);
+      let s8 = Number(req.body.size8);
+      let s9 = Number(req.body.size9);
+      let s10 = Number(req.body.size10);
+      let s11 = Number(req.body.size11);
+      let s12 = Number(req.body.size12);
+      let mailList = [];
+      let myArr = [];
+      for(let i=0;i<sneaker.notify.length;i++)
+      {
+        if((sneaker.notify[i].size == '7' && s7 >  0) 
+        || (sneaker.notify[i].size == '8' && s8 > 0) 
+        || (sneaker.notify[i].size == '9' && s9 > 0) 
+        || (sneaker.notify[i].size == '10' && s10 > 0) 
+        || (sneaker.notify[i].size == '11' && s11 > 0) 
+        || (sneaker.notify[i].size == '12' && s12 > 0))
+        {
+          mailList.push(sneaker.notify[i].userName);
+        }
+        else{
+          myArr.push(sneaker.notify[i]);
+        }
+      }
+
+    const update = await sneakersData.update(
+      req.body.id,
       req.body.brandName,
       req.body.modelName,
-    sizesAvailable,
-    req.body.price,
-    sneaker.images,
-    sneaker.reviews,
-    sneaker.overallRating,
-    sneaker.qAndA,
-    sneaker.listedBy,
-    sneaker.notify);
+      sizesAvailable,
+      req.body.price,
+      sneaker.images,
+      sneaker.reviews,
+      sneaker.overallRating,
+      sneaker.qAndA,
+      sneaker.listedBy,
+      myArr
+    );
+      
 
+
+    var mailOptions = {
+      from: 'demo60700@gmail.com',
+      to: mailList,
+      subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock.`,
+      text: 'Hurry up and Order Now!'
+    };
     
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      }
+    });
+
+
+    res.render("store/sneakerUpdatedSuccessfully", {
+      title: "Updated Successfully",
+      isLoggedIn: !!req.session.user,
+      partial: "empty-scripts",
+    });
   } catch (e) {
     console.log(e);
     res.sendStatus(500);
   }
 });
 
-
 router.get("/BuyList", async (req, res) => {
   try {
-    let id=req.session.user;
+    let id = req.session.user;
     const sneaker = await sneakersData.getAllBuyList(id);
     res.render("store/sneakerBuyList", {
       title: "Shop",
@@ -194,9 +248,8 @@ router.get("/BuyList", async (req, res) => {
 });
 
 router.get("/delete/:id", async (req, res) => {
-
   try {
-    let id=req.params.id;
+    let id = req.params.id;
     const sneaker = await sneakersData.remove(req.params.id);
     res.redirect("/sneakers/");
   } catch (e) {
@@ -260,7 +313,7 @@ router.post("/buy", async (req, res) => {
         sneakerId,
         size
       );
-      res.redirect("/sneakers/BuyList" );
+      res.redirect("/sneakers/BuyList");
     }
   } catch (e) {
     console.log(e);
@@ -272,13 +325,15 @@ router.post("/notify", async (req, res) => {
   try {
     let sneakerId = req.body.id;
     let size = req.body.size;
-    validation.checkInputStr(sneakerId);
-    validation.checkInputStr(size);
+    // validation.checkInputStr(sneakerId);
+    // validation.checkInputStr(size);
     if (!req.session.user) {
       res.redirect("/users/login");
     } else {
+      const user = await usersData.get(req.session.user);
       const sneakers = await sneakersData.notifySneaker(
         req.session.user,
+        user.email,
         sneakerId,
         size
       );

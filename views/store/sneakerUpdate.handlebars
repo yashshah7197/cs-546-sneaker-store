@@ -7,10 +7,21 @@
       <!-- Card body -->
       <div class="card-body p-6">
         <div class="mb-4">
+<<<<<<< HEAD
           <h1 class="mb-1 fw-bold">Sell a sneaker</h1>
         </div>
         <!-- Form -->
         <form action="/sneakers/updateSneakerNotifyBuyer" method="POST">
+=======
+          <h1 class="mb-1 fw-bold">Update your sneaker</h1>
+        </div>
+        <!-- Form -->
+        <form
+          id="update-form"
+          action="/sneakers/updateSneakerNotifyBuyer"
+          method="POST"
+        >
+>>>>>>> 564649e8b334a9bc6c21870dfe65e21ce8e8224c
           <div class="mb-3">
             <input
               type="text"
@@ -106,6 +117,10 @@
               placeholder="Quantity available here"
               required=""
             />
+<<<<<<< HEAD
+=======
+            <input id= "notifyX" type="text" value="{{sneaker.notify}}" hidden>
+>>>>>>> 564649e8b334a9bc6c21870dfe65e21ce8e8224c
           </div>
           <label for="price">Price:</label><br />
           <input
@@ -127,6 +142,7 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 {{! <html>
 
   <head>
@@ -150,3 +166,60 @@
   </body>
 
 </html> }}
+=======
+{{!-- <script src="https://smtpjs.com/v3/smtp.js">
+  </script>
+<script type="text/javascript">
+  $("#update-form").submit(function (e) 
+  { 
+    e.preventDefault(); 
+    let s7 = $("#size7").val(); 
+    let s8 = $("#size8").val(); 
+    let s9 = $("#size9").val(); 
+    let s10 = $("#size10").val(); 
+    let s11 = $("#size11").val(); 
+    let s12 = $("#size12").val(); 
+    // prettier-ignore
+    for(let i=0;i<sneaker.notify.length;i++) 
+    { 
+      if((sneaker.notify[i].size == '7' && s7 >  0) 
+      || (sneaker.notify[i].size == '8' && s8 > 0) 
+      || (sneaker.notify[i].size == '9' && s9 > 0) 
+      || (sneaker.notify[i].size == '10' && s10 > 0) 
+      || (sneaker.notify[i].size == '11' && s11 > 0) 
+      || (sneaker.notify[i].size == '12' && s12 > 0))
+      {
+        Email.send({ Host:"smtp.gmail.com", 
+        Username: "demo60700@gmail.com", 
+        Password: "D60@@D60", 
+        To: `${sneaker.notify[i].userName}`, 
+        From: "demo60700@gmail.com", 
+        Subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock.`, 
+        Body: "Hurry up and Order Now"
+        })
+      }
+    }
+  }).then(function (message) {
+  $("#update-form").submit();
+  });
+</script> --}}
+
+{{!-- <head>
+  <title>Send Mail</title>
+  <script src="https://smtpjs.com/v3/smtp.js">
+  </script>
+
+  <script type="text/javascript">
+    function sendEmail() { Email.send({ Host: "smtp.gmail.com", Username:
+    "demo60700@gmail.com", Password: "D60@@D60", To: 'hamzasbuch@gmail.com',
+    From: "demo60700@gmail.com", Subject: "Sending Email using javascript",
+    Body: "Well that was easy!!", }) .then(function (message) { alert("mail sent successfully") }); }
+  </script>
+</head>
+
+<body>
+  <form method="post">
+    <input type="button" value="Send Email" onclick="sendEmail()" />
+  </form>
+</body> --}}
+>>>>>>> 564649e8b334a9bc6c21870dfe65e21ce8e8224c
