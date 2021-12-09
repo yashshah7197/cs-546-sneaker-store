@@ -362,6 +362,11 @@ router.post('/filter', async (req, res) => {
 
   try {
     let filteredData = await sneakersData.filter(brandName, Number(size), Number(price));
+
+    if (!!req.session.user) {
+      filteredData = filteredData.filter((s) => s.listedBy !== req.session.user);
+    }
+
     let brands = await getBrands();
 
     res.render("store/sneakersList", {
