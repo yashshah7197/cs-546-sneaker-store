@@ -12,8 +12,8 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'demo60700@gmail.com',
-    pass: 'D60@@D60'
+    user: 'noreply.solesearch@gmail.com',
+    pass: 'Solesearch@1234'
   }
 });
 
@@ -207,7 +207,7 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
 
 
     var mailOptions = {
-      from: 'demo60700@gmail.com',
+      from: 'noreply.solesearch@gmail.com',
       to: mailList,
       subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock.`,
       text: 'Hurry up and Order Now!'

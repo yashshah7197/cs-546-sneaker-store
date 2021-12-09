@@ -256,3 +256,9 @@ function submitAnswer(event) {
     console.log(e);
   }
 }
+
+function reportReview(e, userID) {
+
+  console.log("Review reported Successfully");
+  console.log(userID);
+}
