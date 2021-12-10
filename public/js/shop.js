@@ -262,8 +262,84 @@ function submitAnswer(event) {
   }
 }
 
-function reportReview(e, userID) {
-
+function reportReview(e) {
   console.log("Review reported Successfully");
-  console.log(userID);
+  console.log(e.currentTarget.id);
+  console.log($("#reviewedBy").val());
 }
+
+reviewForm.submit(function (event) {
+  event.preventDefault();
+  debugger;
+  try {
+    reviewFormError.addClass("d-none");
+    var reviewedByElem = $("#reviewedBy");
+    var reviewForElem = $("#reviewFor");
+    var reviewTitleElem = $("#reviewTitle");
+    var reviewTextElem = $("#reviewText");
+    var reviewRatingElem = $("#reviewRating");
+
+    checkInputStr(reviewedByElem.val(), "reviewedBy");
+    checkInputStr(reviewForElem.val(), "reviewFor");
+    checkInputStr(reviewTitleElem.val(), "Title");
+    checkInputStr(reviewTextElem.val(), "Text");
+    checkIsNumber(Number(reviewRatingElem.val()), "Rating");
+    checkRating(Number(reviewRatingElem.val()));
+
+    var requestConfig = {
+      method: "POST",
+      url: "/reviews/",
+      dataType: "json",
+      data: {
+        reviewedBy: reviewedByElem.val(),
+        reviewFor: reviewForElem.val(),
+        reviewTitle: reviewTitleElem.val(),
+        reviewText: reviewTextElem.val(),
+        reviewRating: reviewRatingElem.val(),
+      },
+    };
+
+    $.ajax(requestConfig)
+      .then(function (responseMessage) {
+        var accordionReviews = $("#accordionReviews");
+        var newHTML = `<div class="accordion-item">
+        <h4 class="accordion-header" id="heading_${responseMessage._id}">
+          <button
+            class="accordion-button"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapse_${responseMessage._id}"
+            aria-expanded="true"
+            aria-controls="collapse_${responseMessage._id}"
+          >
+            ${responseMessage.title} - Rating : ${responseMessage.rating}
+          </button>
+        </h4>
+        <div
+          id="collapse_${responseMessage._id}"
+          class="accordion-collapse collapse"
+          aria-labelledby="heading_${responseMessage._id}"
+          data-bs-parent="#accordionReviews"
+        >
+          <div class="accordion-body">
+            <div> User: ${responseMessage.reviewedBy} </div>
+            <div> Review: ${responseMessage.review}</div>
+          </div>
+        </div>
+      </div>`;
+        accordionReviews.append(newHTML);
+        $("#collapsePostReview").removeClass("show");
+        $("#reviewTitle").val("");
+        $("#reviewText").val("");
+        $("#reviewRating").val("");
+      })
+      .catch(function (e) {
+        reviewErrorMsg.empty().append(e);
+        reviewFormError.removeClass("d-none");
+      });
+  } catch (e) {
+    //console.log(e);
+    reviewErrorMsg.empty().append(e);
+    reviewFormError.removeClass("d-none");
+  }
+});
