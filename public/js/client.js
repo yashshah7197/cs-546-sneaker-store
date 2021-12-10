@@ -1,3 +1,5 @@
+//Commented by Hamza || Code to be modified
+
 (function ($) {
   $(document).ready(function () {
     $(".alert").alert("close");

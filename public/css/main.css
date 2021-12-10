@@ -54,9 +54,22 @@
 }
 
 .accordion-body {
-  background-color: beige;
+  background-color: #d8d8d8;
 }
 
 .sneakerListImg {
   width: 350px !important;
+}
+
+.revReportBtn {
+  border: 0.5px solid black;
+  border-radius: 5px;
+  float: right;
+  background-color: #ffc107;
+}
+
+.revReportBtn a {
+  padding: 5px;
+  text-decoration: none;
+  color: black;
 }

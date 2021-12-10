@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     {{#each sneakers}}
-      <div class="col-sm-4 border">
+      <div class="col-sm-4 border m-2 mt-4 mb-4">
         <form>
           <h1>{{modelName}}</h1>
           <p> {{brandName}} </p>
@@ -10,12 +10,10 @@
               
           <h4>Price : {{price}}$</h4>
 
-          <input
+          <button
             type="submit"
-            value="UPDATE"
-            formaction="/sneakers/listedByUpdate/{{_id}}"
-          />
-          {{! http://localhost:3000/sneakers/61a04f4e878558d0e73856ba? }}
+            class="btn btn-primary mb-2"
+            formaction="/sneakers/listedByUpdate/{{_id}}">Update</button>
         </form>
 
       </div>
