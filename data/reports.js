@@ -1,38 +1,45 @@
 const mongoCollections = require("../config/mongoCollections");
 const reports = mongoCollections.reports;
-const validation = require("./validate");
 
 const { ObjectId } = require("mongodb");
-// const { reports } = require("../config/mongoCollections");
+const {isValidArgument, isValidString, isValidObjectId} = require("./data/validate");
 
 const create = async (reportedBy, reportFor, reportReasons, type) => {
-  validation.checkInputStr(reportedBy, "Reported By");
-  // validation.checkValidObjectId(reportedBy);
-  validation.checkInputStr(reportFor, "Report For");
-  // validation.checkValidObjectId(reportFor);
-  validation.checkInputStr(reportReasons, "Report Reasons");
-  validation.checkInputStr(type, "Type");
+  checkValidation(isValidArgument(reportedBy, "reportedBy"));
+  checkValidation(isValidString(reportedBy, "reportedBy"));
+  checkValidation(isValidObjectId(reportedBy.trim()));
+
+  checkValidation(isValidArgument(reportFor, "reportFor"));
+  checkValidation(isValidString(reportFor, "reportFor"));
+  checkValidation(isValidObjectId(reportFor.trim()));
+
+  checkValidation(isValidArgument(reportReasons, "reportReasons"));
+  checkValidation(isValidString(reportReasons, "reportReasons"));
+
+  checkValidation(isValidArgument(type, "type"));
+  checkValidation(isValidString(type, "type"));
+
   const reportCollection = await reports();
-  //create new report object
+
   let newReport = {
     reportedBy: reportedBy.trim(),
     reportFor: reportFor.trim(),
     reportReasons: reportReasons.trim(),
     type: type.trim(),
   };
-  //Insert new report object to report collection
+
   const insertInfo = await reportCollection.insertOne(newReport);
   if (insertInfo.insertedCount === 0) {
-    throw "Could not create report.";
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
-  //Fetch objectId for newly created report
   const newId = insertInfo.insertedId;
 
-  //Fetch the newly created report object
   const addedReport = await reportCollection.findOne({ _id: newId });
 
-  //Convert objectId to string
   addedReport._id = addedReport._id.toString();
 
   return addedReport;
@@ -44,7 +51,6 @@ const getAll = async () => {
 
   const reportList = await reportCollection.find({}).toArray();
 
-  //Return an empty array if no reports present in the DB
   if (reportCollection.length <= 0) {
     return emptyResult;
   }
@@ -58,100 +64,117 @@ const getAll = async () => {
 };
 
 const get = async (reportId) => {
-  validation.checkInputStr(reportId, "Report id");
-
-  //validation.checkValidObjectId(reportId);
+  checkValidation(isValidArgument(reportId, "reportId"));
+  checkValidation(isValidString(reportId, "reportId"));
+  checkValidation(isValidObjectId(reportId.trim()));
 
   const reportCollection = await reports();
 
-  //Convert id into a valid ObjectID
   let parsedId = ObjectId(reportId.trim());
 
-  //Check if the report with the given id exists
   const report = await reportCollection.findOne({ _id: parsedId });
   if (report === null) {
-    throw "No report with that id.";
+    throw {
+      statusCode: 404,
+      message: "No report was found with the given id!"
+    };
   }
-
-  //Convert ObjectId to string
   report._id = report._id.toString();
+
   return report;
 };
 
 const update = async (reportId, reportedBy, reportFor, reportReasons) => {
-  validation.checkInputStr(reportId, "Report Id");
-  //validation.checkValidObjectId(reportId);
+  checkValidation(isValidArgument(reportId, "reportId"));
+  checkValidation(isValidString(reportId, "reportId"));
+  checkValidation(isValidObjectId(reportId.trim()));
+
+  checkValidation(isValidArgument(reportedBy, "reportedBy"));
+  checkValidation(isValidString(reportedBy, "reportedBy"));
+  checkValidation(isValidObjectId(reportedBy.trim()));
+
+  checkValidation(isValidArgument(reportFor, "reportFor"));
+  checkValidation(isValidString(reportFor, "reportFor"));
+  checkValidation(isValidObjectId(reportFor.trim()));
+
+  checkValidation(isValidArgument(reportReasons, "reportReasons"));
+  checkValidation(isValidString(reportReasons, "reportReasons"));
+
   let parsedId = ObjectId(reportId.trim());
 
   const reportCollection = await reports();
 
-  //Check if the report with the given id exists
   const existingReport = await reportCollection.findOne({ _id: parsedId });
   if (existingReport === null) {
-    throw "No report with that id.";
+    throw {
+      statusCode: 404,
+      message: "No report was found with the given id!"
+    };
   }
-  validation.checkInputStr(reportedBy, "Reported By");
-  //validation.checkValidObjectId(reportedBy);
-  validation.checkInputStr(reportFor, "Report For");
-  //validation.checkValidObjectId(reportFor);
-  validation.checkInputStr(reportReasons, "Report Reasons");
 
   if (
-    existingReport.reportedBy == reportedBy &&
-    existingReport.reportFor == reportFor &&
-    existingReport.reportReasons == reportReasons.trim()
+    existingReport.reportedBy === reportedBy.trim() &&
+    existingReport.reportFor === reportFor.trim() &&
+    existingReport.reportReasons === reportReasons.trim()
   ) {
-    throw "Update field values are the same as the report field values.";
+    throw {
+      statusCode: 400,
+      message: "Update field values are the same as the report field values!"
+    };
   }
 
-  //Create new report object
   let updateReport = {
     reportedBy: reportedBy.trim(),
     reportFor: reportFor.trim(),
     reportReasons: reportReasons.trim(),
   };
 
-  //Update new report object to report collection
   const updateInfo = await reportCollection.updateOne(
     { _id: parsedId },
     { $set: updateReport }
   );
   if (updateInfo.modifiedCount === 0) {
-    throw "Could not update the report.";
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
-  //Fetch the updated report object
   const updatedReport = await reportCollection.findOne({
     _id: parsedId,
   });
 
-  //Convert objectId to string
   updatedReport._id = updatedReport._id.toString();
 
   return updatedReport;
 };
 
 const remove = async (reportId) => {
+  checkValidation(isValidArgument(reportId, "reportId"));
+  checkValidation(isValidString(reportId, "reportId"));
+  checkValidation(isValidObjectId(reportId.trim()));
+
   let result = {};
-  validation.checkInputStr(reportId, "Id");
 
-  //validation.checkValidObjectId(reportId);
-
-  //Convert id into a valid ObjectID
   let parsedId = ObjectId(reportId.trim());
 
   const reportCollection = await reports();
 
-  //Check if the restaurant with the given id exists
   const report = await reportCollection.findOne({ _id: parsedId });
   if (report === null) {
-    throw "No report with that id.";
+    throw {
+      statusCode: 404,
+      message: "No report was found with the given id!"
+    };
   }
 
   const deletionInfo = await reportCollection.deleteOne({ _id: parsedId });
 
   if (deletionInfo.deletedCount === 0) {
-    throw `Could not delete report with id of ${id}.`;
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
   result["reportId"] = report._id.toString();
@@ -159,6 +182,15 @@ const remove = async (reportId) => {
 
   return result;
 };
+
+const checkValidation = (validation) => {
+  if (!validation.result) {
+    throw {
+      statusCode: 400,
+      message: validation.message
+    };
+  }
+}
 
 module.exports = {
   create,
