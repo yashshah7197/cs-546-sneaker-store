@@ -149,7 +149,7 @@ const update = async (
   validation.checkInputStr(listedBy);
   validation.checkInputStr(brandName);
   validation.checkInputStr(modelName);
-  validation.checkIsNumber(price);
+  validation.checkIsNumber(Number(price));
   //validation.checkInputStr(images);
   validation.checkIsChar(brandName);
   validation.checkIsChar(modelName);

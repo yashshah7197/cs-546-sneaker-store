@@ -244,10 +244,10 @@ router.get("/BuyList", async (req, res) => {
     let id = req.session.user;
     const sneaker = await sneakersData.getAllBuyList(id);
     res.render("store/sneakerBuyList", {
-      title: "Shop",
+      title: "Sneakers Bought",
       sneaker: sneaker,
       isLoggedIn: !!req.session.user,
-      partial: "shop-scripts",
+      partial: "empty-scripts",
     });
     // console.log("hell2");
   } catch (e) {
@@ -309,7 +309,7 @@ router.get("/sell", async (req, res) => {
 });
 router.post("/buy", async (req, res) => {
   try {
-    let sneakerId = req.body.id;
+    let sneakerId = req.body.sneakerId;
     let size = req.body.size;
     // validation.checkInputStr(sneakerId);
     // validation.checkInputStr(size);

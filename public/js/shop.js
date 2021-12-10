@@ -9,6 +9,7 @@
 
   var sneakerBuyForm = $("#sneakerBuyForm");
 
+  //Sneaker buy client side validations
   sneakerBuyForm.submit(function (event) {
     var buyFormError;
     var buyErrorMsg;
@@ -18,12 +19,12 @@
 
       var sneakerId = $("#sneakerId").val();
       var sneakerPrice = $("#sneakerPrice").val();
-      var sizeArr = $("#sneakerSize").val().split;
+      var sizeArr = $("#sneakerSize").val().split(",");
       var size = sizeArr[0];
       var quantity = sizeArr[1];
 
       checkInputStr(sneakerId, "Sneaker ID");
-      checkIsNumber(Number(sneakerPrice), "Price");
+      //checkIsNumber(Number(sneakerPrice), "Price");
       checkIsNumber(Number(size), "Size");
       checkIsNumber(Number(quantity), "Quantity");
       return true;
