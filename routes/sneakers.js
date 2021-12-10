@@ -8,13 +8,12 @@ const multer = require("multer");
 const validation = require("../data/validate");
 const nodemailer = require("nodemailer");
 
-
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: 'noreply.solesearch@gmail.com',
-    pass: 'Solesearch@1234'
-  }
+    user: "noreply.solesearch@gmail.com",
+    pass: "Solesearch@1234",
+  },
 });
 
 const fileStorageEngine = multer.diskStorage({
@@ -40,7 +39,12 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
       { size: 11, quantity: Number(req.body.size11) },
       { size: 12, quantity: Number(req.body.size12) },
     ];
-    let image = "../../" + req.file.path;
+    let image;
+    if (req.file != null && req.file.path != null) {
+      image = "../../" + req.file.path;
+    } else {
+      image = "../../public/uploads/no_image.jpeg";
+    }
     validation.checkInputStr(brandName);
     validation.checkInputStr(modelName);
     validation.checkInputStr(price);
@@ -71,7 +75,7 @@ const users = data.users;
 
 const { ObjectId } = require("mongodb");
 const { update } = require("../data/users");
-const {getBrands} = require("../data/sneakers");
+const { getBrands } = require("../data/sneakers");
 //User listed sneakers
 router.get("/listedBy", async (req, res) => {
   try {
@@ -94,7 +98,7 @@ router.get("/", async (req, res) => {
     let brands = await sneakersData.getBrands();
 
     if (!!req.session.user) {
-      sneakers = sneakers.filter(s => s.listedBy !== req.session.user);
+      sneakers = sneakers.filter((s) => s.listedBy !== req.session.user);
     }
 
     res.render("store/sneakersList", {
@@ -174,29 +178,28 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
       { size: 12, quantity: Number(req.body.size12) },
     ];
 
-      let s7 = Number(req.body.size7);
-      let s8 = Number(req.body.size8);
-      let s9 = Number(req.body.size9);
-      let s10 = Number(req.body.size10);
-      let s11 = Number(req.body.size11);
-      let s12 = Number(req.body.size12);
-      let mailList = [];
-      let myArr = [];
-      for(let i=0;i<sneaker.notify.length;i++)
-      {
-        if((sneaker.notify[i].size == '7' && s7 >  0) 
-        || (sneaker.notify[i].size == '8' && s8 > 0) 
-        || (sneaker.notify[i].size == '9' && s9 > 0) 
-        || (sneaker.notify[i].size == '10' && s10 > 0) 
-        || (sneaker.notify[i].size == '11' && s11 > 0) 
-        || (sneaker.notify[i].size == '12' && s12 > 0))
-        {
-          mailList.push(sneaker.notify[i].userName);
-        }
-        else{
-          myArr.push(sneaker.notify[i]);
-        }
+    let s7 = Number(req.body.size7);
+    let s8 = Number(req.body.size8);
+    let s9 = Number(req.body.size9);
+    let s10 = Number(req.body.size10);
+    let s11 = Number(req.body.size11);
+    let s12 = Number(req.body.size12);
+    let mailList = [];
+    let myArr = [];
+    for (let i = 0; i < sneaker.notify.length; i++) {
+      if (
+        (sneaker.notify[i].size == "7" && s7 > 0) ||
+        (sneaker.notify[i].size == "8" && s8 > 0) ||
+        (sneaker.notify[i].size == "9" && s9 > 0) ||
+        (sneaker.notify[i].size == "10" && s10 > 0) ||
+        (sneaker.notify[i].size == "11" && s11 > 0) ||
+        (sneaker.notify[i].size == "12" && s12 > 0)
+      ) {
+        mailList.push(sneaker.notify[i].userName);
+      } else {
+        myArr.push(sneaker.notify[i]);
       }
+    }
 
     const update = await sneakersData.update(
       req.body.id,
@@ -211,22 +214,19 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
       sneaker.listedBy,
       myArr
     );
-      
-
 
     var mailOptions = {
-      from: 'noreply.solesearch@gmail.com',
+      from: "noreply.solesearch@gmail.com",
       to: mailList,
-      subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock.`,
-      text: 'Hurry up and Order Now!'
+      subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock. Hurry up and Order Now!`,
+      text: "This is a system generated email. Please do not reply to this mail. Thank you!",
     };
-    
-    transporter.sendMail(mailOptions, function(error, info){
+
+    transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
       }
     });
-
 
     res.render("store/sneakerUpdatedSuccessfully", {
       title: "Updated Successfully",
@@ -353,7 +353,7 @@ router.post("/notify", async (req, res) => {
   }
 });
 
-router.post('/filter', async (req, res) => {
+router.post("/filter", async (req, res) => {
   let filterOptions = req.body;
 
   let brandName = filterOptions.brandName;
@@ -361,10 +361,16 @@ router.post('/filter', async (req, res) => {
   let price = filterOptions.price;
 
   try {
-    let filteredData = await sneakersData.filter(brandName, Number(size), Number(price));
+    let filteredData = await sneakersData.filter(
+      brandName,
+      Number(size),
+      Number(price)
+    );
 
     if (!!req.session.user) {
-      filteredData = filteredData.filter((s) => s.listedBy !== req.session.user);
+      filteredData = filteredData.filter(
+        (s) => s.listedBy !== req.session.user
+      );
     }
 
     let brands = await getBrands();
@@ -376,11 +382,9 @@ router.post('/filter', async (req, res) => {
       isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
-
   } catch (e) {
-    res.redirect('/');
+    res.redirect("/");
   }
 });
 
 module.exports = router;
-

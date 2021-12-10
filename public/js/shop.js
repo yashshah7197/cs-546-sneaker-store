@@ -7,23 +7,23 @@
   var quesFormError = $("#quesFormError");
   var quesErrorMsg = $("#quesErrorMsg");
 
-  var sneakerBuyForm = $("#sneakerBuyForm");
+  // var sneakerBuyForm = $("#sneakerBuyForm");
 
-  sneakerBuyForm.submit(function (event) {
-    var buyFormError;
-    var buyErrorMsg;
-    try {
-      var buyFormError = $("#buyFormError");
-      var buyErrorMsg = $("#buyErrorMsg");
-      var size = $("#size").val();
-      checkIsNumber(Number(reviewRatingElem.val()), "Rating");
-      return true;
-    } catch (e) {
-      buyFormError.empty().append(e);
-      buyErrorMsg.removeClass("d-none");
-      return false;
-    }
-  });
+  // sneakerBuyForm.submit(function (event) {
+  //   var buyFormError;
+  //   var buyErrorMsg;
+  //   try {
+  //     var buyFormError = $("#buyFormError");
+  //     var buyErrorMsg = $("#buyErrorMsg");
+  //     var size = $("#size").val();
+  //     checkIsNumber(Number(reviewRatingElem.val()), "Rating");
+  //     return true;
+  //   } catch (e) {
+  //     buyFormError.empty().append(e);
+  //     buyErrorMsg.removeClass("d-none");
+  //     return false;
+  //   }
+  // });
 
   //Add review AJAX call
   reviewForm.submit(function (event) {
@@ -315,7 +315,25 @@ function submitAnswer(event) {
   }
 }
 
-// function reportReview(event) {
-//   var repoertedBy = $("#reviewedBy").val();
-//   console.log("Review reported Successfully");
-// }
+function reportReview(event) {
+  let reportedBy = $("#reviewedBy").val();
+  let reportFor = event.currentTarget.id.split("_");
+  let request = {
+    method: "POST",
+    url: "/reports/",
+    dataType: "json",
+    data: {
+      reportedBy: reportedBy,
+      reportFor: reportFor[1],
+      reportReasons: "inappropriate",
+    },
+  };
+  $.ajax(request)
+    .then(function (responseMessage) {
+      console.log("Review reported Successfully");
+      console.log(responseMessage);
+    })
+    .fail(function (e) {
+      console.log(e);
+    });
+}
