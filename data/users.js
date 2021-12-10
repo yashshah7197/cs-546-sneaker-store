@@ -75,11 +75,11 @@ const getAll = async () => {
 const get = async (userId) => {
   checkValidation(isValidArgument(userId, "userId"));
   checkValidation(isValidString(userId, "userId"));
-  checkValidation(isValidObjectId(userId));
+  checkValidation(isValidObjectId(userId.trim()));
 
   const usersCollection = await users();
 
-  const user = await usersCollection.findOne({ _id: ObjectId(userId) });
+  const user = await usersCollection.findOne({ _id: ObjectId(userId.trim()) });
   if (user === null) {
     throw {
       statusCode: 404,
@@ -104,7 +104,7 @@ const update = async (
 ) => {
   checkValidation(isValidArgument(userId, "userId"));
   checkValidation(isValidString(userId, "userId"));
-  checkValidation(isValidObjectId(userId));
+  checkValidation(isValidObjectId(userId.trim()));
 
   checkValidation(isValidArgument(firstName, "firstName"));
   checkValidation(isValidString(firstName, "firstName"));
@@ -134,7 +134,7 @@ const update = async (
   checkValidation(isValidArgument(sneakersBought, "sneakersBought"));
   checkValidation(isValidArray(sneakersBought, "sneakersBought"));
 
-  let user = await get(userId);
+  let user = await get(userId.trim());
 
   const updatedUser = {
     firstName: firstName.trim(),
@@ -158,7 +158,7 @@ const update = async (
   const usersCollection = await users();
 
   const updatedInfo = await usersCollection.updateOne(
-    { _id: ObjectId(userId) },
+    { _id: ObjectId(userId.trim()) },
     { $set: updatedUser }
   );
 
@@ -169,19 +169,19 @@ const update = async (
     };
   }
 
-  return await get(userId);
+  return await get(userId.trim());
 };
 
 const remove = async (userId) => {
   checkValidation(isValidArgument(userId, "userId"));
   checkValidation(isValidString(userId, "userId"));
-  checkValidation(isValidObjectId(userId));
+  checkValidation(isValidObjectId(userId.trim()));
 
-  await get(userId);
+  await get(userId.trim());
 
   const usersCollection = await users();
 
-  const deletionInfo = await usersCollection.deleteOne({ _id: ObjectId(userId) });
+  const deletionInfo = await usersCollection.deleteOne({ _id: ObjectId(userId.trim()) });
   if (deletionInfo.deletedCount === 0) {
     throw {
       statusCode: 500,
@@ -231,7 +231,7 @@ const hashPassword = async (password) => {
 const getUserID = async (email) => {
   checkValidation(isValidArgument(email, "email"));
   checkValidation(isValidString(email, "email"));
-  checkValidation(isValidEmail(email));
+  checkValidation(isValidEmail(email.trim()));
 
   const usersCollection = await users();
 
