@@ -21,6 +21,7 @@
     } catch (e) {
       buyFormError.empty().append(e);
       buyErrorMsg.removeClass("d-none");
+      return false;
     }
   });
 
