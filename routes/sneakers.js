@@ -301,7 +301,7 @@ router.get("/sell", async (req, res) => {
     res.render("store/sneakerSell", {
       title: "Add Sneaker",
       isLoggedIn: !!req.session.user,
-      partial: "empty-scripts",
+      partial: "sell-scripts",
     });
   } catch (e) {
     console.log(e);
