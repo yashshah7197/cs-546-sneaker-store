@@ -22,7 +22,7 @@
       var quantity = sizeArr[1];
 
       checkInputStr(sneakerId, "Sneaker ID");
-      //checkIsNumber(Number(sneakerPrice), "Price");
+      checkIsNumber(Number(sneakerPrice), "Price");
       checkIsNumber(Number(size), "Size");
       checkIsNumber(Number(quantity), "Quantity");
       return true;

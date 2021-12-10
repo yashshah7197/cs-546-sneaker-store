@@ -1,65 +1,132 @@
-<div class="row align-items-center justify-content-center g-0 min-vh-100 mt-4 mb-4">
-    <div class="col-lg-5 col-md-8 py-8 py-xl-0">
-        <!-- Card -->
-        <div class="card shadow ">
-            <!-- Card body -->
-            <div class="card-body p-6">
-                <div class="mb-4">
-                    <h1 class="mb-1 fw-bold">Sell a sneaker</h1>
-                </div>
-                <!-- Form -->
-                <form action="/sneakers/photo/upload" method="POST" id="sell-form" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="brandName" class="form-label">Brand Name</label>
-                        <input type="text" id="brandName" class="form-control" name="brandName"
-                               placeholder="Brand name here" required="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="modelName" class="form-label">Model Name</label>
-                        <input type="text" id="modelName" class="form-control" name="modelName"
-                               placeholder="Model name here" required="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="size7" class="form-label">Size 7</label>
-                        <input type="number" id="size7" class="form-control" name="size7"
-                               placeholder="Quantity available here" required="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="size8" class="form-label">Size 8</label>
-                        <input type="number" id="size8" class="form-control" name="size8"
-                               placeholder="Quantity available here" required="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="size9" class="form-label">Size 9</label>
-                        <input type="number" id="size9" class="form-control" name="size9"
-                               placeholder="Quantity available here" required="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="size10" class="form-label">Size 10</label>
-                        <input type="number" id="size10" class="form-control" name="size10"
-                               placeholder="Quantity available here" required="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="size11" class="form-label">Size 11</label>
-                        <input type="number" id="size11" class="form-control" name="size11"
-                               placeholder="Quantity available here" required="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="size12" class="form-label">Size 12</label>
-                        <input type="number" id="size12" class="form-control" name="size12"
-                               placeholder="Quantity available here" required="">
-                    </div>
-                      <label for="price">Price:</label><br />
-                       <input type="number" id="price" name="price" value="0" /><br />
-  <label for="image" class="mt-2">Images:</label><br />
-                     <input type="file" name="image" accept=".jpg, .jpeg, .png" /><br />
-                    <div class="mt-4">
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+<div
+  class="row align-items-center justify-content-center g-0 min-vh-100 mt-4 mb-4"
+>
+  <div class="col-lg-5 col-md-8 py-8 py-xl-0">
+    <!-- Card -->
+    <div class="card shadow">
+      <!-- Card body -->
+      <div class="card-body p-6">
+        <div class="mb-4">
+          <h1 class="mb-1 fw-bold">Sell a sneaker</h1>
         </div>
+        <!-- Form -->
+        <form
+          action="/sneakers/photo/upload"
+          method="POST"
+          id="sellForm"
+          enctype="multipart/form-data"
+        >
+          <div
+            class="alert alert-danger d-none"
+            role="alert"
+            id="sellFormError"
+            class="sellFormError"
+          >
+          </div>
+          <div class="mb-3">
+            <label for="brandName" class="form-label">Brand Name</label>
+            <input
+              type="text"
+              id="brandName"
+              class="form-control"
+              name="brandName"
+              placeholder="Brand name here"
+              required=""
+            />
+          </div>
+          <div class="mb-3">
+            <label for="modelName" class="form-label">Model Name</label>
+            <input
+              type="text"
+              id="modelName"
+              class="form-control"
+              name="modelName"
+              placeholder="Model name here"
+              required=""
+            />
+          </div>
+          <div class="mb-3">
+            <label for="size7" class="form-label">Size 7</label>
+            <input
+              type="number"
+              id="size7"
+              class="form-control"
+              name="size7"
+              placeholder="Quantity available here"
+              required=""
+            />
+          </div>
+          <div class="mb-3">
+            <label for="size8" class="form-label">Size 8</label>
+            <input
+              type="number"
+              id="size8"
+              class="form-control"
+              name="size8"
+              placeholder="Quantity available here"
+              required=""
+            />
+          </div>
+          <div class="mb-3">
+            <label for="size9" class="form-label">Size 9</label>
+            <input
+              type="number"
+              id="size9"
+              class="form-control"
+              name="size9"
+              placeholder="Quantity available here"
+              required=""
+            />
+          </div>
+          <div class="mb-3">
+            <label for="size10" class="form-label">Size 10</label>
+            <input
+              type="number"
+              id="size10"
+              class="form-control"
+              name="size10"
+              placeholder="Quantity available here"
+              required=""
+            />
+          </div>
+          <div class="mb-3">
+            <label for="size11" class="form-label">Size 11</label>
+            <input
+              type="number"
+              id="size11"
+              class="form-control"
+              name="size11"
+              placeholder="Quantity available here"
+              required=""
+            />
+          </div>
+          <div class="mb-3">
+            <label for="size12" class="form-label">Size 12</label>
+            <input
+              type="number"
+              id="size12"
+              class="form-control"
+              name="size12"
+              placeholder="Quantity available here"
+              required=""
+            />
+          </div>
+          <label for="price">Price:</label><br />
+          <input type="number" id="price" name="price" value="0" /><br />
+          <label for="image" class="mt-2">Images:</label><br />
+          <input
+            type="file"
+            name="image"
+            id="image"
+            accept=".jpg, .jpeg, .png"
+          /><br />
+          <div class="mt-4">
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>

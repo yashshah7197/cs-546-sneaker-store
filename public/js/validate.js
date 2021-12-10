@@ -19,7 +19,7 @@ function checkIsChar(str, varName) {
 //Function to check overall rating
 function checkRating(rating) {
   if (rating < 0 || rating > 5) {
-    throw "Invalid overall rating.";
+    throw "Invalid rating.";
   }
 }
 

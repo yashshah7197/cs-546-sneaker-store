@@ -27,7 +27,8 @@
                                   <div class="alert alert-danger d-none" role="alert" id="buyFormError">
                                   </div>
                                     <div>
-                                        <p id="sneakerPrice">Price : {{sneaker.price}}$</p>
+                                        <p>Price : {{sneaker.price}}$</p>
+                                        <input type="hidden" value={{sneaker.price}} name="sneakerPrice" id="sneakerPrice" />
                                     </div>
                                     <div class="col-md-4">
                                         <label for="size" class="form-label">Select Size</label>

@@ -311,6 +311,7 @@ router.post("/buy", async (req, res) => {
   try {
     let sneakerId = req.body.sneakerId;
     let size = req.body.size;
+    let price = req.body.sneakerPrice;
     // validation.checkInputStr(sneakerId);
     // validation.checkInputStr(size);
     if (!req.session.user) {
@@ -319,7 +320,8 @@ router.post("/buy", async (req, res) => {
       const sneakers = await sneakersData.buySneaker(
         req.session.user,
         sneakerId,
-        size
+        size,
+        price
       );
       res.redirect("/sneakers/BuyList");
     }

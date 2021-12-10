@@ -195,7 +195,7 @@ const remove = async (sneakerId) => {
   return { Deleted: true };
 };
 
-const buySneaker = async (userId, sneakerId, size1) => {
+const buySneaker = async (userId, sneakerId, size1, price) => {
   let size = size1.split(",");
   // validation.checkInputStr(sneakerId);
   // validation.checkInputStr(size);
@@ -205,6 +205,7 @@ const buySneaker = async (userId, sneakerId, size1) => {
   userInfo.sneakersBought[userInfo.sneakersBought.length] = {
     sneakerId: sneakerId,
     size: size[0],
+    price: price,
   };
   const update1 = await user.update(
     userId,
