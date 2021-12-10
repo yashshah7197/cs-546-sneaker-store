@@ -1,25 +1,23 @@
-// //Commented by Hamza || Code to be modified
+(function ($) {
+  var searchForm = $("#searchForm");
 
-// (function ($) {
-//   $(document).ready(function () {
-//     $("select").change(function () {
-//       //$(".alert").alert("close");
-//       var nameArr = $("#size").val().split(",");
-//       console.log(nameArr[0]);
-//       if ($("#size").val() == 0) {
-//         document.getElementById("notify").hidden = true;
-//         $("#buy").attr("disabled", true);
-//       } else if (nameArr[1] <= 0) {
-//         document.getElementById("notify").hidden = false;
-//         $("#buy").attr("disabled", true);
-//       } else {
-//         document.getElementById("notify").hidden = true;
-//         $("#buy").attr("disabled", false);
-//       }
-//     });
-//   });
+  //Sneaker buy client side validations
+  searchForm.submit(function (event) {
+    var searchFormError;
+    try {
+      var searchFormError = $("#searchFormError");
 
-//   $("#notify").click(function (event) {
-//     $(".alert").alert();
-//   });
-// })(window.jQuery);
+      searchFormError.addClass("d-none");
+
+      var searchTerm = $("#searchTerm");
+
+      checkInputStr(searchTerm.val(), "Search Term");
+
+      return true;
+    } catch (e) {
+      searchFormError.text(e);
+      searchFormError.removeClass("d-none");
+      return false;
+    }
+  });
+})(window.jQuery);

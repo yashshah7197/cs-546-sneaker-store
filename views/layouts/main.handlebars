@@ -46,8 +46,8 @@
                     {{/if}}
 
                 </ul>
-                <form action="/sneakers/search" method="POST" class="d-flex">
-                    <input class="form-control me-2" type="search" name="searchTerm" placeholder="Search" aria-label="Search">
+                <form action="/sneakers/search" method="POST" class="d-flex" id="searchForm">
+                    <input class="form-control me-2" type="search" name="searchTerm" id="searchTerm" placeholder="Search" aria-label="Search">
                 </form>
 
                 {{#if isLoggedIn}}
@@ -73,6 +73,8 @@
             </div>
         </div>
     </nav>
+    <div class="alert alert-danger d-none" role="alert" id="searchFormError">
+    </div>
 </header>
 
 
