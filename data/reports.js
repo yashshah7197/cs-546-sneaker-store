@@ -2,7 +2,7 @@ const mongoCollections = require("../config/mongoCollections");
 const reports = mongoCollections.reports;
 
 const { ObjectId } = require("mongodb");
-const {isValidArgument, isValidString, isValidObjectId} = require("./data/validate");
+const {isValidArgument, isValidString, isValidObjectId} = require("./validate");
 
 const create = async (reportedBy, reportFor, reportReasons, type) => {
   checkValidation(isValidArgument(reportedBy, "reportedBy"));
