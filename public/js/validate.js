@@ -32,3 +32,31 @@ function checkIsNumber(num, varName) {
     throw `${varName || "Given variable"} is NaN`;
   }
 }
+
+function checkIsValidEmail(email) {
+  const emailRegex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  const match = email.match(emailRegex);
+  if (match === null) {
+    throw "The email provided is invalid!";
+  }
+}
+
+function checkIsValidPassword(password) {
+  const passwordRegex = /^[^\s]{6,}$/;
+  const match = password.match(passwordRegex);
+
+  if (match === null) {
+    throw "The password must be at least 6 characters long and consist only of alphanumeric and special characters!";
+  }
+}
+
+function checkIsValidPhoneNumber(phoneNumber) {
+  const phoneNumberRegex = /^\d{3}-\d{3}-\d{4}$/;
+  const match = phoneNumber.match(phoneNumberRegex);
+
+  if (match === null) {
+    throw "The phone number should be in the format xxx-xxx-xxxx where x is a digit from 0-9!";
+  }
+}

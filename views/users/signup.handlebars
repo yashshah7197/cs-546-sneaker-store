@@ -1,45 +1,64 @@
 <div class="row align-items-center justify-content-center g-0 min-vh-100">
-    <div class="col-lg-5 col-md-8 py-8 py-xl-0">
-        <!-- Card -->
-        <div class="card shadow ">
-            <!-- Card body -->
-            <div class="card-body p-6">
-                <div class="mb-4">
-                    <h1 class="mb-1 fw-bold">Sign Up</h1>
-                    <span>Already have an account? <a href="/users/login" class="ms-1">Sign In</a></span>
-                </div>
-                <!-- Form -->
-                <form action="/users/signup" method="POST" id="signup-form">
-                    <!-- Username -->
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" class="form-control" name="email"
-                               placeholder="Email address here" required="" value="{{email}}">
-                    </div>
-                    <!-- Password -->
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" id="password" class="form-control" name="password"
-                               placeholder="**************" required="" value="{{ password }}">
-                    </div>
-                    <div>
-                        <!-- Button -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary ">Sign Up</button>
-                        </div>
-                    </div>
-                </form>
-                <div class="mt-2">
-                    {{#if hasErrors}}
-                        {{#each errors}}
-                            <div class="alert alert-danger">
-                                {{this}}
-                            </div>
-                        {{/each}}
-                    {{/if}}
-                </div>
-            </div>
+  <div class="col-lg-5 col-md-8 py-8 py-xl-0">
+    <!-- Card -->
+    <div class="card shadow">
+      <!-- Card body -->
+      <div class="card-body p-6">
+        <div class="mb-4">
+          <h1 class="mb-1 fw-bold">Sign Up</h1>
+          <span>Already have an account?
+            <a href="/users/login" class="ms-1">Sign In</a></span>
         </div>
+        <!-- Form -->
+        <form action="/users/signup" method="POST" id="signup-form">
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              name="email"
+              placeholder="Email address here"
+              required=""
+              value="{{email}}"
+            />
+          </div>
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              name="password"
+              placeholder="**************"
+              required=""
+              value="{{password}}"
+            />
+          </div>
+          <div>
+            <!-- Button -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Sign Up</button>
+            </div>
+          </div>
+        </form>
+        <div class="mt-2">
+          <div
+            class="alert alert-danger d-none"
+            role="alert"
+            id="signupFormError"
+          ></div>
+          {{#if hasErrors}}
+            {{#each errors}}
+              <div class="alert alert-danger">
+                {{this}}
+              </div>
+            {{/each}}
+          {{/if}}
+        </div>
+      </div>
     </div>
+  </div>
 </div>
-

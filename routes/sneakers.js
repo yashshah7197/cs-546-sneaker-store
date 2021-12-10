@@ -47,7 +47,7 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
     }
     validation.checkInputStr(brandName);
     validation.checkInputStr(modelName);
-    validation.checkInputStr(price);
+    validation.checkIsNumber(Number(price));
     validation.checkInputStr(image);
     validation.checkIsChar(brandName);
     validation.checkIsChar(modelName);

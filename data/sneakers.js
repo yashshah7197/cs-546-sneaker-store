@@ -18,7 +18,7 @@ const create = async (
   const sneakersCollection = await sneakers();
   validation.checkInputStr(brandName);
   validation.checkInputStr(modelName);
-  validation.checkIsNumber(price);
+  validation.checkIsNumber(Number(price));
   validation.checkInputStr(listedBy);
   validation.checkInputStr(images);
   validation.checkIsChar(brandName);

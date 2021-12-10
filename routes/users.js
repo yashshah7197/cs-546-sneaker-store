@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const data = require("../data");
-const {isValidEmail, isValidPassword, isValidString, isValidPhoneNumber} = require("../data/validate");
+const {
+  isValidEmail,
+  isValidPassword,
+  isValidString,
+  isValidPhoneNumber,
+} = require("../data/validate");
 const usersData = data.users;
 
 router.get("/login", (req, res) => {
@@ -13,7 +18,7 @@ router.get("/login", (req, res) => {
   res.status(200).render("users/login", {
     title: "Login",
     isLoggedIn: !!req.session.user,
-    partial: "empty-scripts",
+    partial: "user-scripts",
   });
 });
 
@@ -26,7 +31,7 @@ router.get("/signup", (req, res) => {
   res.status(200).render("users/signup", {
     title: "Signup",
     isLoggedIn: !!req.session.user,
-    partial: "empty-scripts",
+    partial: "user-scripts",
   });
 });
 
@@ -68,7 +73,7 @@ router.post("/signup", async (req, res) => {
       isLoggedIn: !!req.session.user,
       hasErrors: true,
       errors: errors,
-      partial: "empty-scripts",
+      partial: "user-scripts",
     });
     return;
   }
@@ -77,8 +82,8 @@ router.post("/signup", async (req, res) => {
     const result = await usersData.create(
       signupData.email.toLowerCase().trim(),
       signupData.password,
-      false,
-      );
+      false
+    );
     if (result) {
       res.redirect("/users/login");
     } else {
@@ -86,7 +91,7 @@ router.post("/signup", async (req, res) => {
         title: "Error",
         isLoggedIn: !!req.session.user,
         error: "Internal server error!",
-        partial: "empty-scripts",
+        partial: "user-scripts",
       });
     }
   } catch (e) {
@@ -97,14 +102,14 @@ router.post("/signup", async (req, res) => {
         isLoggedIn: !!req.session.user,
         hasErrors: true,
         errors: errors,
-        partial: "empty-scripts",
+        partial: "user-scripts",
       });
     } else {
       res.status(500).render("layouts/error", {
         title: "Error",
         isLoggedIn: !!req.session.user,
         error: "Internal server error!",
-        partial: "empty-scripts",
+        partial: "user-scripts",
       });
     }
   }
@@ -148,13 +153,16 @@ router.post("/login", async (req, res) => {
       isLoggedIn: !!req.session.user,
       hasErrors: true,
       errors: errors,
-      partial: "empty-scripts",
+      partial: "user-scripts",
     });
     return;
   }
 
   try {
-    let result = await usersData.checkUser(loginData.email.trim(), loginData.password);
+    let result = await usersData.checkUser(
+      loginData.email.trim(),
+      loginData.password
+    );
     if (result) {
       req.session.user = result["_id"].toString();
       res.redirect("/");
@@ -166,7 +174,7 @@ router.post("/login", async (req, res) => {
       isLoggedIn: !!req.session.user,
       hasErrors: true,
       errors: errors,
-      partial: "empty-scripts",
+      partial: "user-scripts",
     });
   }
 });
@@ -179,7 +187,7 @@ router.get("/logout", (req, res) => {
     res.status(200).render("users/logout", {
       title: "Logout",
       status: "Logged out successfully!",
-      partial: "empty-scripts",
+      partial: "user-scripts",
     });
   }
 });
@@ -198,7 +206,7 @@ router.get("/profile", async (req, res) => {
         address: user.address,
         phoneNumber: user.phoneNumber,
         isLoggedIn: !!req.session.user,
-        partial: "empty-scripts",
+        partial: "user-scripts",
       };
 
       if (req.session.updateSuccessful) {
@@ -209,13 +217,13 @@ router.get("/profile", async (req, res) => {
       res.status(200).render("users/profile", renderOptions);
     } catch (e) {
       if (e.statusCode === 404) {
-        res.status(404).json({error: "Not found!"});
+        res.status(404).json({ error: "Not found!" });
       } else {
         res.status(500).render("layouts/error", {
           title: "Error",
           isLoggedIn: !!req.session.user,
           error: "Internal server error!",
-          partial: "empty-scripts",
+          partial: "user-scripts",
         });
       }
     }
@@ -290,7 +298,7 @@ router.post("/profile", async (req, res) => {
         hasErrors: true,
         errors: errors,
         isLoggedIn: !!req.session.user,
-        partial: "empty-scripts",
+        partial: "user-scripts",
       });
       return;
     }
@@ -319,7 +327,7 @@ router.post("/profile", async (req, res) => {
           title: "Error",
           error: "Internal server error!",
           isLoggedIn: !!req.session.user,
-          partial: "empty-scripts",
+          partial: "user-scripts",
         });
       }
     } catch (e) {
@@ -335,7 +343,7 @@ router.post("/profile", async (req, res) => {
           hasErrors: true,
           errors: errors,
           isLoggedIn: !!req.session.user,
-          partial: "empty-scripts",
+          partial: "user-scripts",
         });
       } else {
         console.log(e);
@@ -343,7 +351,7 @@ router.post("/profile", async (req, res) => {
           title: "Error",
           error: "Internal server error!",
           isLoggedIn: !!req.session.user,
-          partial: "empty-scripts",
+          partial: "user-scripts",
         });
       }
     }

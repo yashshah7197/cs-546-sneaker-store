@@ -9,27 +9,25 @@
 
       sellFormError.addClass("d-none");
 
-      var brandName = $("brandName");
-      var modelName = $("modelName");
-      var size7 = $("size7");
-      var size8 = $("size8");
-      var size9 = $("size9");
-      var size10 = $("size10");
-      var size11 = $("size11");
-      var size12 = $("size12");
-      var price = $("price");
-      var image = $("image");
+      var brandName = $("#brandName");
+      var modelName = $("#modelName");
+      var size7 = $("#size7");
+      var size8 = $("#size8");
+      var size9 = $("#size9");
+      var size10 = $("#size10");
+      var size11 = $("#size11");
+      var size12 = $("#size12");
+      var price = $("#price");
 
-      checkInputStr(brandName, "Brand Name");
-      checkInputStr(modelName, "Model Name");
-      checkIsNumber(Number(size7), "size7");
-      checkIsNumber(Number(size8), "size8");
-      checkIsNumber(Number(size9), "size9");
-      checkIsNumber(Number(size10), "size10");
-      checkIsNumber(Number(size11), "size11");
-      checkIsNumber(Number(size12), "size12");
-      checkIsNumber(Number(price), "Price");
-      //checkIsImage(image, "Image");
+      checkInputStr(brandName.val(), "Brand Name");
+      checkInputStr(modelName.val(), "Model Name");
+      checkIsNumber(Number(size7.val()), "size7");
+      checkIsNumber(Number(size8.val()), "size8");
+      checkIsNumber(Number(size9.val()), "size9");
+      checkIsNumber(Number(size10.val()), "size10");
+      checkIsNumber(Number(size11.val()), "size11");
+      checkIsNumber(Number(size12.val()), "size12");
+      checkIsNumber(Number(price.val()), "Price");
 
       return true;
     } catch (e) {
