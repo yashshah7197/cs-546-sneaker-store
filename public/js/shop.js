@@ -318,6 +318,7 @@ function submitAnswer(event) {
 function reportReview(event) {
   let reportedBy = $("#reviewedBy").val();
   let reportFor = event.currentTarget.id.split("_");
+  let reportR = $(`#rr_${reportFor[1]}`).val();
   let request = {
     method: "POST",
     url: "/reports/",
@@ -325,7 +326,7 @@ function reportReview(event) {
     data: {
       reportedBy: reportedBy,
       reportFor: reportFor[1],
-      reportReasons: "inappropriate",
+      reportReasons: reportR,
     },
   };
   $.ajax(request)
@@ -336,4 +337,11 @@ function reportReview(event) {
     .fail(function (e) {
       console.log(e);
     });
+}
+
+function openReport(event) {
+  event.preventDefault();
+  let id = event.currentTarget.id.split("_");
+  let idx = id[1];
+  $(".rrBtn").attr("hidden", false);
 }
