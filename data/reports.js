@@ -5,18 +5,20 @@ const validation = require("./validate");
 const { ObjectId } = require("mongodb");
 // const { reports } = require("../config/mongoCollections");
 
-const create = async (reportedBy, reportFor, reportReasons) => {
+const create = async (reportedBy, reportFor, reportReasons, type) => {
   validation.checkInputStr(reportedBy, "Reported By");
   // validation.checkValidObjectId(reportedBy);
   validation.checkInputStr(reportFor, "Report For");
   // validation.checkValidObjectId(reportFor);
   validation.checkInputStr(reportReasons, "Report Reasons");
+  validation.checkInputStr(type, "Type");
   const reportCollection = await reports();
   //create new report object
   let newReport = {
     reportedBy: reportedBy.trim(),
     reportFor: reportFor.trim(),
     reportReasons: reportReasons.trim(),
+    type: type.trim(),
   };
   //Insert new report object to report collection
   const insertInfo = await reportCollection.insertOne(newReport);

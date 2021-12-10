@@ -73,3 +73,25 @@
   text-decoration: none;
   color: black;
 }
+
+.rrBtn label {
+  color: blue;
+}
+
+.rrBtn button {
+  color: black;
+  background-color: #ffc107;
+}
+
+.qnaReportBtn {
+  border: 0.5px solid black;
+  border-radius: 5px;
+  float: right;
+  background-color: #ffc107;
+}
+
+.qnaReportBtn a {
+  padding: 5px;
+  text-decoration: none;
+  color: black;
+}

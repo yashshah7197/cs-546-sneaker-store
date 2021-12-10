@@ -15,6 +15,7 @@ router.post("/", async (req, res) => {
     validation.checkInputStr(reportData.reportedBy, "Reported By");
     validation.checkInputStr(reportData.reportFor, "Report For");
     validation.checkInputStr(reportData.reportReasons, "Report Reason");
+    validation.checkInputStr(reportData.type, "Type");
   } catch (e) {
     res.status(400).json({ Error: e });
     return;
@@ -24,7 +25,8 @@ router.post("/", async (req, res) => {
     const report = await reportsData.create(
       reportData.reportedBy,
       reportData.reportFor,
-      reportData.reportReasons
+      reportData.reportReasons,
+      reportData.type
     );
     res.status(200).json(report);
   } catch (e) {

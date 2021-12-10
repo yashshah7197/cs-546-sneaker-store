@@ -327,12 +327,14 @@ function reportReview(event) {
       reportedBy: reportedBy,
       reportFor: reportFor[1],
       reportReasons: reportR,
+      type: "Review",
     },
   };
   $.ajax(request)
     .then(function (responseMessage) {
-      console.log("Review reported Successfully");
-      console.log(responseMessage);
+      alert("Review reported Successfully");
+      let idx = reportFor[1];
+      $(`#rrBtn_${idx}`).attr("hidden", true);
     })
     .fail(function (e) {
       console.log(e);
@@ -343,5 +345,38 @@ function openReport(event) {
   event.preventDefault();
   let id = event.currentTarget.id.split("_");
   let idx = id[1];
-  $(".rrBtn").attr("hidden", false);
+  $(`#rrBtn_${idx}`).attr("hidden", false);
+}
+
+function openReport2(event) {
+  event.preventDefault();
+  let id = event.currentTarget.id.split("_");
+  let idx = id[1];
+  $(`#rqBtn_${idx}`).attr("hidden", false);
+}
+
+function reportQna(event) {
+  let reportedBy = $("#reviewedBy").val();
+  let reportFor = event.currentTarget.id.split("_");
+  let reportR = $(`#rr_${reportFor[1]}`).val();
+  let request = {
+    method: "POST",
+    url: "/reports/",
+    dataType: "json",
+    data: {
+      reportedBy: reportedBy,
+      reportFor: reportFor[1],
+      reportReasons: reportR,
+      type: "QnA",
+    },
+  };
+  $.ajax(request)
+    .then(function (responseMessage) {
+      alert("Answer reported Successfully");
+      let idx = reportFor[1];
+      $(`#rqBtn_${idx}`).attr("hidden", true);
+    })
+    .fail(function (e) {
+      console.log(e);
+    });
 }

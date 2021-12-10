@@ -88,7 +88,7 @@
               {{!-- <a id = "revReportBtn_{{_id}}" onclick ="reportReview(event,{{../userID}})" href="">Report</a></div> --}}
               <a id = "revReportBtn_{{_id}}" onclick ="openReport(event)" href="">Report</a></div>
               <div> Review: {{review}}</div>
-              <div class="rrBtn" hidden>
+              <div id= "rrBtn_{{_id}}"class="rrBtn" hidden>
                 <label id = "ll_{{_id}}">Report Reason:</label>
                 <input type="text" id = "rr_{{_id}}" />
                 <button id = "rrB_{{_id}}" onclick="reportReview(event)">Submit Report</button>
@@ -194,7 +194,28 @@
                       <hr />
                       <div>
                         <div>Answer: {{answer}}</div>
-                        <div>User: {{answeredBy}}</div>
+                        
+                      
+
+
+
+
+                      <div class="qnaReportBtn">
+              {{!-- <a id = "revReportBtn_{{_id}}" onclick ="reportReview(event,{{../userID}})" href="">Report</a></div> --}}
+              <a id = "qnaReportBtn_{{_id}}" onclick ="openReport2(event)" href="">Report</a></div>
+              <div>User: {{answeredBy}}</div>
+              <div id= "rqBtn_{{_id}}"class="rrBtn" hidden>
+                <label id = "ll_{{_id}}">Report Reason:</label>
+                <input type="text" id = "rr_{{_id}}" />
+                <button id = "rrB_{{_id}}" onclick="reportQna(event)">Submit Report</button>
+                {{!-- <a id = "rrB_{{_id}}" onclick="reportReview(event)" href="" ></a> --}}
+              </div>
+
+
+
+
+
+
                       </div>
                       <hr />
                     </div>
