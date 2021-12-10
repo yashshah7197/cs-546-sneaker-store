@@ -18,7 +18,7 @@ const create = async (
   const sneakersCollection = await sneakers();
   validation.checkInputStr(brandName);
   validation.checkInputStr(modelName);
-  validation.checkInputStr(price);
+  validation.checkIsNumber(price);
   validation.checkInputStr(listedBy);
   validation.checkInputStr(images);
   validation.checkIsChar(brandName);
@@ -149,8 +149,8 @@ const update = async (
   validation.checkInputStr(listedBy);
   validation.checkInputStr(brandName);
   validation.checkInputStr(modelName);
-  validation.checkInputStr(price);
-  validation.checkInputStr(images);
+  validation.checkIsNumber(price);
+  //validation.checkInputStr(images);
   validation.checkIsChar(brandName);
   validation.checkIsChar(modelName);
   validation.checkIsChar(images);
@@ -272,7 +272,7 @@ const notifySneaker = async (userId, userName, sneakerId, size1) => {
 const getBrands = async () => {
   const sneakers = await getAll();
   return new Set(sneakers.map((s) => s.brandName));
-}
+};
 
 const filter = async (brandName, size, price) => {
   let sneakers = await getAll();
@@ -296,7 +296,7 @@ const filter = async (brandName, size, price) => {
   }
 
   return sneakers;
-}
+};
 
 const notifybuyerWithEmail = async () => {};
 
@@ -313,5 +313,5 @@ module.exports = {
   notifySneaker,
   notifybuyerWithEmail,
   getBrands,
-  filter
+  filter,
 };

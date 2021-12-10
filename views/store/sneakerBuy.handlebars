@@ -29,11 +29,11 @@
                                  <p id="buyErrorMsg"></p>
                                   </div>
                                     <div>
-                                        <p>Price : {{sneaker.price}}$</p>
+                                        <p id="sneakerPrice">Price : {{sneaker.price}}$</p>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="size" class="form-label">Select Size</label>
-                                        <select class="form-select" id="size" required="" name="size">
+                                        <select class="form-select" id="sneakerSize" required="" name="size">
                                             <option value=0></option>
                                             {{#sneaker.sizesAvailable}}
                                                 <option value={{size}},{{quantity}} >{{size}}</option>
@@ -41,7 +41,7 @@
                                         </select>
                                     </div>
 
-                                    <input type="text" value={{sneaker._id}} name="id" hidden />
+                                    <input type="hidden" value={{sneaker._id}} name="sneakerId" id="sneakerId" />
 
                                     <br>
                                     <div>
@@ -54,9 +54,9 @@
       </div>
     </div>
   </div>
-   <div class="alert alert-success" role="alert"  >
+   {{!-- <div class="alert alert-success" role="alert"  >
  You will be Notified by Email when stock is updated.!!!!! 
-</div>
+</div> --}}
 
 
   <div class="container" id="reviewContainer">
@@ -85,8 +85,12 @@
             <div class="accordion-body">
               <div> User: {{reviewedBy}} </div>
               <div class="revReportBtn">
+<<<<<<< Updated upstream
               {{!-- <a id = "revReportBtn_{{_id}}" onclick ="reportReview(event,{{../userID}})" href="">Report</a></div> --}}
               <a id = "revReportBtn_{{_id}}" onclick ="openReport(event)" href="">Report</a></div>
+=======
+              <a id = "revReportBtn_{{_id}}" onClick ="reportReview(event)" href="">Report</a></div>
+>>>>>>> Stashed changes
               <div> Review: {{review}}</div>
               <div id= "rrBtn_{{_id}}"class="rrBtn" hidden>
                 <label id = "ll_{{_id}}">Report Reason:</label>

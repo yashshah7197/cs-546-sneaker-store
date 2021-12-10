@@ -7,23 +7,32 @@
   var quesFormError = $("#quesFormError");
   var quesErrorMsg = $("#quesErrorMsg");
 
-  // var sneakerBuyForm = $("#sneakerBuyForm");
+  var sneakerBuyForm = $("#sneakerBuyForm");
 
-  // sneakerBuyForm.submit(function (event) {
-  //   var buyFormError;
-  //   var buyErrorMsg;
-  //   try {
-  //     var buyFormError = $("#buyFormError");
-  //     var buyErrorMsg = $("#buyErrorMsg");
-  //     var size = $("#size").val();
-  //     checkIsNumber(Number(reviewRatingElem.val()), "Rating");
-  //     return true;
-  //   } catch (e) {
-  //     buyFormError.empty().append(e);
-  //     buyErrorMsg.removeClass("d-none");
-  //     return false;
-  //   }
-  // });
+  sneakerBuyForm.submit(function (event) {
+    var buyFormError;
+    var buyErrorMsg;
+    try {
+      var buyFormError = $("#buyFormError");
+      var buyErrorMsg = $("#buyErrorMsg");
+
+      var sneakerId = $("#sneakerId").val();
+      var sneakerPrice = $("#sneakerPrice").val();
+      var sizeArr = $("#sneakerSize").val().split;
+      var size = sizeArr[0];
+      var quantity = sizeArr[1];
+
+      checkInputStr(sneakerId, "Sneaker ID");
+      checkIsNumber(Number(sneakerPrice), "Price");
+      checkIsNumber(Number(size), "Size");
+      checkIsNumber(Number(quantity), "Quantity");
+      return true;
+    } catch (e) {
+      buyFormError.empty().append(e);
+      buyErrorMsg.removeClass("d-none");
+      return false;
+    }
+  });
 
   //Add review AJAX call
   reviewForm.submit(function (event) {
@@ -250,6 +259,22 @@
   //     console.log(e);
   //   }
   // });
+
+  $("select").change(function () {
+    //$(".alert").alert("close");
+    var nameArr = $("#sneakerSize").val().split(",");
+    console.log(nameArr[0]);
+    if ($("#sneakerSize").val() == 0) {
+      document.getElementById("notify").hidden = true;
+      $("#buy").attr("disabled", true);
+    } else if (nameArr[1] <= 0) {
+      document.getElementById("notify").hidden = false;
+      $("#buy").attr("disabled", true);
+    } else {
+      document.getElementById("notify").hidden = true;
+      $("#buy").attr("disabled", false);
+    }
+  });
 })(window.jQuery);
 
 //Answer AJAX call
