@@ -5,114 +5,124 @@ const usersData = require("./users");
 const validation = require("./validate");
 
 const { ObjectId } = require("mongodb");
+const {isValidArgument, isValidString, isValidObjectId} = require("./validate");
 
 const create = async (qAndAFor, questionBy, question) => {
-  validation.checkInputStr(qAndAFor, "Question for");
-  //validation.checkValidObjectId(qAndAFor);
-  validation.checkInputStr(questionBy, "Question by");
-  //validation.checkValidObjectId(questionBy);
-  validation.checkInputStr(question, "Question");
+  checkValidation(isValidArgument(qAndAFor, "qAndAFor"));
+  checkValidation(isValidString(qAndAFor, "qAndAFor"));
+  checkValidation(isValidObjectId(qAndAFor.trim()));
+
+  checkValidation(isValidArgument(questionBy, "questionBy"));
+  checkValidation(isValidString(questionBy, "questionBy"));
+  checkValidation(isValidObjectId(questionBy.trim()));
+
+  checkValidation(isValidArgument(question, "question"));
+  checkValidation(isValidString(question, "question"));
 
   const qAndACollection = await qAndA();
 
-  //Create new review object
   let newQ = {
-    qAndAFor: qAndAFor,
-    questionBy: questionBy,
+    qAndAFor: qAndAFor.trim(),
+    questionBy: questionBy.trim(),
     question: question.trim(),
     answers: [],
   };
 
-  //Insert new question object to qAndA collection
   const insertInfo = await qAndACollection.insertOne(newQ);
   if (insertInfo.insertedCount === 0) {
-    throw "Could not create question.";
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
-  //Fetch objectId for newly created question
   const newId = insertInfo.insertedId;
 
   const sneakerCollection = await sneakers();
 
-  let sneakerId = ObjectId(qAndAFor);
+  let sneakerId = ObjectId(qAndAFor.trim());
 
-  //Check if the restaurant with the given id exists
   const sneaker = await sneakerCollection.findOne({ _id: sneakerId });
   if (sneaker === null) {
-    throw "No sneaker with that id.";
+    throw {
+      statusCode: 404,
+      message: "No sneaker was found with the given id!"
+    };
   }
 
   let newQandA = sneaker.qAndA;
 
   newQandA.push(newId.toString());
 
-  //Update new review object to review collection
   const updateInfo = await sneakerCollection.updateOne(
     { _id: sneakerId },
     { $set: { qAndA: newQandA } }
   );
+
   if (updateInfo.modifiedCount === 0) {
-    throw "Could not add QandA to sneaker.";
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
-  //Fetch the newly created reviquestionew object
   const addedQuestion = await qAndACollection.findOne({ _id: newId });
 
-  let user = await usersData.get(questionBy);
+  let user = await usersData.get(questionBy.trim());
 
   addedQuestion.questionBy = user.email;
-  //Convert objectId to string
   addedQuestion._id = addedQuestion._id.toString();
 
   return addedQuestion;
 };
 
 const getAll = async (qAndAFor) => {
-  let emptyResult = [];
-  validation.checkInputStr(qAndAFor, "Question For");
+  checkValidation(isValidArgument(qAndAFor, "qAndAFor"));
+  checkValidation(isValidString(qAndAFor, "qAndAFor"));
+  checkValidation(isValidObjectId(qAndAFor.trim()));
 
-  //validation.checkValidObjectId(reviewFor);
+  let emptyResult = [];
+
   const qAndACollection = await qAndA();
 
-  let qAndAList = await qAndACollection.find({ qAndAFor: qAndAFor }).toArray();
+  let qAndAList = await qAndACollection.find({ qAndAFor: qAndAFor.trim() }).toArray();
 
-  //Return an empty array if no restaurants present in the DB
   if (qAndAList.length <= 0) {
     return emptyResult;
   }
 
-  qAndAList.forEach(async (obj) => {
+  for (const obj of qAndAList) {
     let userInfo = await usersData.get(obj.questionBy);
-    //Convert objectId to string
     obj.questionBy = userInfo.email;
     obj._id = obj._id.toString();
-  });
+  }
 
-  qAndAList.forEach(async (obj) => {
-    obj.answers.forEach(async (element) => {
+  for (const obj of qAndAList) {
+    for (const element of obj.answers) {
       let user = await usersData.get(element.answeredBy);
-      //Convert objectId to string
       element.answeredBy = user.email;
       element._id = element._id.toString();
-    });
-  });
+    }
+  }
 
   return qAndAList;
 };
 
 const get = async (qAndAId) => {
-  validation.checkInputStr(qAndAId, "QAndA id");
+  checkValidation(isValidArgument(qAndAId, "qAndAId"));
+  checkValidation(isValidString(qAndAId, "qAndAId"));
+  checkValidation(isValidObjectId(qAndAId.trim()));
 
-  //validation.checkValidObjectId(reviewId);
   const qAndACollection = await qAndA();
 
-  //Convert id into a valid ObjectID
   let parsedId = ObjectId(qAndAId.trim());
 
-  //Check if the review with the given id exists
   const qAndAItem = await qAndACollection.findOne({ _id: parsedId });
   if (qAndAItem === null) {
-    throw "No review with that id.";
+    throw {
+      statusCode: 404,
+      message: "No Q&A was found with the given id!"
+    };
   }
 
   let userInfo = await usersData.get(qAndAItem.questionBy);
@@ -120,57 +130,64 @@ const get = async (qAndAId) => {
 
   let answersList = qAndAItem.answers;
 
-  answersList.forEach(async (obj) => {
+  for (const obj of answersList) {
     let userInfo = await usersData.get(obj.answeredBy);
-    //Convert objectId to string
     obj.answeredBy = userInfo.email;
     obj._id = obj._id.toString();
-  });
+  }
 
   qAndAItem.answers = answersList;
 
-  //Convert ObjectId to string
   qAndAItem._id = qAndAItem._id.toString();
   return qAndAItem;
 };
 
 const update = async (qAndAId, answerBy, answer) => {
+  checkValidation(isValidArgument(qAndAId, "qAndAId"));
+  checkValidation(isValidString(qAndAId, "qAndAId"));
+  checkValidation(isValidObjectId(qAndAId.trim()));
+
+  checkValidation(isValidArgument(answerBy, "answerBy"));
+  checkValidation(isValidString(answerBy, "answerBy"));
+  checkValidation(isValidObjectId(answerBy.trim()));
+
+  checkValidation(isValidArgument(answer, "answer"));
+  checkValidation(isValidString(answer, "answer"));
+
   let result = {};
-  validation.checkInputStr(qAndAId, "QandA Id");
-  //validation.checkValidObjectId(qAndAId);
 
   let parsedId = ObjectId(qAndAId.trim());
 
   const qAndACollection = await qAndA();
 
-  //Check if the restaurant with the given id exists
   const existingQandA = await qAndACollection.findOne({ _id: parsedId });
   if (existingQandA === null) {
-    throw "No Q and A with that id.";
+    throw {
+      statusCode: 404,
+      message: "No Q&A was found with the given id!"
+    };
   }
-
-  validation.checkInputStr(answerBy, "Answer by");
-  validation.checkInputStr(answer, "Answer");
 
   let newAnswers = existingQandA.answers;
 
   let answerObj = {
     _id: ObjectId(),
     answeredBy: answerBy.trim(),
-    answer: answer,
+    answer: answer.trim(),
   };
   newAnswers.push(answerObj);
 
-  //Update new review object to review collection
   const updateInfo = await qAndACollection.updateOne(
     { _id: parsedId },
     { $set: { answers: newAnswers } }
   );
   if (updateInfo.modifiedCount === 0) {
-    throw "Could not answer the question.";
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
-  //Fetch the updated review object
   const updatedQandA = await qAndACollection.findOne({
     _id: parsedId,
   });
@@ -196,26 +213,30 @@ const update = async (qAndAId, answerBy, answer) => {
 };
 
 const remove = async (qAndAId) => {
+  checkValidation(isValidArgument(qAndAId, "qAndAId"));
+  checkValidation(isValidString(qAndAId, "qAndAId"));
+  checkValidation(isValidObjectId(qAndAId.trim()));
+
   let result = {};
-  validation.checkInputStr(qAndAId, "QandA id");
-
-  //validation.checkValidObjectId(qAndAId);
-
-  //Convert id into a valid ObjectID
   let parsedId = ObjectId(qAndAId.trim());
 
   const qAndACollection = await qAndA();
 
-  //Check if the qAndA with the given id exists
   const qAndAItem = await qAndACollection.findOne({ _id: parsedId });
   if (qAndAItem === null) {
-    throw "No Q and A with that id.";
+    throw {
+      statusCode: 404,
+      message: "No Q&A was found with the given id!"
+    };
   }
 
   const deletionInfo = await qAndACollection.deleteOne({ _id: parsedId });
 
   if (deletionInfo.deletedCount === 0) {
-    throw `Could not delete Q and A with id of ${id}.`;
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
   result["qAndAId"] = qAndAItem._id.toString();
@@ -223,6 +244,15 @@ const remove = async (qAndAId) => {
 
   return result;
 };
+
+const checkValidation = (validation) => {
+  if (!validation.result) {
+    throw {
+      statusCode: 400,
+      message: validation.message
+    };
+  }
+}
 
 module.exports = {
   create,

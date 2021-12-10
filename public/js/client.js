@@ -2,7 +2,6 @@
 
 (function ($) {
   $(document).ready(function () {
-    $(".alert").alert("close");
     $("select").change(function () {
       $(".alert").alert("close");
       var nameArr = $("#size").val().split(",");

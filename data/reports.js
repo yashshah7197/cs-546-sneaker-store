@@ -1,4 +1,3 @@
-
 const mongoCollections = require("../config/mongoCollections");
 const reports = mongoCollections.reports;
 const validation = require("./validate");
@@ -6,18 +5,20 @@ const validation = require("./validate");
 const { ObjectId } = require("mongodb");
 // const { reports } = require("../config/mongoCollections");
 
-const create = async(reportedBy, reportFor, reportReasons) => {
+const create = async (reportedBy, reportFor, reportReasons, type) => {
   validation.checkInputStr(reportedBy, "Reported By");
   // validation.checkValidObjectId(reportedBy);
   validation.checkInputStr(reportFor, "Report For");
   // validation.checkValidObjectId(reportFor);
   validation.checkInputStr(reportReasons, "Report Reasons");
+  validation.checkInputStr(type, "Type");
   const reportCollection = await reports();
   //create new report object
   let newReport = {
     reportedBy: reportedBy.trim(),
     reportFor: reportFor.trim(),
     reportReasons: reportReasons.trim(),
+    type: type.trim(),
   };
   //Insert new report object to report collection
   const insertInfo = await reportCollection.insertOne(newReport);
@@ -37,7 +38,7 @@ const create = async(reportedBy, reportFor, reportReasons) => {
   return addedReport;
 };
 
-const getAll = async() => {
+const getAll = async () => {
   let emptyResult = [];
   const reportCollection = await reports();
 
@@ -56,7 +57,7 @@ const getAll = async() => {
   return reportList;
 };
 
-const get = async(reportId) => {
+const get = async (reportId) => {
   validation.checkInputStr(reportId, "Report id");
 
   //validation.checkValidObjectId(reportId);
@@ -77,7 +78,7 @@ const get = async(reportId) => {
   return report;
 };
 
-const update = async(reportId, reportedBy, reportFor, reportReasons) => {
+const update = async (reportId, reportedBy, reportFor, reportReasons) => {
   validation.checkInputStr(reportId, "Report Id");
   //validation.checkValidObjectId(reportId);
   let parsedId = ObjectId(reportId.trim());
@@ -130,7 +131,7 @@ const update = async(reportId, reportedBy, reportFor, reportReasons) => {
   return updatedReport;
 };
 
-const remove = async(reportId) => {
+const remove = async (reportId) => {
   let result = {};
   validation.checkInputStr(reportId, "Id");
 
