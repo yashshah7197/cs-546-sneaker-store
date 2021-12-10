@@ -25,8 +25,6 @@
                             <div class="col">
                                 <form id="sneakerBuyForm"  method="post">
                                   <div class="alert alert-danger d-none" role="alert" id="buyFormError">
-                                  Error
-                                 <p id="buyErrorMsg"></p>
                                   </div>
                                     <div>
                                         <p id="sneakerPrice">Price : {{sneaker.price}}$</p>
@@ -85,10 +83,12 @@
             <div class="accordion-body">
               <div> User: {{reviewedBy}} </div>
               <div class="revReportBtn">
-              <a id = "revReportBtn_{{_id}}" onClick ="reportReview(event)" href="">Report</a></div>
+              <a id = "revReportBtn_{{_id}}" onClick ="openReport(event)" href="">Report</a></div>
               <div> Review: {{review}}</div>
               <div id= "rrBtn_{{_id}}"class="rrBtn" hidden>
-                <label id = "ll_{{_id}}">Report Reason:</label>
+                <div class="alert alert-danger d-none" role="alert" id="rrFormError_{{_id}}" class="rrFormError">
+                </div>
+                <label id = "rrll_{{_id}}">Report Reason:</label>
                 <input type="text" id = "rr_{{_id}}" />
                 <button id = "rrB_{{_id}}" onclick="reportReview(event)">Submit Report</button>
                 {{!-- <a id = "rrB_{{_id}}" onclick="reportReview(event)" href="" ></a> --}}
@@ -123,8 +123,6 @@
             <form id="reviewForm" method="post" action="/reviews/" >
               <div class="mb-3">
                 <div class="alert alert-danger d-none" role="alert" id="reviewFormError">
-                  Error
-                  <p id="reviewErrorMsg"></p>
                 </div>
                 <label for="reviewTitle" class="form-label">Title</label>
                 <input
@@ -194,19 +192,16 @@
                       <div>
                         <div>Answer: {{answer}}</div>
                         
-                      
-
-
-
-
                       <div class="qnaReportBtn">
               {{!-- <a id = "revReportBtn_{{_id}}" onclick ="reportReview(event,{{../userID}})" href="">Report</a></div> --}}
               <a id = "qnaReportBtn_{{_id}}" onclick ="openReport2(event)" href="">Report</a></div>
               <div>User: {{answeredBy}}</div>
-              <div id= "rqBtn_{{_id}}"class="rrBtn" hidden>
-                <label id = "ll_{{_id}}">Report Reason:</label>
-                <input type="text" id = "rr_{{_id}}" />
-                <button id = "rrB_{{_id}}" onclick="reportQna(event)">Submit Report</button>
+              <div id= "rqBtn_{{_id}}"class="rqBtn" hidden>
+                <div class="alert alert-danger d-none" role="alert" id="rqFormError_{{_id}}" class="rrFormError">
+                </div>
+                <label id = "rqll_{{_id}}">Report Reason:</label>
+                <input type="text" id = "rq_{{_id}}" />
+                <button id = "rqB_{{_id}}" onclick="reportQna(event)">Submit Report</button>
                 {{!-- <a id = "rrB_{{_id}}" onclick="reportReview(event)" href="" ></a> --}}
               </div>
 
@@ -231,8 +226,6 @@
               <form class="answerForm" id="answerForm_{{_id}}" method="POST" onsubmit="submitAnswer(event)">
                 <div class="mb-3">
                    <div class="alert alert-danger d-none" role="alert" id="ansFormError_{{_id}}">
-                    Error
-                    <p id="ansErrorMsg_{{_id}}"></p>
                   </div>
                   <label for="answerText_{{_id}}" class="form-label">Answer this
                     question</label>
@@ -290,8 +283,6 @@
             <form id="questionForm" method="post">
               <div class="mb-3">
                 <div class="alert alert-danger d-none" role="alert" id="quesFormError">
-                  Error
-                  <p id="quesErrorMsg"></p>
                 </div>
                 <label for="question" class="form-label">Question</label>
                 <input
