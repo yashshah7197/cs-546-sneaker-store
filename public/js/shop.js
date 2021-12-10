@@ -7,23 +7,23 @@
   var quesFormError = $("#quesFormError");
   var quesErrorMsg = $("#quesErrorMsg");
 
-  var sneakerBuyForm = $("#sneakerBuyForm");
+  // var sneakerBuyForm = $("#sneakerBuyForm");
 
-  sneakerBuyForm.submit(function (event) {
-    var buyFormError;
-    var buyErrorMsg;
-    try {
-      var buyFormError = $("#buyFormError");
-      var buyErrorMsg = $("#buyErrorMsg");
-      var size = $("#size").val();
-      checkIsNumber(Number(reviewRatingElem.val()), "Rating");
-      return true;
-    } catch (e) {
-      buyFormError.empty().append(e);
-      buyErrorMsg.removeClass("d-none");
-      return false;
-    }
-  });
+  // sneakerBuyForm.submit(function (event) {
+  //   var buyFormError;
+  //   var buyErrorMsg;
+  //   try {
+  //     var buyFormError = $("#buyFormError");
+  //     var buyErrorMsg = $("#buyErrorMsg");
+  //     var size = $("#size").val();
+  //     checkIsNumber(Number(reviewRatingElem.val()), "Rating");
+  //     return true;
+  //   } catch (e) {
+  //     buyFormError.empty().append(e);
+  //     buyErrorMsg.removeClass("d-none");
+  //     return false;
+  //   }
+  // });
 
   //Add review AJAX call
   reviewForm.submit(function (event) {
