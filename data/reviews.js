@@ -5,21 +5,29 @@ const validation = require("./validate");
 const usersData = require("./users");
 
 const { ObjectId } = require("mongodb");
+const {isValidArgument, isValidString, isValidObjectId, isValidNumber, isValidRating} = require("./validate");
 
 const create = async (reviewedBy, reviewFor, title, review, rating) => {
-  validation.checkInputStr(reviewedBy, "Reviewed By");
-  //let userID = await usersData.getUserID(reviewedBy);
-  //validation.checkValidObjectId(reviewedBy);
-  validation.checkInputStr(reviewFor, "Review For");
-  //validation.checkValidObjectId(reviewFor);
-  validation.checkInputStr(title, "Title");
-  validation.checkInputStr(review, "Review");
-  validation.checkIsNumber(rating, "Rating");
-  validation.checkRating(rating);
+  checkValidation(isValidArgument(reviewedBy, "reviewedBy"));
+  checkValidation(isValidString(reviewedBy, "reviewedBy"));
+  checkValidation(isValidObjectId(reviewedBy.trim()));
+
+  checkValidation(isValidArgument(reviewFor, "reviewFor"));
+  checkValidation(isValidString(reviewFor, "reviewFor"));
+  checkValidation(isValidObjectId(reviewFor.trim()));
+
+  checkValidation(isValidArgument(title, "title"));
+  checkValidation(isValidString(title, "title"));
+
+  checkValidation(isValidArgument(review, "review"));
+  checkValidation(isValidString(review, "review"));
+
+  checkValidation(isValidArgument(rating, "rating"));
+  checkValidation(isValidNumber(rating, "rating"));
+  checkValidation(isValidRating(rating));
 
   const reviewCollection = await reviews();
 
-  //Create new review object
   let newReview = {
     reviewedBy: reviewedBy.trim(),
     reviewFor: reviewFor.trim(),
@@ -28,97 +36,99 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
     rating: rating,
   };
 
-  //Insert new review object to review collection
   const insertInfo = await reviewCollection.insertOne(newReview);
   if (insertInfo.insertedCount === 0) {
-    throw "Could not create review.";
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
-  //Recalculate average rating
-  //let avgRating = await calAvgRating(reviewFor);
-
-  //Fetch objectId for newly created review
   const newId = insertInfo.insertedId;
 
   const sneakerCollection = await sneakers();
 
-  let sneakerId = ObjectId(reviewFor);
+  let sneakerId = ObjectId(reviewFor.trim());
 
-  //Check if the restaurant with the given id exists
   const sneaker = await sneakerCollection.findOne({ _id: sneakerId });
   if (sneaker === null) {
-    throw "No sneaker with that id.";
+    throw {
+      statusCode: 404,
+      message: "No sneaker was found with the given id!"
+    };
   }
 
   let newReviews = sneaker.reviews;
 
   newReviews.push(newId.toString());
 
-  //Update new review object to review collection
   const updateInfo = await sneakerCollection.updateOne(
     { _id: sneakerId },
     { $set: { reviews: newReviews } }
   );
   if (updateInfo.modifiedCount === 0) {
-    throw "Could not add review to sneaker.";
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
-  //Fetch the newly created review object
   const addedReview = await reviewCollection.findOne({ _id: newId });
 
-  let user = await usersData.get(reviewedBy);
+  let user = await usersData.get(reviewedBy.trim());
 
   addedReview.reviewedBy = user.email;
-  //Convert objectId to string
+
   addedReview._id = addedReview._id.toString();
 
   return addedReview;
 };
 
 const getAll = async (reviewFor) => {
-  let emptyResult = [];
-  validation.checkInputStr(reviewFor, "Review For");
+  checkValidation(isValidArgument(reviewFor, "reviewFor"));
+  checkValidation(isValidString(reviewFor, "reviewFor"));
+  checkValidation(isValidObjectId(reviewFor.trim()));
 
-  //validation.checkValidObjectId(reviewFor);
+  let emptyResult = [];
+
   const reviewCollection = await reviews();
 
   let reviewList = await reviewCollection
-    .find({ reviewFor: reviewFor })
+    .find({ reviewFor: reviewFor.trim() })
     .toArray();
 
-  //Return an empty array if no restaurants present in the DB
   if (reviewCollection.length <= 0) {
     return emptyResult;
   }
 
-  reviewList.forEach(async (obj) => {
+  for (const obj of reviewList) {
     let userInfo = await usersData.get(obj.reviewedBy);
     obj.reviewedBy = userInfo.email;
     obj._id = obj._id.toString();
-  });
+  }
 
   return reviewList;
 };
 
 const get = async (reviewId) => {
-  validation.checkInputStr(reviewId, "Review id");
-
-  //validation.checkValidObjectId(reviewId);
+  checkValidation(isValidArgument(reviewId, "reviewId"));
+  checkValidation(isValidString(reviewId, "reviewId"));
+  checkValidation(isValidObjectId(reviewId.trim()));
 
   const reviewCollection = await reviews();
 
-  //Convert id into a valid ObjectID
   let parsedId = ObjectId(reviewId.trim());
 
-  //Check if the review with the given id exists
   let review = await reviewCollection.findOne({ _id: parsedId });
   if (review === null) {
-    throw "No review with that id.";
+    throw {
+      statusCode: 404,
+      message: "No review was found with the given id!"
+    };
   }
 
   let userInfo = await usersData.get(review.reviewedBy);
 
-  //Convert ObjectId to string
   review.reviewedBy = userInfo.email;
   review._id = review._id.toString();
   return review;
@@ -132,39 +142,53 @@ const update = async (
   review,
   rating
 ) => {
-  validation.checkInputStr(reviewId, "Review Id");
-  //validation.checkValidObjectId(reviewId);
+  checkValidation(isValidArgument(reviewId, "reviewId"));
+  checkValidation(isValidString(reviewId, "reviewId"));
+  checkValidation(isValidObjectId(reviewId.trim()));
+
+  checkValidation(isValidArgument(reviewedBy, "reviewedBy"));
+  checkValidation(isValidString(reviewedBy, "reviewedBy"));
+  checkValidation(isValidObjectId(reviewedBy.trim()));
+
+  checkValidation(isValidArgument(reviewFor, "reviewFor"));
+  checkValidation(isValidString(reviewFor, "reviewFor"));
+  checkValidation(isValidObjectId(reviewFor.trim()));
+
+  checkValidation(isValidArgument(title, "title"));
+  checkValidation(isValidString(title, "title"));
+
+  checkValidation(isValidArgument(review, "review"));
+  checkValidation(isValidString(review, "review"));
+
+  checkValidation(isValidArgument(rating, "rating"));
+  checkValidation(isValidNumber(rating, "rating"));
+  checkValidation(isValidRating(rating));
 
   let parsedId = ObjectId(reviewId.trim());
 
   const reviewCollection = await reviews();
 
-  //Check if the restaurant with the given id exists
   const existingReview = await reviewCollection.findOne({ _id: parsedId });
   if (existingReview === null) {
-    throw "No review with that id.";
+    throw {
+      statusCode: 404,
+      message: "No review was found with the given id!"
+    };
   }
-
-  validation.checkInputStr(reviewedBy, "Reviewed By");
-  //validation.checkValidObjectId(reviewedBy);
-  validation.checkInputStr(reviewFor, "Review For");
-  //validation.checkValidObjectId(reviewFor);
-  validation.checkInputStr(title, "Title");
-  validation.checkInputStr(review, "Review");
-  validation.checkIsNumber(rating, "Rating");
-  validation.checkRating(rating);
 
   if (
-    review.reviewedBy == reviewedBy.trim() &&
-    review.reviewFor == reviewFor.trim() &&
-    review.title == title.trim() &&
-    review.review == review.trim() &&
-    review.rating == rating
+    review.reviewedBy === reviewedBy.trim() &&
+    review.reviewFor === reviewFor.trim() &&
+    review.title === title.trim() &&
+    review.review === review.trim() &&
+    review.rating === rating
   ) {
-    throw "Update field values are the same as the review field values.";
+    throw {
+      statusCode: 400,
+      message: "Update field values are the same as the review field values!"
+    };
   }
 
-  //Create new review object
   let updateReview = {
     reviewedBy: reviewedBy.trim(),
     reviewFor: reviewFor.trim(),
@@ -173,50 +197,54 @@ const update = async (
     rating: rating,
   };
 
-  //Update new review object to review collection
   const updateInfo = await reviewCollection.updateOne(
     { _id: parsedId },
     { $set: updateReview }
   );
   if (updateInfo.modifiedCount === 0) {
-    throw "Could not update the review.";
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
-  //Recalculate average rating
-  let avgRating = await calAvgRating(reviewFor);
+  await calAvgRating(reviewFor.trim());
 
-  //Fetch the updated review object
   const updatedReview = await reviewCollection.findOne({
     _id: parsedId,
   });
 
-  //Convert objectId to string
   updatedReview._id = updatedReview._id.toString();
 
   return updatedReview;
 };
 
 const remove = async (reviewId) => {
+  checkValidation(isValidArgument(reviewId, "reviewId"));
+  checkValidation(isValidString(reviewId, "reviewId"));
+  checkValidation(isValidObjectId(reviewId.trim()));
+
   let result = {};
-  validation.checkInputStr(reviewId, "id");
 
-  //validation.checkValidObjectId(reviewId);
-
-  //Convert id into a valid ObjectID
   let parsedId = ObjectId(reviewId.trim());
 
   const reviewCollection = await reviews();
 
-  //Check if the restaurant with the given id exists
   const review = await reviewCollection.findOne({ _id: parsedId });
   if (review === null) {
-    throw "No review with that id.";
+    throw {
+      statusCode: 404,
+      message: "No review was found with the given id!"
+    };
   }
 
   const deletionInfo = await reviewCollection.deleteOne({ _id: parsedId });
 
   if (deletionInfo.deletedCount === 0) {
-    throw `Could not delete review with id of ${id}.`;
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
   result["reviewId"] = review._id.toString();
@@ -225,37 +253,43 @@ const remove = async (reviewId) => {
   return result;
 };
 
-//Function to calculate Average rating
 async function calAvgRating(productId) {
+  checkValidation(isValidArgument(productId, "productId"));
+  checkValidation(isValidString(productId, "productId"));
+  checkValidation(isValidObjectId(productId.trim()));
+
   let rating = 0;
-  validation.checkInputStr(productId, "Product id");
-  //checkValidId(productId);
-  //Convert id into a valid ObjectID
   let parsedId = ObjectId(productId.trim());
 
   const sneakerCollection = await sneakers();
 
-  //Check if the sneaker with the given id exists
   const sneaker = await sneakerCollection.findOne({ _id: parsedId });
   if (sneaker === null) {
-    throw "No sneaker with that id.";
+    throw {
+      statusCode: 404,
+      message: "No sneaker was found with the given id!"
+    };
   }
 
   const reviewCollection = await reviews();
 
   let reviews = sneaker.reviews;
   let overallRating = 0;
-  reviews.forEach(async (element) => {
-    //Convert id into a valid ObjectID
+
+  for (let element of reviews) {
     let parsedId = ObjectId(element.trim());
 
-    //Check if the review with the given id exists
     const review = await reviewCollection.findOne({ _id: parsedId });
+
     if (review === null) {
-      throw "No review with that id.";
+      throw {
+        statusCode: 404,
+        message: "No review was found with the given id!"
+      };
     }
+
     overallRating += review.rating;
-  });
+  }
 
   if (overallRating > 0) {
     overallRating = overallRating / reviews.length;
@@ -267,10 +301,22 @@ async function calAvgRating(productId) {
     { $set: { overallRating: overallRating } }
   );
 
-  if (updatedSneaker.modifiedCount === 0 && sneaker.overallRating != rating) {
-    throw "Could not update the sneaker rating.";
+  if (updatedSneaker.modifiedCount === 0 && sneaker.overallRating !== rating) {
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   } else {
     return true;
+  }
+}
+
+const checkValidation = (validation) => {
+  if (!validation.result) {
+    throw {
+      statusCode: 400,
+      message: validation.message
+    };
   }
 }
 

@@ -56,6 +56,20 @@ const isValidBoolean = (arg, argName) => {
   };
 };
 
+const isValidNumber = (arg, argName) => {
+  if ((typeof arg !== "number" && typeof arg !== "string") || isNaN(arg)) {
+    return {
+      result: false,
+      message: argName + " passed in must be either a number or a number in string format!"
+    };
+  }
+
+  return {
+    result: true,
+    message: ""
+  };
+}
+
 const isValidArray = (arg, argName) => {
   if (!Array.isArray(arg)) {
     return {
@@ -138,6 +152,20 @@ const isValidObjectId = (objectId) => {
     };
   }
 };
+
+const isValidRating = (rating) => {
+  if (rating < 1 || rating > 5) {
+    return {
+      result: false,
+      message: "The rating must be a value between 1 and 5!"
+    };
+  }
+
+  return {
+    result: true,
+    message: ""
+  }
+}
 
 //Function to check for Input array
 function checkInputStr(str, varName) {
@@ -265,4 +293,6 @@ module.exports = {
   isValidBoolean,
   isValidObjectId,
   isValidArray,
+  isValidNumber,
+  isValidRating
 };
