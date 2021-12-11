@@ -508,9 +508,13 @@ router.post("/notify", async (req, res) => {
     checkValidation(isValidArgument(req.body.size, "size"));
     checkValidation(isValidNumber(req.body.size.trim(), "size"));
 
-    let sneakerId = req.body.id.trim();
-    let size = Number(req.body.size.trim());
+    let sizeArray=req.body.sneakerSize.split(",");
+    let size=sizeArray[0];
+    checkValidation(isValidArgument(size, "size"));
+    checkValidation(isValidNumber(size.trim(), "size"));
 
+    let sneakerId = req.body.sneakerId.trim();
+  
     if (!req.session.user) {
       res.redirect("/users/login");
     } else {

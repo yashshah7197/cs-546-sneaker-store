@@ -202,7 +202,6 @@ const update = async (
 
   checkValidation(isValidArgument(overallRating, "overallRating"));
   checkValidation(isValidNumber(overallRating, "overallRating"));
-  checkValidation(isValidPrice(overallRating));
 
   checkValidation(isValidArgument(qAndA, "qAndA"));
   checkValidation(isValidArray(qAndA, "qAndA"));
@@ -333,16 +332,13 @@ const notifySneaker = async (userId, userName, sneakerId, size1) => {
   checkValidation(isValidString(sneakerId, "sneakerId"));
   checkValidation(isValidObjectId(sneakerId.trim()));
 
-  let size = size1.split(",");
 
-  checkValidation(isValidNumber(size[0].trim()));
-  checkValidation(isValidNumber(size[1].trim()));
-
+  checkValidation(isValidNumber(size1.trim()));
   const sneakerInfo = await get(sneakerId.toString().trim());
   sneakerInfo.notify[sneakerInfo.notify.length] = {
     userId: userId.trim(),
     userName: userName.trim(),
-    size: Number(size[0].trim()),
+    size: Number(size1.trim()),
   };
 
   const updateSneaker = await update(
