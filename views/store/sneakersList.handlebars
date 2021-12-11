@@ -1,3 +1,8 @@
+<h1 class="visually-hidden">Sneaker Shop</h1>
+<h2 class="visually-hidden">Sneaker Shop</h2>
+<h3 class="visually-hidden">Sneaker Shop</h3>
+<h4 class="visually-hidden">Sneaker Shop</h4>
+
 {{#if error}}
   <div class="alert alert-primary" role="alert">
     {{error}}
@@ -6,6 +11,53 @@
 
 <div class="album py-5">
   <div class="container">
+    <div class="col-4"></div>
+    <form action="/sneakers/filter" method="post" id="filter-form">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col">
+          <label for="brandName" class="form-label">Brand Name</label>
+          <select name="brandName" id="brandName" class="form-select">
+            <option value="">Brand</option>
+            {{#each brands}}
+              <option value="{{this}}">{{this}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="col">
+          <label for="size" class="form-label">Size</label>
+          <select name="size" id="size" class="form-select">
+            <option value="0">Size</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="price" class="form-label">Price</label>
+          <select name="price" id="price" class="form-select">
+            <option value="0">Price</option>
+            <option value="100">&lt;100</option>
+            <option value="200">&lt;200</option>
+            <option value="300">&lt;300</option>
+            <option value="400">&lt;400</option>
+            <option value="500">&lt;500</option>
+            <option value="600">&lt;600</option>
+            <option value="700">&lt;700</option>
+            <option value="800">&lt;800</option>
+            <option value="900">&lt;900</option>
+            <option value="1000">&lt;1000</option>
+          </select>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary m-2"
+          style="width: 98.6%"
+        >Filter</button>
+      </div>
+    </form>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
       {{#each sneakers}}
         <div class="col">

@@ -3,32 +3,26 @@ const users = mongoCollections.users;
 
 const { ObjectId } = require("mongodb");
 const {
-  checkInputStr,
-  checkIfBoolean,
-  checkValidEmail,
-  checkValidPassword,
-  checkValidPhoneNumber,
+  isValidArgument, isValidString, isValidPassword, isValidEmail, isValidPhoneNumber,
+  isValidBoolean, isValidObjectId, isValidArray,
 } = require("./validate");
 const bcrypt = require("bcryptjs");
 
 const create = async (
-  firstName,
-  lastName,
   email,
   password,
-  address,
-  phoneNumber,
   isAdmin,
-  sneakersListed,
-  sneakersBought
 ) => {
-  checkInputStr(email);
-  checkInputStr(password);
+  checkValidation(isValidArgument(email, "email"));
+  checkValidation(isValidString(email, "email"));
+  checkValidation(isValidEmail(email.trim()));
 
-  checkIfBoolean(isAdmin);
+  checkValidation(isValidArgument(password, "password"));
+  checkValidation(isValidString(password, "password"));
+  checkValidation(isValidPassword(password));
 
-  checkValidEmail(email.toLowerCase().trim());
-  checkValidPassword(password);
+  checkValidation(isValidArgument(isAdmin, "isAdmin"));
+  checkValidation(isValidBoolean(isAdmin, "isAdmin"));
 
   const usersCollection = await users();
 
@@ -39,7 +33,7 @@ const create = async (
   if (user) {
     throw {
       statusCode: 400,
-      message: "A user with email " + email + " already exists in the system!",
+      message: "A user with email " + email.toLowerCase().trim() + " already exists in the system!",
     };
   }
 
@@ -47,10 +41,10 @@ const create = async (
     _id: ObjectId(),
     email: email.toLowerCase().trim(),
     passwordHash: await hashPassword(password),
-    firstName: firstName.trim(),
-    lastName: lastName.trim(),
-    address: address.trim(),
-    phoneNumber: phoneNumber,
+    firstName: "",
+    lastName: "",
+    address: "",
+    phoneNumber: "",
     isAdmin: isAdmin,
     sneakersListed: [],
     sneakersBought: [],
@@ -79,24 +73,17 @@ const getAll = async () => {
 };
 
 const get = async (userId) => {
-  checkInputStr(userId);
-
-  try {
-    userId = ObjectId(userId.trim());
-  } catch (e) {
-    throw {
-      statusCode: 400,
-      message: "Could not parse the id in to a valid ObjectId!",
-    };
-  }
+  checkValidation(isValidArgument(userId, "userId"));
+  checkValidation(isValidString(userId, "userId"));
+  checkValidation(isValidObjectId(userId.trim()));
 
   const usersCollection = await users();
 
-  const user = await usersCollection.findOne({ _id: userId });
+  const user = await usersCollection.findOne({ _id: ObjectId(userId.trim()) });
   if (user === null) {
     throw {
       statusCode: 404,
-      message: "No user was found with the given id!",
+      message: "No user was found with the given user id!",
     };
   }
 
@@ -115,27 +102,39 @@ const update = async (
   sneakersListed,
   sneakersBought
 ) => {
-  checkInputStr(userId);
-  checkInputStr(email);
+  checkValidation(isValidArgument(userId, "userId"));
+  checkValidation(isValidString(userId, "userId"));
+  checkValidation(isValidObjectId(userId.trim()));
 
-  checkIfBoolean(isAdmin);
+  checkValidation(isValidArgument(firstName, "firstName"));
+  checkValidation(isValidString(firstName, "firstName"));
 
-  checkValidEmail(email.toLowerCase().trim());
+  checkValidation(isValidArgument(lastName, "lastName"));
+  checkValidation(isValidString(lastName, "lastName"));
 
-  if (phoneNumber.length !== 0) {
-    checkValidPhoneNumber(phoneNumber.trim());
-  }
+  checkValidation(isValidArgument(email, "email"));
+  checkValidation(isValidString(email, "email"));
+  checkValidation(isValidEmail(email.trim()));
 
-  try {
-    userId = ObjectId(userId.trim());
-  } catch (e) {
-    throw {
-      statusCode: 400,
-      message: "Could not parse the user id in to a valid ObjectId!",
-    };
-  }
+  checkValidation(isValidArgument(password, "password"));
 
-  let user = await get(userId.toString());
+  checkValidation(isValidArgument(address, "address"));
+  checkValidation(isValidString(address, "address"));
+
+  checkValidation(isValidArgument(phoneNumber, "phoneNumber"));
+  checkValidation(isValidString(phoneNumber, "phoneNumber"));
+  checkValidation(isValidPhoneNumber(phoneNumber));
+
+  checkValidation(isValidArgument(isAdmin, "isAdmin"));
+  checkValidation(isValidBoolean(isAdmin, "isAdmin"));
+
+  checkValidation(isValidArgument(sneakersListed, "sneakersListed"));
+  checkValidation(isValidArray(sneakersListed, "sneakersListed"));
+
+  checkValidation(isValidArgument(sneakersBought, "sneakersBought"));
+  checkValidation(isValidArray(sneakersBought, "sneakersBought"));
+
+  let user = await get(userId.trim());
 
   const updatedUser = {
     firstName: firstName.trim(),
@@ -151,14 +150,15 @@ const update = async (
   if (password.length === 0) {
     updatedUser["passwordHash"] = user["passwordHash"];
   } else {
-    checkValidPassword(password);
+    checkValidation(isValidString(password, "password"));
+    checkValidation(isValidPassword(password));
     updatedUser["passwordHash"] = await hashPassword(password);
   }
 
   const usersCollection = await users();
 
   const updatedInfo = await usersCollection.updateOne(
-    { _id: userId },
+    { _id: ObjectId(userId.trim()) },
     { $set: updatedUser }
   );
 
@@ -169,26 +169,19 @@ const update = async (
     };
   }
 
-  return await get(userId.toString());
+  return await get(userId.trim());
 };
 
 const remove = async (userId) => {
-  checkInputStr(userId);
+  checkValidation(isValidArgument(userId, "userId"));
+  checkValidation(isValidString(userId, "userId"));
+  checkValidation(isValidObjectId(userId.trim()));
 
-  try {
-    userId = ObjectId(userId.trim());
-  } catch (e) {
-    throw {
-      statusCode: 400,
-      message: "Could not parse the user id in to a valid ObjectId!",
-    };
-  }
-
-  await get(userId.toString());
+  await get(userId.trim());
 
   const usersCollection = await users();
 
-  const deletionInfo = await usersCollection.deleteOne({ _id: userId });
+  const deletionInfo = await usersCollection.deleteOne({ _id: ObjectId(userId.trim()) });
   if (deletionInfo.deletedCount === 0) {
     throw {
       statusCode: 500,
@@ -198,11 +191,13 @@ const remove = async (userId) => {
 };
 
 const checkUser = async (email, password) => {
-  checkInputStr(email);
-  checkInputStr(password);
+  checkValidation(isValidArgument(email, "email"));
+  checkValidation(isValidString(email, "email"));
+  checkValidation(isValidEmail(email.trim()));
 
-  checkValidEmail(email);
-  checkValidPassword(password);
+  checkValidation(isValidArgument(password, "password"));
+  checkValidation(isValidString(password, "password"));
+  checkValidation(isValidPassword(password));
 
   const usersCollection = await users();
 
@@ -233,12 +228,14 @@ const hashPassword = async (password) => {
   return await bcrypt.hash(password, saltRounds);
 };
 
-const getUserID = async (username) => {
-  checkInputStr(username);
+const getUserID = async (email) => {
+  checkValidation(isValidArgument(email, "email"));
+  checkValidation(isValidString(email, "email"));
+  checkValidation(isValidEmail(email.trim()));
 
   const usersCollection = await users();
 
-  const user = await usersCollection.findOne({ email: username });
+  const user = await usersCollection.findOne({ email: email.toLowerCase().trim() });
   if (user === null) {
     throw {
       statusCode: 404,
@@ -248,6 +245,16 @@ const getUserID = async (username) => {
 
   return user._id.toString();
 };
+
+const checkValidation = (validation) => {
+  if (!validation.result) {
+    throw {
+      statusCode: 400,
+      message: validation.message
+    };
+  }
+}
+
 module.exports = {
   create,
   getAll,

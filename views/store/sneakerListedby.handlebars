@@ -1,24 +1,38 @@
-<div class="container">
-  <div class="row">
-    {{#each sneakers}}
-      <div class="col-sm-4 border">
-        <form>
-          <h1>{{modelName}}</h1>
-          <p> {{brandName}} </p>
-           <img class="d-block w-100" src={{images}} />
-        
-              
-          <h4>Price : {{price}}$</h4>
+<h1 class="visually-hidden">Listed Sneakers</h1>
+<h2 class="visually-hidden">Listed Sneakers</h2>
+<h3 class="visually-hidden">Listed Sneakers</h3>
+<h4 class="visually-hidden">Listed Sneakers</h4>
 
-          <input
-            type="submit"
-            value="UPDATE"
-            formaction="/sneakers/listedByUpdate/{{_id}}"
-          />
-          {{! http://localhost:3000/sneakers/61a04f4e878558d0e73856ba? }}
-        </form>
+<div class="album py-5">
+    <div class="container">
+        <div class="col-4"></div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {{#each sneakers}}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <img
+                                src="{{images}}"
+                                alt="shoe"
+                                width="200"
+                                class="card-img-top sneakerListImg"
+                        />
 
-      </div>
-    {{/each}}
-  </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{modelName}}</h5>
+                            <p class="card-text">{{brandName}}</p>
+                            <p class="card-text">${{price}}</p>
+                            <form>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button
+                                            type="submit"
+                                            class="btn btn-sm btn-outline-primary"
+                                            formaction="/sneakers/listedByUpdate/{{_id}}">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
 </div>
