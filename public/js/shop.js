@@ -378,6 +378,7 @@ function reportQna(event) {
       data: {
         reportedBy: reportedBy,
         reportFor: reportFor[1],
+        reportForQ: reportFor[2],
         reportReasons: reportR,
         type: "QnA",
       },

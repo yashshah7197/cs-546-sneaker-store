@@ -260,10 +260,53 @@ const checkValidation = (validation) => {
   }
 };
 
+const updateA = async (qAndAId, answerId) => {
+  checkValidation(isValidArgument(qAndAId, "qAndAId"));
+  checkValidation(isValidString(qAndAId, "qAndAId"));
+  checkValidation(isValidObjectId(qAndAId.trim()));
+
+  checkValidation(isValidArgument(answerId, "answerId"));
+  checkValidation(isValidString(answerId, "answerId"));
+  checkValidation(isValidObjectId(answerId.trim()));
+
+  let result = {};
+
+  let parsedId = ObjectId(qAndAId.trim());
+
+  const qAndACollection = await qAndA();
+
+  const existingQandA = await qAndACollection.findOne({ _id: parsedId });
+  if (existingQandA === null) {
+    throw {
+      statusCode: 404,
+      message: "No Q&A was found with the given id!",
+    };
+  }
+  let newAnswers = [];
+  let answersArr = existingQandA.answers;
+  for (let i = 0; i < answersArr.length; i++) {
+    if (answersArr[i]._id != answerId.trim()) {
+      newAnswers.push(answersArr[i]);
+    }
+  }
+
+  const updateInfo = await qAndACollection.updateOne(
+    { _id: parsedId },
+    { $set: { answers: newAnswers } }
+  );
+  if (updateInfo.modifiedCount === 0) {
+    throw {
+      statusCode: 500,
+      message: "Internal server error!",
+    };
+  }
+};
+
 module.exports = {
   create,
   getAll,
   get,
   update,
   remove,
+  updateA,
 };
