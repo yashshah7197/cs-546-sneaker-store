@@ -10,8 +10,13 @@ const nodemailer = require("nodemailer");
 const qAndAData = data.qAndA;
 
 const { getBrands } = require("../data/sneakers");
-const {isValidArgument, isValidString, isValidNumber, isValidPrice, isValidObjectId} = require("../data/validate");
-
+const {
+  isValidArgument,
+  isValidString,
+  isValidNumber,
+  isValidPrice,
+  isValidObjectId,
+} = require("../data/validate");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -33,7 +38,7 @@ const upload = multer({ storage: fileStorageEngine });
 
 router.post("/photo/upload", upload.single("image"), async (req, res) => {
   if (!req.session.user) {
-    res.redirect('/users/login');
+    res.redirect("/users/login");
     return;
   }
 
@@ -103,22 +108,22 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
     });
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).render('store/sneakerSell', {
+      res.status(e.statusCode).render("store/sneakerSell", {
         title: "Add Sneaker",
         isLoggedIn: !!req.session.user,
         partial: "sell-scripts",
         hasErrors: true,
-        error: e.message
-      })
+        error: e.message,
+      });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
 
 router.get("/listedBy", async (req, res) => {
   if (!req.session.user) {
-    res.redirect('/users/login');
+    res.redirect("/users/login");
     return;
   }
 
@@ -128,21 +133,21 @@ router.get("/listedBy", async (req, res) => {
 
     res.render("store/sneakerListedby", {
       sneakers: sneakers,
-      title: 'Sneakers Listed',
+      title: "Sneakers Listed",
       isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).render('store/sneakerListedby', {
-        title: 'Sneakers Listed',
+      res.status(e.statusCode).render("store/sneakerListedby", {
+        title: "Sneakers Listed",
         isLoggedIn: !!req.session.user,
-        partial: 'empty-scripts',
+        partial: "empty-scripts",
         hasErrors: true,
-        error: e.message
+        error: e.message,
       });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
@@ -161,7 +166,7 @@ router.get("/", async (req, res) => {
       sneakers: sneakers,
       brands: brands,
       isLoggedIn: !!req.session.user,
-      partial: "empty-scripts",
+      partial: "list-scripts",
     });
   } catch (e) {
     if (e.statusCode) {
@@ -170,10 +175,10 @@ router.get("/", async (req, res) => {
         isLoggedIn: !!req.session.user,
         partial: "empty-scripts",
         hasErrors: true,
-        error: e.message
+        error: e.message,
       });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
@@ -204,7 +209,7 @@ router.get("/sneaker/:id", async (req, res) => {
     });
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).render('store/sneakerBuy', {
+      res.status(e.statusCode).render("store/sneakerBuy", {
         title: "Shop",
         userID: req.session.user,
         partial: "shop-scripts",
@@ -212,7 +217,7 @@ router.get("/sneaker/:id", async (req, res) => {
         error: e.message,
       });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
@@ -238,15 +243,15 @@ router.get("/listedByUpdate/:id", async (req, res) => {
     });
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).render('store/sneakerUpdate', {
+      res.status(e.statusCode).render("store/sneakerUpdate", {
         title: "Update",
         isLoggedIn: !!req.session.user,
         partial: "sell-scripts",
         hasErrors: true,
-        error: e.message
+        error: e.message,
       });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
@@ -343,7 +348,7 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
       if (error) {
         throw {
           statusCode: 500,
-          message: "Internal server error!"
+          message: "Internal server error!",
         };
       }
     });
@@ -355,9 +360,9 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
     });
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
@@ -374,9 +379,9 @@ router.get("/BuyList", async (req, res) => {
     });
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
@@ -393,9 +398,9 @@ router.get("/delete/:id", async (req, res) => {
     res.redirect("/sneakers/");
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
@@ -416,7 +421,7 @@ router.post("/search", async (req, res) => {
         sneakers: sneakers,
         brands: brands,
         isLoggedIn: !!req.session.user,
-        partial: "empty-scripts",
+        partial: "list-scripts",
       });
     } else {
       res.render("store/sneakersList", {
@@ -425,14 +430,14 @@ router.post("/search", async (req, res) => {
         brands: brands,
         isLoggedIn: !!req.session.user,
         error: "No results found",
-        partial: "empty-scripts",
+        partial: "list-scripts",
       });
     }
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
@@ -449,13 +454,12 @@ router.get("/sell", async (req, res) => {
       isLoggedIn: !!req.session.user,
       partial: "sell-scripts",
     });
-
   } catch (e) {
-      if (e.statusCode) {
-          res.status(e.statusCode).json({error: e.message});
-      } else {
-          res.status(500).json({error: "Internal server error!"});
-      }
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 router.post("/buy", async (req, res) => {
@@ -487,19 +491,19 @@ router.post("/buy", async (req, res) => {
       res.redirect("/sneakers/BuyList");
     }
   } catch (e) {
-      if (e.statusCode) {
-          res.status(e.statusCode).json({error: e.message});
-      } else {
-          res.status(500).json({error: "Internal server error!"});
-      }
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
 router.post("/notify", async (req, res) => {
   try {
-    checkValidation(isValidArgument(req.body.id, "sneakerId"));
-    checkValidation(isValidString(req.body.id, "sneakerId"));
-    checkValidation(isValidObjectId(req.body.id.trim()));
+    checkValidation(isValidArgument(req.body.sneakerId, "sneakerId"));
+    checkValidation(isValidString(req.body.sneakerId, "sneakerId"));
+    checkValidation(isValidObjectId(req.body.sneakerId.trim()));
 
     checkValidation(isValidArgument(req.body.size, "size"));
     checkValidation(isValidNumber(req.body.size.trim(), "size"));
@@ -520,11 +524,11 @@ router.post("/notify", async (req, res) => {
       res.redirect("/sneakers/sneaker/" + sneakerId);
     }
   } catch (e) {
-      if (e.statusCode) {
-          res.status(e.statusCode).json({error: e.message});
-      } else {
-          res.status(500).json({error: "Internal server error!"});
-      }
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
@@ -546,11 +550,7 @@ router.post("/filter", async (req, res) => {
   let price = Number(filterOptions.price.trim());
 
   try {
-    let filteredData = await sneakersData.filter(
-      brandName,
-      size,
-      price
-    );
+    let filteredData = await sneakersData.filter(brandName, size, price);
 
     if (!!req.session.user) {
       filteredData = filteredData.filter(
@@ -565,14 +565,14 @@ router.post("/filter", async (req, res) => {
       sneakers: filteredData,
       brands: brands,
       isLoggedIn: !!req.session.user,
-      partial: "empty-scripts",
+      partial: "list-scripts",
     });
   } catch (e) {
-      if (e.statusCode) {
-          res.status(e.statusCode).json({error: e.message});
-      } else {
-          res.status(500).json({error: "Internal server error!"});
-      }
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
@@ -580,9 +580,9 @@ const checkValidation = (validation) => {
   if (!validation.result) {
     throw {
       statusCode: 400,
-      message: validation.message
+      message: validation.message,
     };
   }
-}
+};
 
 module.exports = router;

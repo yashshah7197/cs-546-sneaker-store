@@ -28,6 +28,13 @@
       checkIsNumber(Number(size11.val()), "size11");
       checkIsNumber(Number(size12.val()), "size12");
       checkIsNumber(Number(price.val()), "Price");
+      checkSneakerQuantity(Number(size7.val()));
+      checkSneakerQuantity(Number(size8.val()));
+      checkSneakerQuantity(Number(size9.val()));
+      checkSneakerQuantity(Number(size10.val()));
+      checkSneakerQuantity(Number(size11.val()));
+      checkSneakerQuantity(Number(size12.val()));
+      checkPrice(Number(price.val()), "Price");
 
       return true;
     } catch (e) {

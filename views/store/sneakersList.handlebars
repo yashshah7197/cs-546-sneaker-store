@@ -4,15 +4,20 @@
 <h4 class="visually-hidden">Sneaker Shop</h4>
 
 {{#if hasErrors}}
-    <div class="alert alert-danger" role="alert">
-        {{error}}
-    </div>
+  <div class="alert alert-danger" role="alert">
+    {{error}}
+  </div>
 {{/if}}
 
 <div class="album py-5">
   <div class="container">
     <div class="col-4"></div>
     <form action="/sneakers/filter" method="post" id="filter-form">
+      <div
+        class="alert alert-danger d-none"
+        role="alert"
+        id="filterFormError"
+      ></div>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div class="col">
           <label for="brandName" class="form-label">Brand Name</label>

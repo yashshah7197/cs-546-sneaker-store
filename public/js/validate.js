@@ -23,6 +23,27 @@ function checkRating(rating) {
   }
 }
 
+//Function to check input argument
+function checkArgExists(argument, varName) {
+  if (argument == undefined) {
+    throw `${varName || "Given variable"} is not a valid.`;
+  }
+}
+
+//Function to check overall rating
+function checkPrice(price) {
+  if (price < 1) {
+    throw "Invalid price.";
+  }
+}
+
+//Function to check overall rating
+function checkSneakerQuantity(quantity) {
+  if (quantity < 0) {
+    throw "Invalid quantity provided.";
+  }
+}
+
 //Function to check for valid number
 function checkIsNumber(num, varName) {
   if (typeof num != "number") {

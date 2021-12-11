@@ -88,7 +88,28 @@
           >
             <div class="accordion-body">
               <div> User: ${responseMessage.reviewedBy} </div>
+              <div class="revReportBtn">
+                    <a
+                      id="revReportBtn_${responseMessage._id}"
+                      onClick="openReport(event)"
+                      href=""
+                    >Report</a></div>
               <div> Review: ${responseMessage.review}</div>
+              <div id="rrBtn_${responseMessage._id}" class="rrBtn" hidden>
+                    <div
+                      class="alert alert-danger d-none"
+                      role="alert"
+                      id="rrFormError_${responseMessage._id}"
+                      class="rrFormError"
+                    >
+                    </div>
+                    <label id="rrll_${responseMessage._id}">Report Reason:</label>
+                    <input type="text" id="rr_${responseMessage._id}" />
+                    <button
+                      id="rrB_${responseMessage._id}"
+                      onclick="reportReview(event)"
+                    >Submit Report</button>
+                  </div>
             </div>
           </div>
         </div>`;
@@ -251,7 +272,7 @@ function submitAnswer(event) {
           var newHTML = `<hr />
                   <div>
                     <div>Answer: ${responseMessage.answer.answer}</div>
-                    <div>User: ${responseMessage.answer.answeredBy}</div>
+                    <div>User: ${responseMessage.answer.answerBy}</div>
                   </div>
                   <hr />`;
           $(`#answerPanel_${responseMessage._id}`).append(newHTML);
@@ -259,7 +280,7 @@ function submitAnswer(event) {
           var newHTML = `<hr />
                   <div>
                     <div>Answer: ${responseMessage.answer.answer}</div>
-                    <div>User: ${responseMessage.answer.answeredBy}</div>
+                    <div>User: ${responseMessage.answer.answerBy}</div>
                   </div>
                   <hr />`;
           $(`#answerPanel_${responseMessage._id}`).empty().append(newHTML);
@@ -339,6 +360,7 @@ function reportQna(event) {
   try {
     let reportedBy = $("#reviewedBy").val();
     let reportFor = event.currentTarget.id.split("_");
+
     let reportR = $(`#rq_${reportFor[1]}`).val();
 
     var reportFormError = $("#rqFormError_" + reportFor[1]);
