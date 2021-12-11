@@ -62,6 +62,7 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
       req.session.user
     );
     res.render("store/sneakerAdded", {
+      title: "Sneaker Added",
       sneaker: sneakerAdded,
       isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
@@ -84,6 +85,7 @@ router.get("/listedBy", async (req, res) => {
 
     res.render("store/sneakerListedby", {
       sneakers: sneakers,
+      title: 'Sneakers Listed',
       isLoggedIn: !!req.session.user,
       partial: "empty-scripts",
     });
@@ -152,7 +154,6 @@ router.get("/sneaker/:id", async (req, res) => {
 router.get("/listedByUpdate/:id", async (req, res) => {
   try {
     const sneaker = await sneakersData.get(req.params.id);
-    console.log(sneaker);
 
     res.render("store/sneakerUpdate", {
       title: "Update",
@@ -274,6 +275,7 @@ router.post("/search", async (req, res) => {
     //console.log(sneakers);
     if (sneakers.length > 0) {
       res.render("store/sneakersList", {
+        title: "Shop",
         sneakers: sneakers,
         isLoggedIn: !!req.session.user,
         partial: "empty-scripts",

@@ -12,16 +12,16 @@
         <div class="col">
           <label for="brandName" class="form-label">Brand Name</label>
           <select name="brandName" id="brandName" class="form-select">
-            <option value=""></option>
+            <option value="">Brand</option>
             {{#each brands}}
-              <option value={{this}}>{{this}}</option>
+              <option value="{{this}}">{{this}}</option>
             {{/each}}
           </select>
         </div>
         <div class="col">
           <label for="size" class="form-label">Size</label>
           <select name="size" id="size" class="form-select">
-            <option value="0"></option>
+            <option value="0">Size</option>
             <option value="7">7</option>
             <option value="8">8</option>
             <option value="9">9</option>
@@ -33,17 +33,17 @@
         <div class="col">
           <label for="price" class="form-label">Price</label>
           <select name="price" id="price" class="form-select">
-            <option value="0"></option>
-            <option value="100"><100</option>
-            <option value="200"><200</option>
-            <option value="300"><300</option>
-            <option value="400"><400</option>
-            <option value="500"><500</option>
-            <option value="600"><600</option>
-            <option value="700"><700</option>
-            <option value="800"><800</option>
-            <option value="900"><900</option>
-            <option value="1000"><1000</option>
+            <option value="0">Price</option>
+            <option value="100">&lt;100</option>
+            <option value="200">&lt;200</option>
+            <option value="300">&lt;300</option>
+            <option value="400">&lt;400</option>
+            <option value="500">&lt;500</option>
+            <option value="600">&lt;600</option>
+            <option value="700">&lt;700</option>
+            <option value="800">&lt;800</option>
+            <option value="900">&lt;900</option>
+            <option value="1000">&lt;1000</option>
           </select>
         </div>
         <button

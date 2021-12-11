@@ -4,15 +4,16 @@
     {{#each sneaker}}
       <div class="col-sm-4 border">
 
-        {{!-- <form action="/sneakers/{{_id}}" method="get"> --}}
-        <h1>{{modelName}}</h1>
-        <p> {{brandName}} </p>
-        <img class="d-block w-100" src={{images}} />
+        <form action="/sneakers/{{_id}}" method="get">
+          <h1>{{modelName}}</h1>
+          <p> {{brandName}} </p>
+          <img alt="sneaker" class="d-block w-100" src={{images}} />
+
 
         <h4>Price : {{price}}$</h4>
         <h5>Size : {{boughtSize}}</h5>
 
-        {{! </form> }}
+        </form>
 
       </div>
     {{/each}}
