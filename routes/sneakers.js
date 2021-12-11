@@ -158,7 +158,7 @@ router.get("/listedByUpdate/:id", async (req, res) => {
       title: "Update",
       sneaker: sneaker,
       isLoggedIn: !!req.session.user,
-      partial: "empty-scripts",
+      partial: "sell-scripts",
     });
     //  console.log("hell2");
   } catch (e) {
