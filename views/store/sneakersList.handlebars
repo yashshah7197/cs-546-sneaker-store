@@ -3,10 +3,10 @@
 <h3 class="visually-hidden">Sneaker Shop</h3>
 <h4 class="visually-hidden">Sneaker Shop</h4>
 
-{{#if error}}
-  <div class="alert alert-primary" role="alert">
-    {{error}}
-  </div>
+{{#if hasErrors}}
+    <div class="alert alert-danger" role="alert">
+        {{error}}
+    </div>
 {{/if}}
 
 <div class="album py-5">

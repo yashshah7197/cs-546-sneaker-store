@@ -1,8 +1,8 @@
-{{#if error}}<div class="alert alert-danger" role="alert" id="buyPageError">
-    <h2>Error</h2>
-    <hr />
-    <p>{{error}}</p>
-  </div>{{/if}}
+{{#if hasErrors}}
+    <div class="alert alert-danger" role="alert" id="buyPageError">
+        {{error}}
+    </div>
+{{/if}}
 
 {{#if sneaker}}
   <div

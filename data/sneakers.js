@@ -6,6 +6,8 @@ const user = require("../data/users");
 const validation = require("../data/validate");
 
 const { ObjectId } = require("mongodb");
+const {isValidArgument, isValidString, isValidNumber, isValidPrice} = require("../data/validate");
+const {isValidArray, isValidObjectId} = require("./validate");
 
 const create = async (
   brandName,
@@ -15,65 +17,83 @@ const create = async (
   images,
   listedBy
 ) => {
+  checkValidation(isValidArgument(brandName, "brandName"));
+  checkValidation(isValidString(brandName, "brandName"));
+
+  checkValidation(isValidArgument(modelName, "modelName"));
+  checkValidation(isValidString(modelName, "modelName"));
+
+  checkValidation(isValidArgument(sizesAvailable, "sizesAvailable"));
+  checkValidation(isValidArray(sizesAvailable, "sizesAvailable"));
+
+  checkValidation(isValidArgument(price, "price"));
+  checkValidation(isValidNumber(price, "price"));
+  checkValidation(isValidPrice(price));
+
+  checkValidation(isValidArgument(images, "images"));
+  checkValidation(isValidString(images, "images"));
+
+  checkValidation(isValidArgument(listedBy, "listedBy"));
+  checkValidation(isValidString(listedBy, "listedBy"));
+  checkValidation(isValidObjectId(listedBy.trim()));
+
   const sneakersCollection = await sneakers();
-  validation.checkInputStr(brandName);
-  validation.checkInputStr(modelName);
-  validation.checkIsNumber(Number(price));
-  validation.checkInputStr(listedBy);
-  validation.checkInputStr(images);
-  validation.checkIsChar(brandName);
-  validation.checkIsChar(modelName);
-  validation.checkIsChar(images);
 
   let newSneaker = {
-    brandName: brandName,
-    modelName: modelName,
+    brandName: brandName.trim(),
+    modelName: modelName.trim(),
     sizesAvailable: sizesAvailable,
     price: price,
-    images: images,
+    images: images.trim(),
     reviews: [],
     overallRating: 0,
     qAndA: [],
-    listedBy: listedBy,
+    listedBy: listedBy.trim(),
     notify: [],
   };
 
   const insertInfo = await sneakersCollection.insertOne(newSneaker);
-  if (insertInfo.insertedCount === 0) throw "Could not add Sneaker";
-
-  // const newId = insertInfo.insertedId;
-  // const sneaker = await get(String(newId));
-
-  //Added by Hamza || To update user Sneakers Listed field on sneaker creation
+  if (insertInfo.insertedCount === 0) {
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
+  }
 
   const newId = insertInfo.insertedId;
 
-  let sneaker = await get(newId);
+  let sneaker = await get(newId.toString());
 
   const usersCollection = await users();
 
-  //Check if the restaurant with the given id exists
   const userInfo = await usersCollection.findOne({
     _id: ObjectId(sneaker.listedBy),
   });
+
   if (userInfo === null) {
-    throw "No user with that id.";
+    throw {
+      statusCode: 404,
+      message: "No user was found with the given id!"
+    };
   }
 
   let userSneakerListed = userInfo.sneakersListed;
 
-  userSneakerListed.push(newId);
+  userSneakerListed.push(newId.toString());
 
-  //Update new review object to review collection
   const updateInfo = await usersCollection.updateOne(
     { _id: userInfo._id },
     { $set: { sneakersListed: userSneakerListed } }
   );
+
   if (updateInfo.modifiedCount === 0) {
-    throw "Could not add sneaker to the user document.";
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
 
-  sneaker = await get(newId);
+  sneaker = await get(newId.toString());
 
   sneaker._id = sneaker._id.toString();
 
@@ -86,16 +106,25 @@ const getAll = async () => {
   for (let x of sneakerList) x._id = x._id.toString();
   return sneakerList;
 };
+
 const getAllListedBy = async (listedBy) => {
+  checkValidation(isValidArgument(listedBy, "listedBy"));
+  checkValidation(isValidString(listedBy, "listedBy"));
+  checkValidation(isValidObjectId(listedBy.trim()));
+
   const sneaker = await sneakers();
-  const sneakerList = await sneaker.find({ listedBy: listedBy }).toArray();
+  const sneakerList = await sneaker.find({ listedBy: listedBy.trim() }).toArray();
   for (let x of sneakerList) x._id = x._id.toString();
   return sneakerList;
 };
 const getAllBuyList = async (userId) => {
+  checkValidation(isValidArgument(userId, "userId"));
+  checkValidation(isValidString(userId, "userId"));
+  checkValidation(isValidObjectId(userId.trim()));
+
   const sneakersCollection = await sneakers();
 
-  const u = await user.get(userId);
+  const u = await user.get(userId.trim());
   const sneakerList = [];
   for (const x of u.sneakersBought) {
     const sneakerInfo = await sneakersCollection.findOne({
@@ -107,23 +136,33 @@ const getAllBuyList = async (userId) => {
   return sneakerList;
 };
 const get = async (sneakerId) => {
+  checkValidation(isValidArgument(sneakerId, "sneakerId"));
+  checkValidation(isValidString(sneakerId, "sneakerId"));
+  checkValidation(isValidObjectId(sneakerId.trim()));
+
   const sneakersCollection = await sneakers();
   const review = await reviews();
 
-  const rest = await sneakersCollection.findOne({ _id: ObjectId(sneakerId) });
-  if (rest === null) throw "No Sneakers with that id";
+  const rest = await sneakersCollection.findOne({ _id: ObjectId(sneakerId.trim()) });
+  if (rest === null) throw {
+    statusCode: 404,
+    message: "No sneaker was found with the given id!"
+  };
+
   rest._id = rest._id.toString();
   return rest;
 };
-const getName = async (sneakerName) => {
-  validation.checkInputStr(sneakerName);
-  const sneaker = await sneakers();
-  let regEx = new RegExp(sneakerName, "i");
-  const sneakerList = await sneaker
-    .find({ $or: [{ modelName: regEx }, { brandName: regEx }] })
-    .toArray();
 
-  return sneakerList;
+const getName = async (sneakerName) => {
+  checkValidation(isValidArgument(sneakerName, "sneakerName"));
+  checkValidation(isValidString(sneakerName, "sneakerName"));
+
+  const sneaker = await sneakers();
+  let regEx = new RegExp(sneakerName.trim(), "i");
+
+  return await sneaker
+      .find({$or: [{modelName: regEx}, {brandName: regEx}]})
+      .toArray();
 };
 const update = async (
   sneakerId,
@@ -138,34 +177,54 @@ const update = async (
   listedBy,
   notify
 ) => {
-  try {
-    sneakerId = ObjectId(sneakerId.trim());
-  } catch (e) {
-    throw {
-      statusCode: 400,
-      message: "Could not parse the user id in to a valid ObjectId!",
-    };
-  }
-  validation.checkInputStr(listedBy);
-  validation.checkInputStr(brandName);
-  validation.checkInputStr(modelName);
-  validation.checkIsNumber(Number(price));
-  //validation.checkInputStr(images);
-  validation.checkIsChar(brandName);
-  validation.checkIsChar(modelName);
-  validation.checkIsChar(images);
+  checkValidation(isValidArgument(sneakerId, "sneakerId"));
+  checkValidation(isValidString(sneakerId, "sneakerId"));
+  checkValidation(isValidObjectId(sneakerId.trim()));
+
+  checkValidation(isValidArgument(brandName, "brandName"));
+  checkValidation(isValidString(brandName, "brandName"));
+
+  checkValidation(isValidArgument(modelName, "modelName"));
+  checkValidation(isValidString(modelName, "modelName"));
+
+  checkValidation(isValidArgument(sizesAvailable, "sizesAvailable"));
+  checkValidation(isValidArray(sizesAvailable, "sizesAvailable"));
+
+  checkValidation(isValidArgument(price, "price"));
+  checkValidation(isValidNumber(price, "price"));
+  checkValidation(isValidPrice(price));
+
+  checkValidation(isValidArgument(images, "images"));
+  checkValidation(isValidString(images, "images"));
+
+  checkValidation(isValidArgument(reviews, "reviews"));
+  checkValidation(isValidArray(reviews, "reviews"));
+
+  checkValidation(isValidArgument(overallRating, "overallRating"));
+  checkValidation(isValidNumber(overallRating, "overallRating"));
+  checkValidation(isValidPrice(overallRating));
+
+  checkValidation(isValidArgument(qAndA, "qAndA"));
+  checkValidation(isValidArray(qAndA, "qAndA"));
+
+  checkValidation(isValidArgument(listedBy, "listedBy"));
+  checkValidation(isValidString(listedBy, "listedBy"));
+  checkValidation(isValidObjectId(listedBy.trim()));
+
+  checkValidation(isValidArgument(notify, "notify"));
+  checkValidation(isValidArray(notify, "notify"));
 
   const sneaker = await get(sneakerId.toString());
   const updatedSneaker = {
-    brandName: brandName,
-    modelName: modelName,
+    brandName: brandName.trim(),
+    modelName: modelName.trim(),
     sizesAvailable: sizesAvailable,
     price: price,
-    images: images,
+    images: images.trim(),
     reviews: reviews,
     overallRating: overallRating,
     qAndA: qAndA,
-    listedBy: listedBy,
+    listedBy: listedBy.trim(),
     notify: notify,
   };
 
@@ -187,26 +246,46 @@ const update = async (
 };
 
 const remove = async (sneakerId) => {
+  checkValidation(isValidArgument(sneakerId, "sneakerId"));
+  checkValidation(isValidString(sneakerId, "sneakerId"));
+  checkValidation(isValidObjectId(sneakerId.trim()));
+
   const rest = await sneakers();
   const deletionInfo = await rest.deleteOne({ _id: ObjectId(sneakerId) });
   if (deletionInfo.deletedCount === 0) {
-    throw `Could not delete post with id of ${id}`;
+    throw {
+      statusCode: 500,
+      message: "Internal server error!"
+    };
   }
   return { Deleted: true };
 };
 
 const buySneaker = async (userId, sneakerId, size1, price) => {
+  checkValidation(isValidArgument(userId, "userId"));
+  checkValidation(isValidString(userId, "userId"));
+  checkValidation(isValidObjectId(userId.trim()));
+
+  checkValidation(isValidArgument(sneakerId, "sneakerId"));
+  checkValidation(isValidString(sneakerId, "sneakerId"));
+  checkValidation(isValidObjectId(sneakerId.trim()));
+
   let size = size1.split(",");
-  // validation.checkInputStr(sneakerId);
-  // validation.checkInputStr(size);
-  // validation.checkInputStr(userId);
+
+  checkValidation(isValidNumber(size[0].trim()));
+  checkValidation(isValidNumber(size[1].trim()));
+
+  checkValidation(isValidArgument(price, "price"));
+  checkValidation(isValidNumber(price, "price"));
+  checkValidation(isValidPrice(price));
 
   const userInfo = await user.get(userId.toString());
   userInfo.sneakersBought[userInfo.sneakersBought.length] = {
-    sneakerId: sneakerId,
-    size: size[0],
+    sneakerId: sneakerId.trim(),
+    size: Number(size[0]),
     price: price,
   };
+
   const update1 = await user.update(
     userId,
     userInfo.firstName,
@@ -222,12 +301,12 @@ const buySneaker = async (userId, sneakerId, size1, price) => {
   const sneakerInfo = await get(sneakerId.toString());
 
   for (const x of sneakerInfo.sizesAvailable) {
-    if (x.size == size[0]) {
+    if (x.size === Number(size[0])) {
       x.quantity = x.quantity - 1;
     }
   }
   const updateSneaker = await update(
-    sneakerId,
+    sneakerId.trim(),
     sneakerInfo.brandName,
     sneakerInfo.modelName,
     sneakerInfo.sizesAvailable,
@@ -243,18 +322,31 @@ const buySneaker = async (userId, sneakerId, size1, price) => {
   return update1;
 };
 const notifySneaker = async (userId, userName, sneakerId, size1) => {
+  checkValidation(isValidArgument(userId, "userId"));
+  checkValidation(isValidString(userId, "userId"));
+  checkValidation(isValidObjectId(userId.trim()));
+
+  checkValidation(isValidArgument(userName, "userName"));
+  checkValidation(isValidString(userName, "userName"));
+
+  checkValidation(isValidArgument(sneakerId, "sneakerId"));
+  checkValidation(isValidString(sneakerId, "sneakerId"));
+  checkValidation(isValidObjectId(sneakerId.trim()));
+
   let size = size1.split(",");
-  // validation.checkInputStr(size);
-  // validation.checkValidEmail(userName);
-  const sneakerInfo = await get(sneakerId.toString());
+
+  checkValidation(isValidNumber(size[0].trim()));
+  checkValidation(isValidNumber(size[1].trim()));
+
+  const sneakerInfo = await get(sneakerId.toString().trim());
   sneakerInfo.notify[sneakerInfo.notify.length] = {
-    userId: userId,
-    userName: userName,
-    size: Number(size[0]),
+    userId: userId.trim(),
+    userName: userName.trim(),
+    size: Number(size[0].trim()),
   };
 
   const updateSneaker = await update(
-    sneakerId,
+    sneakerId.trim(),
     sneakerInfo.brandName,
     sneakerInfo.modelName,
     sneakerInfo.sizesAvailable,
@@ -276,6 +368,16 @@ const getBrands = async () => {
 };
 
 const filter = async (brandName, size, price) => {
+  checkValidation(isValidArgument(brandName, "brandName"));
+  checkValidation(isValidString(brandName, "brandName"));
+
+  checkValidation(isValidArgument(size, "size"));
+  checkValidation(isValidNumber(size, "size"));
+
+  checkValidation(isValidArgument(price, "price"));
+  checkValidation(isValidNumber(price, "price"));
+  checkValidation(isValidPrice(price));
+
   let sneakers = await getAll();
 
   if (brandName) {
@@ -300,6 +402,15 @@ const filter = async (brandName, size, price) => {
 };
 
 const notifybuyerWithEmail = async () => {};
+
+const checkValidation = (validation) => {
+  if (!validation.result) {
+    throw {
+      statusCode: 400,
+      message: validation.message
+    };
+  }
+}
 
 module.exports = {
   create,

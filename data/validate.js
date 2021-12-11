@@ -167,6 +167,20 @@ const isValidRating = (rating) => {
   }
 }
 
+const isValidPrice = (price) => {
+  if (price <= 0) {
+    return {
+      result: false,
+      message: "The price must be a positive value!"
+    };
+  }
+
+  return {
+    result: true,
+    message: ""
+  };
+}
+
 //Function to check for Input array
 function checkInputStr(str, varName) {
   if (str == undefined) {
@@ -294,5 +308,6 @@ module.exports = {
   isValidObjectId,
   isValidArray,
   isValidNumber,
-  isValidRating
+  isValidRating,
+  isValidPrice
 };
