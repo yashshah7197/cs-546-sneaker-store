@@ -123,3 +123,7 @@ html {
   min-height: 100%;
   position: relative;
 }
+
+.totally-fix {
+  text-indent:-9px;
+}
