@@ -10,14 +10,18 @@
             {{#each sneaker}}
                 <div class="col">
                     <div class="card shadow-sm">
-                        <img
+                      
+                           <a
+                                            href="/sneakers/sneaker/{{_id}}"
+                                    >  <img
                                 src="{{images}}"
                                 alt="shoe"
                                 width="200"
                                 height="200"
                                 class="card-img-top sneakerListImg"
-                        />
-
+                        /></a>
+                        
+    
                         <div class="card-body">
                             <h5 class="card-title">{{modelName}}</h5>
                             <p class="card-text">{{brandName}}</p>
