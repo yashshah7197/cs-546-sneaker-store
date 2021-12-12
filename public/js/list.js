@@ -1,3 +1,5 @@
+const { checkInputStr } = require("../../data/validate");
+
 (function ($) {
   var filterForm = $("#filter-form");
 
@@ -14,6 +16,8 @@
       var price = $("#price");
 
       checkArgExists(brandName.val(), "Brand Name");
+      checkInputStr(size.val(), "Size");
+      checkInputStr(price.val(), "Price");
       checkIsNumber(Number(size.val()), "Size");
       checkIsNumber(Number(price.val()), "Price");
 
