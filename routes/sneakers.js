@@ -192,8 +192,9 @@ router.get("/", async (req, res) => {
 router.get("/sneaker/:id", async (req, res) => {
   if (!req.session.user) {
     res.redirect('/users/login');
-
+    return;
   }
+  
   try {
     if (!req.session.user) {
       res.redirect("/users/login");
