@@ -25,6 +25,7 @@ const configRoutes = (app) => {
     if (!err) {
       return next();
     }
+    console.log(err);
     res.status(400).json({ error: "Bad request!" });
   });
 };

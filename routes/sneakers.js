@@ -190,6 +190,10 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/sneaker/:id", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect('/users/login');
+
+  }
   try {
     if (!req.session.user) {
       res.redirect("/users/login");
@@ -476,19 +480,19 @@ router.get("/sell", async (req, res) => {
 });
 router.post("/buy", async (req, res) => {
   try {
-    checkValidation(isValidArgument(req.body.id, "sneakerId"));
-    checkValidation(isValidString(req.body.id, "sneakerId"));
-    checkValidation(isValidObjectId(req.body.id.trim()));
+    checkValidation(isValidArgument(req.body.sneakerId, "sneakerId"));
+    checkValidation(isValidString(req.body.sneakerId, "sneakerId"));
+    checkValidation(isValidObjectId(req.body.sneakerId.trim()));
 
-    checkValidation(isValidArgument(req.body.size, "size"));
-    checkValidation(isValidNumber(req.body.size.trim(), "size"));
+    checkValidation(isValidArgument(req.body.sneakerSize, "size"));
+    checkValidation(isValidString(req.body.sneakerSize.trim(), "size"));
 
-    checkValidation(isValidArgument(req.body.price, "price"));
-    checkValidation(isValidNumber(req.body.price.trim(), "price"));
-    checkValidation(isValidPrice(Number(req.body.price)));
+    checkValidation(isValidArgument(req.body.sneakerPrice, "price"));
+    checkValidation(isValidNumber(req.body.sneakerPrice.trim(), "price"));
+    checkValidation(isValidPrice(Number(req.body.sneakerPrice)));
 
     let sneakerId = req.body.sneakerId.trim();
-    let size = Number(req.body.size.trim());
+    let size = req.body.sneakerSize.trim();
     let price = Number(req.body.sneakerPrice.trim());
 
     if (!req.session.user) {
@@ -517,11 +521,11 @@ router.post("/notify", async (req, res) => {
     checkValidation(isValidString(req.body.sneakerId, "sneakerId"));
     checkValidation(isValidObjectId(req.body.sneakerId.trim()));
 
-    checkValidation(isValidArgument(req.body.size, "size"));
-    checkValidation(isValidNumber(req.body.size.trim(), "size"));
+    checkValidation(isValidArgument(req.body.sneakerSize, "size"));
 
     let sizeArray = req.body.sneakerSize.split(",");
     let size = sizeArray[0];
+
     checkValidation(isValidArgument(size, "size"));
     checkValidation(isValidNumber(size.trim(), "size"));
 
