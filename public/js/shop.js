@@ -110,7 +110,7 @@
                     </div>
                     <label id="rrll_${responseMessage._id}">Report Reason:</label>
                     <input type="text" id="rr_${responseMessage._id}" />
-                    <button
+                    <button class="btn btn-secondary"
                       id="rrB_${responseMessage._id}"
                       onclick="reportReview(event)"
                     >Submit Report</button>
@@ -255,7 +255,7 @@ function submitAnswer(event) {
                               </div>
                               <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
                               <input type="text" id="rq_${responseMessage.answer._id}" />
-                              <button
+                              <button class="btn btn-secondary"
                                 id="rqB_${responseMessage.answer._id}_${responseMessage._id}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>
@@ -287,7 +287,7 @@ function submitAnswer(event) {
                               </div>
                               <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
                               <input type="text" id="rq_${responseMessage.answer._id}" />
-                              <button
+                              <button class="btn btn-secondary"
                                 id="rqB_${responseMessage.answer._id}_${responseMessage._id}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>

@@ -150,14 +150,15 @@
                   <div> Review: {{review}}</div>
                   <div id="rrBtn_{{_id}}" class="rrBtn" hidden>
                     <div
-                      class="alert alert-danger d-none rrFormError"
+                      class="alert alert-danger d-none"
                       role="alert"
                       id="rrFormError_{{_id}}"
+                      class="rrFormError"
                     >
                     </div>
                     <label id="rrll_{{_id}}">Report Reason:</label>
                     <input type="text" id="rr_{{_id}}" />
-                    <button
+                    <button class="btn btn-secondary"
                       id="rrB_{{_id}}"
                       onclick="reportReview(event)"
                     >Submit Report</button>
@@ -286,14 +287,15 @@
                             <div>User: {{answeredBy}}</div>
                             <div id="rqBtn_{{_id}}" class="rqBtn" hidden>
                               <div
-                                class="alert alert-danger d-none rqFormError"
+                                class="alert alert-danger d-none"
                                 role="alert"
                                 id="rqFormError_{{_id}}"
+                                class="rrFormError"
                               >
                               </div>
                               <label id="rqll_{{_id}}">Report Reason:</label>
                               <input type="text" id="rq_{{_id}}" />
-                              <button
+                              <button class="btn btn-secondary"
                                 id="rqB_{{_id}}_{{../_id}}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>

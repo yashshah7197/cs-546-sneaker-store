@@ -65,7 +65,7 @@
   border: 0.5px solid black;
   border-radius: 5px;
   float: right;
-  background-color: #ffc107;
+  background-color: #cef4fc;
 }
 
 .revReportBtn a {
@@ -78,16 +78,16 @@
   color: blue;
 }
 
-.rrBtn button {
+/* .rrBtn button {
   color: black;
   background-color: #ffc107;
-}
+} */
 
 .qnaReportBtn {
   border: 0.5px solid black;
   border-radius: 5px;
   float: right;
-  background-color: #ffc107;
+  background-color: #cef4fc;
 }
 
 .qnaReportBtn a {
@@ -136,8 +136,4 @@ html {
 .textOverImage {
   background: rgba(255, 255, 255, 0.75);
   color: black !important;
-}
-
-.star-checked {
-  color: orange;
 }
