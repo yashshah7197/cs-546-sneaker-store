@@ -428,8 +428,12 @@ router.post("/search", async (req, res) => {
     checkValidation(isValidArgument(req.body.searchTerm, "searchTerm"));
     checkValidation(isValidString(req.body.searchTerm, "searchTerm"));
 
-    const sneakers = await sneakersData.getName(searchTerm);
+    let sneakers = await sneakersData.getName(searchTerm);
     const brands = await sneakersData.getBrands();
+
+    if (!!req.session.user) {
+      sneakers = sneakers.filter((s) => s.listedBy !== req.session.user);
+    }
 
     if (sneakers.length > 0) {
       res.render("store/sneakersList", {
