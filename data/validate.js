@@ -73,7 +73,7 @@ const isValidNumber = (arg, argName) => {
 
   if (typeof arg === "string") {
     let result = xss(arg);
-    if (!(arg === Number(result))) {
+    if (!(Number(arg) === Number(result))) {
       return {
         result: false,
         message: "The " + argName + " parameter passed in is invalid!"
