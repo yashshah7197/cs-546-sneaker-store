@@ -184,49 +184,6 @@
     }
   });
 
-  // //Answer AJAX call
-  // answerForm.submit(function (event) {
-  //   event.preventDefault();
-  //   try {
-  //     var qID = event.target.id;
-  //     qID = qID.replace("answerForm_", "");
-  //     var requestConfig = {
-  //       method: $("#method_" + qID).val(),
-  //       url: "/qAndA/" + qID,
-  //       dataType: "json",
-  //       data: {
-  //         answerBy: $("#answerBy_" + qID).val(),
-  //         //answer: values["answerText"],
-  //         answer: $("#answerText_" + qID).val(),
-  //       },
-  //     };
-
-  //     $.ajax(requestConfig).then(function (responseMessage) {
-  //       if ($(`#answerPanel_${responseMessage._id} .answerBlock`).length > 0) {
-  //         var newHTML = `<hr />
-  //                 <div>
-  //                   <div>Answer: ${responseMessage.answer.answer}</div>
-  //                   <div>User: ${responseMessage.answer.answeredBy}</div>
-  //                 </div>
-  //                 <hr />`;
-  //         $(`#answerPanel_${responseMessage._id}`).append(newHTML);
-  //       } else {
-  //         var newHTML = `<hr />
-  //                 <div>
-  //                   <div>Answer: ${responseMessage.answer.answer}</div>
-  //                   <div>User: ${responseMessage.answer.answeredBy}</div>
-  //                 </div>
-  //                 <hr />`;
-  //         $(`#answerPanel_${responseMessage._id}`).empty().append(newHTML);
-  //       }
-
-  //       $("#answerText_" + qID).val("");
-  //     });
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // });
-
   $("select").change(function () {
     var nameArr = $("#sneakerSize").val().split(",");
     console.log(nameArr[0]);

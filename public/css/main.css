@@ -128,3 +128,7 @@ html {
 .totally-fix {
   text-indent: -9px;
 }
+
+.carousel-item img {
+  opacity: 0.7;
+}
