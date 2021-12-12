@@ -126,7 +126,7 @@
         })
         .fail(function (e) {
           errorMessage = JSON.parse(e.responseText);
-          reviewErrorMsg.empty().append(errorMessage.error);
+          reviewFormError.empty().append(errorMessage.error);
           reviewFormError.removeClass("d-none");
         });
     } catch (e) {
