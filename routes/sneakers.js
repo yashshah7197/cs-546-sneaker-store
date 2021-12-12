@@ -255,6 +255,8 @@ router.get("/sneaker/:id", async (req, res) => {
       title: "Buy",
       userID: req.session.user,
       sneaker: sneaker,
+      starRating: Math.floor(sneaker.overallRating),
+      difference: 5 - Math.floor(sneaker.overallRating),
       review: rev,
       qAndAs: qAndA,
       isLoggedIn: !!req.session.user,

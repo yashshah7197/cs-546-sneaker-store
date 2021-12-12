@@ -20,6 +20,14 @@
                 <h1>{{sneaker.modelName}}</h1>
                   <h2 class="visually-hidden">{{sneaker.modelName}}</h2>
                 <p> {{sneaker.brandName}} </p>
+                  <div class="mb-4">
+                      {{#times starRating}}
+                          <span class="fa fa-star star-checked"></span>
+                      {{/times}}
+                      {{#times difference}}
+                          <span class="fa fa-star"></span>
+                      {{/times}}
+                  </div>
                 <img
                   class="img-thumbnail"
                   src="{{sneaker.images}}"

@@ -28,6 +28,13 @@ const handlebarsInstance = exphbs.create({
   partialsDir: ["views/partials/"],
 });
 
+Handlebars.registerHelper('times', function(n, block) {
+  let accum = '';
+  for(let i = 0; i < n; ++i)
+    accum += block.fn(i);
+  return accum;
+});
+
 const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   if (req.body && req.body._method) {
     req.method = req.body._method;
