@@ -299,7 +299,7 @@ function submitAnswer(event) {
                               <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
                               <input type="text" id="rq_${responseMessage.answer._id}" />
                               <button
-                                id="rqB_${responseMessage.answer._id}_${userID}"
+                                id="rqB_${responseMessage.answer._id}_${responseMessage._id}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>
                             </div>
@@ -332,7 +332,7 @@ function submitAnswer(event) {
                               <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
                               <input type="text" id="rq_${responseMessage.answer._id}" />
                               <button
-                                id="rqB_${responseMessage.answer._id}_${userID}"
+                                id="rqB_${responseMessage.answer._id}_${responseMessage._id}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>
                             </div>

@@ -3,6 +3,7 @@ const router = express.Router();
 const data = require("../data");
 const reportsData = data.reports;
 const reviewsData = data.reviews;
+const sneakersData = data.sneakers;
 const qnaData = data.qAndA;
 const { ObjectId } = require("mongodb");
 const {
@@ -13,6 +14,10 @@ const {
 
 router.get("/", async (req, res) => {
   try {
+    if (!req.session.user) {
+      res.redirect("/users/login");
+      return;
+    }
     let reports = await reportsData.getAll();
     for (let i = 0; i < reports.length; i++) {
       if (reports[i].type == "Review") {
@@ -37,7 +42,13 @@ router.get("/", async (req, res) => {
         partial: "empty-scripts",
       });
     } else {
-      res.status(404).json(reports);
+      res.status(200).render("store/allReports", {
+        reports: reports,
+        title: "Reports",
+        error: "No Reports Found",
+        isLoggedIn: !!req.session.user,
+        partial: "empty-scripts",
+      });
     }
   } catch (e) {
     if (e.statusCode) {
@@ -114,9 +125,53 @@ router.get("/delete/:id", async (req, res) => {
     let mx;
     let report = await reportsData.get(req.params.id);
     if (report.type == "Review") {
+      let reviewX = await reviewsData.get(report.reportFor);
+      let sneaker = await sneakersData.get(reviewX.reviewFor);
+      let revArr = sneaker.reviews;
+      let newArr = [];
+      for (let k = 0; k < revArr.length; k++) {
+        if (revArr[k] != reviewX._id) {
+          newArr.push(revArr[k]);
+        }
+      }
+      await sneakersData.update(
+        sneaker._id,
+        sneaker.brandName,
+        sneaker.modelName,
+        sneaker.sizesAvailable,
+        sneaker.price,
+        sneaker.images,
+        newArr,
+        sneaker.overallRating,
+        sneaker.qAndA,
+        sneaker.listedBy,
+        sneaker.notify
+      );
       await reviewsData.remove(report.reportFor);
       mx = "Review Deleted Successfully";
     } else {
+      let qnaX = await qnaData.get(report.reportForQ);
+      let sneaker = await sneakersData.get(qnaX.qAndAFor);
+      let qnaArr = sneaker.qAndA;
+      let newArr = [];
+      for (let k = 0; k < qnaArr.length; k++) {
+        if (qnaArr[k] != qnaX._id) {
+          newArr.push(qnaArr[k]);
+        }
+      }
+      await sneakersData.update(
+        sneaker._id,
+        sneaker.brandName,
+        sneaker.modelName,
+        sneaker.sizesAvailable,
+        sneaker.price,
+        sneaker.images,
+        sneaker.reviews,
+        sneaker.overallRating,
+        newArr,
+        sneaker.listedBy,
+        sneaker.notify
+      );
       await qnaData.updateA(report.reportForQ, report.reportFor);
       mx = "Answer Deleted Successfully";
     }
