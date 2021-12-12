@@ -34,6 +34,7 @@
                   alt="{{sneaker.modelName}}"
                 />
               </div>
+
               <div class="col">
                 <form id="sneakerBuyForm" method="post">
                   <div
@@ -41,7 +42,14 @@
                     role="alert"
                     id="buyFormError"
                   >
+                  
                   </div>
+                  {{#if notify}}
+                  <div class="alert alert-success" role="alert">
+                    You will be Notified by email when stocks get updated.
+                          </div>
+                  {{/if}}
+                 
                   <div>
                     <p>Price: {{sneaker.price}}$</p>
                     <input

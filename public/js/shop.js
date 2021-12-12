@@ -37,6 +37,7 @@
     }
   });
 
+
   //Review form submission
   reviewForm.submit(function (event) {
     event.preventDefault();
@@ -197,6 +198,7 @@
       $("#buy").attr("disabled", false);
     }
   });
+  
 })(window.jQuery);
 
 //Answer AJAX call
