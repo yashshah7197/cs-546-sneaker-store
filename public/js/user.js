@@ -64,7 +64,9 @@
       checkInputStr(lastName.val(), "Last Name");
 
       checkIsValidEmail(email.val());
-      checkIsValidPassword(password.val());
+      if (password.val() !== "") {
+        checkIsValidPassword(password.val());
+      }
 
       checkInputStr(address.val());
       checkIsValidPhoneNumber(phoneNumber.val());

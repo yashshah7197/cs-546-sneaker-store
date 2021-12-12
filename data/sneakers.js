@@ -7,7 +7,7 @@ const validation = require("../data/validate");
 
 const { ObjectId } = require("mongodb");
 const {isValidArgument, isValidString, isValidNumber, isValidPrice} = require("../data/validate");
-const {isValidArray, isValidObjectId} = require("./validate");
+const {isValidArray, isValidObjectId, isValidRating} = require("./validate");
 
 const create = async (
   brandName,
@@ -365,14 +365,12 @@ const getBrands = async () => {
 
 const filter = async (brandName, size, price) => {
   checkValidation(isValidArgument(brandName, "brandName"));
-  checkValidation(isValidString(brandName, "brandName"));
 
   checkValidation(isValidArgument(size, "size"));
   checkValidation(isValidNumber(size, "size"));
 
   checkValidation(isValidArgument(price, "price"));
   checkValidation(isValidNumber(price, "price"));
-  checkValidation(isValidPrice(price));
 
   let sneakers = await getAll();
 

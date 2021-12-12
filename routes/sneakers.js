@@ -18,6 +18,7 @@ const {
   isValidObjectId,
 } = require("../data/validate");
 
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -55,21 +56,27 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
 
     checkValidation(isValidArgument(req.body.size7, "size7"));
     checkValidation(isValidNumber(req.body.size7.trim(), "size7"));
+    checkValidation(isValidQuantity(Number(req.body.size7.trim())));
 
     checkValidation(isValidArgument(req.body.size8, "size8"));
     checkValidation(isValidNumber(req.body.size8.trim(), "size8"));
+    checkValidation(isValidQuantity(Number(req.body.size8.trim())));
 
     checkValidation(isValidArgument(req.body.size9, "size9"));
     checkValidation(isValidNumber(req.body.size9.trim(), "size9"));
+    checkValidation(isValidQuantity(Number(req.body.size9.trim())));
 
     checkValidation(isValidArgument(req.body.size10, "size10"));
     checkValidation(isValidNumber(req.body.size10.trim(), "size10"));
+    checkValidation(isValidQuantity(Number(req.body.size10.trim())));
 
     checkValidation(isValidArgument(req.body.size11, "size11"));
-    checkValidation(isValidNumber(req.body.size11.trim(), "siz11"));
+    checkValidation(isValidNumber(req.body.size11.trim(), "size11"));
+    checkValidation(isValidQuantity(Number(req.body.size11.trim())));
 
     checkValidation(isValidArgument(req.body.size12, "size12"));
     checkValidation(isValidNumber(req.body.size12.trim(), "size12"));
+    checkValidation(isValidQuantity(Number(req.body.size12.trim())));
 
     let brandName = req.body.brandName.trim();
     let modelName = req.body.modelName.trim();
@@ -270,21 +277,27 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
 
     checkValidation(isValidArgument(req.body.size7, "size7"));
     checkValidation(isValidNumber(req.body.size7.trim(), "size7"));
+    checkValidation(isValidQuantity(Number(req.body.size7.trim())));
 
     checkValidation(isValidArgument(req.body.size8, "size8"));
     checkValidation(isValidNumber(req.body.size8.trim(), "size8"));
+    checkValidation(isValidQuantity(Number(req.body.size8.trim())));
 
     checkValidation(isValidArgument(req.body.size9, "size9"));
     checkValidation(isValidNumber(req.body.size9.trim(), "size9"));
+    checkValidation(isValidQuantity(Number(req.body.size9.trim())));
 
     checkValidation(isValidArgument(req.body.size10, "size10"));
     checkValidation(isValidNumber(req.body.size10.trim(), "size10"));
+    checkValidation(isValidQuantity(Number(req.body.size10.trim())));
 
     checkValidation(isValidArgument(req.body.size11, "size11"));
     checkValidation(isValidNumber(req.body.size11.trim(), "size11"));
+    checkValidation(isValidQuantity(Number(req.body.size11.trim())));
 
     checkValidation(isValidArgument(req.body.size12, "size12"));
     checkValidation(isValidNumber(req.body.size12.trim(), "size12"));
+    checkValidation(isValidQuantity(Number(req.body.size12.trim())));
 
     checkValidation(isValidArgument(req.body.price, "price"));
     checkValidation(isValidNumber(req.body.price.trim(), "price"));
@@ -346,10 +359,6 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        throw {
-          statusCode: 500,
-          message: "Internal server error!",
-        };
       }
     });
 
@@ -413,7 +422,7 @@ router.post("/search", async (req, res) => {
     checkValidation(isValidString(req.body.searchTerm, "searchTerm"));
 
     const sneakers = await sneakersData.getName(searchTerm);
-    const brands = await sneakers.getBrands();
+    const brands = await sneakersData.getBrands();
 
     if (sneakers.length > 0) {
       res.render("store/sneakersList", {
@@ -537,24 +546,28 @@ router.post("/notify", async (req, res) => {
 });
 
 router.post("/filter", async (req, res) => {
-  let filterOptions = req.body;
 
-  checkValidation(isValidArgument(req.body.brandName, "brandName"));
-  checkValidation(isValidString(req.body.brandName, "brandName"));
-
-  checkValidation(isValidArgument(req.body.size, "size"));
-  checkValidation(isValidNumber(req.body.size.trim(), "size"));
-
-  checkValidation(isValidArgument(req.body.price, "price"));
-  checkValidation(isValidNumber(req.body.price.trim(), "price"));
-  checkValidation(isValidPrice(Number(req.body.price)));
-
-  let brandName = filterOptions.brandName.trim();
-  let size = Number(filterOptions.size.trim());
-  let price = Number(filterOptions.price.trim());
 
   try {
-    let filteredData = await sneakersData.filter(brandName, size, price);
+    let filterOptions = req.body;
+
+    checkValidation(isValidArgument(req.body.brandName, "brandName"));
+
+    checkValidation(isValidArgument(req.body.size, "size"));
+    checkValidation(isValidNumber(req.body.size.trim(), "size"));
+
+    checkValidation(isValidArgument(req.body.price, "price"));
+    checkValidation(isValidNumber(req.body.price.trim(), "price"));
+
+    let brandName = filterOptions.brandName.trim();
+    let size = Number(filterOptions.size.trim());
+    let price = Number(filterOptions.price.trim());
+
+    let filteredData = await sneakersData.filter(
+      brandName,
+      size,
+      price
+    );
 
     if (!!req.session.user) {
       filteredData = filteredData.filter(

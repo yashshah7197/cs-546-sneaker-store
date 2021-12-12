@@ -181,6 +181,20 @@ const isValidPrice = (price) => {
   };
 }
 
+const isValidQuantity = (quantity) => {
+  if (quantity < 0) {
+    return {
+      result: false,
+      message: "The quantity cannot be negative!"
+    };
+  }
+
+  return {
+    result: true,
+    message: ""
+  };
+}
+
 //Function to check for Input array
 function checkInputStr(str, varName) {
   if (str == undefined) {
@@ -309,5 +323,6 @@ module.exports = {
   isValidArray,
   isValidNumber,
   isValidRating,
-  isValidPrice
+  isValidPrice,
+  isValidQuantity
 };
