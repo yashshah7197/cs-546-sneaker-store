@@ -94,8 +94,8 @@
           >
             <div class="accordion-body">
               <div> User: ${responseMessage.reviewedBy} </div>
-              <div class="revReportBtn">
-                    <a
+              <div>
+                    <a class="revReportBtn btn btn-danger"
                       id="revReportBtn_${responseMessage._id}"
                       onClick="openReport(event)"
                       href=""
@@ -109,8 +109,8 @@
                     >
                     </div>
                     <label id="rrll_${responseMessage._id}">Report Reason:</label>
-                    <input type="text" id="rr_${responseMessage._id}" />
-                    <button class="btn btn-secondary"
+                    <input class="form-control" type="text" id="rr_${responseMessage._id}" />
+                    <button class="btn btn-danger"
                       id="rrB_${responseMessage._id}"
                       onclick="reportReview(event)"
                     >Submit Report</button>
@@ -239,8 +239,9 @@ function submitAnswer(event) {
                           <div>
                             <div>Answer: ${responseMessage.answer.answer}</div>
 
-                            <div class="qnaReportBtn">
+                            <div>
                               <a
+                                class="qnaReportBtn btn btn-danger"
                                 id="qnaReportBtn_${responseMessage.answer._id}"
                                 onclick="openReport2(event)"
                                 href=""
@@ -254,8 +255,8 @@ function submitAnswer(event) {
                               >
                               </div>
                               <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
-                              <input type="text" id="rq_${responseMessage.answer._id}" />
-                              <button class="btn btn-secondary"
+                              <input class="form-control" type="text" id="rq_${responseMessage.answer._id}" />
+                              <button class="btn btn-danger"
                                 id="rqB_${responseMessage.answer._id}_${responseMessage._id}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>
