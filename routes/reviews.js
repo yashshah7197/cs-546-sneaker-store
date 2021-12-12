@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const data = require("../data");
 const reviewsData = data.reviews;
+const userData = data.users;
 const {isValidArgument, isValidString, isValidObjectId, isValidNumber, isValidRating} = require("../data/validate");
 
 router.get("/product/:id", async (req, res) => {
@@ -26,6 +27,11 @@ router.get("/product/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  if (!req.session.user) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
   const reviewData = req.body;
 
   try {
@@ -91,6 +97,11 @@ router.get("/:id", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
+  if (!req.session.user) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
   const reviewData = req.body;
 
   try {
@@ -147,6 +158,17 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
+  if (!req.session.user) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
+  let user = await userData.get(req.session.user);
+  if (!user.isAdmin) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
   try {
     checkValidation(isValidArgument(req.params.id, "reviewId"));
     checkValidation(isValidString(req.params.id, "reviewId"));

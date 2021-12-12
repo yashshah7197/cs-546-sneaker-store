@@ -43,7 +43,11 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="/sneakers/listedBy">Listed Sneakers</a>
                     </li>
-                    
+                    {{#if isAdmin}}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/reports">Reports</a>
+                        </li>
+                    {{/if}}
                     {{/if}}
 
                 </ul>

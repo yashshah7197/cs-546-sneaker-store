@@ -4,8 +4,9 @@ const data = require("../data");
 const reportsData = data.reports;
 const reviewsData = data.reviews;
 const sneakersData = data.sneakers;
+const usersData = data.users;
 const qnaData = data.qAndA;
-const { ObjectId } = require("mongodb");
+
 const {
   isValidArgument,
   isValidString,
@@ -15,9 +16,16 @@ const {
 router.get("/", async (req, res) => {
   try {
     if (!req.session.user) {
-      res.redirect("/users/login");
+      res.status(403).json({error: "Forbidden!"});
       return;
     }
+
+    let user = await usersData.get(req.session.user);
+    if (!user.isAdmin) {
+      res.status(403).json({error: "Forbidden!"});
+      return;
+    }
+
     let reports = await reportsData.getAll();
     for (let i = 0; i < reports.length; i++) {
       if (reports[i].type == "Review") {
@@ -39,6 +47,7 @@ router.get("/", async (req, res) => {
         reports: reports,
         title: "Reports",
         isLoggedIn: !!req.session.user,
+        isAdmin: true,
         partial: "empty-scripts",
       });
     } else {
@@ -46,6 +55,7 @@ router.get("/", async (req, res) => {
         reports: reports,
         title: "Reports",
         error: "No Reports Found",
+        isAdmin: true,
         isLoggedIn: !!req.session.user,
         partial: "empty-scripts",
       });
@@ -60,6 +70,11 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  if (!req.session.user) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
   const reportData = req.body;
 
   try {
@@ -71,7 +86,7 @@ router.post("/", async (req, res) => {
     checkValidation(isValidString(reportData.reportFor, "reportFor"));
     checkValidation(isValidObjectId(reportData.reportFor.trim()));
 
-    if (reportData.type == "QnA") {
+    if (reportData.type === "QnA") {
       checkValidation(isValidArgument(reportData.reportForQ, "reportForQ"));
       checkValidation(isValidString(reportData.reportForQ, "reportForQ"));
       checkValidation(isValidObjectId(reportData.reportFor.trim()));
@@ -88,7 +103,7 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    if (reportData.type == "Review") {
+    if (reportData.type === "Review") {
       report = await reportsData.createRevR(
         reportData.reportedBy.trim(),
         reportData.reportFor.trim(),
@@ -121,16 +136,27 @@ router.get("/delete/:id", async (req, res) => {
   //   return;
   // }
 
+  if (!req.session.user) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
+  let user = await usersData.get(req.session.user);
+  if (!user.isAdmin) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
   try {
     let mx;
     let report = await reportsData.get(req.params.id);
-    if (report.type == "Review") {
+    if (report.type === "Review") {
       let reviewX = await reviewsData.get(report.reportFor);
       let sneaker = await sneakersData.get(reviewX.reviewFor);
       let revArr = sneaker.reviews;
       let newArr = [];
       for (let k = 0; k < revArr.length; k++) {
-        if (revArr[k] != reviewX._id) {
+        if (revArr[k] !== reviewX._id) {
           newArr.push(revArr[k]);
         }
       }
@@ -155,7 +181,7 @@ router.get("/delete/:id", async (req, res) => {
       let qnaArr = sneaker.qAndA;
       let newArr = [];
       for (let k = 0; k < qnaArr.length; k++) {
-        if (qnaArr[k] != qnaX._id) {
+        if (qnaArr[k] !== qnaX._id) {
           newArr.push(qnaArr[k]);
         }
       }
@@ -180,6 +206,7 @@ router.get("/delete/:id", async (req, res) => {
       m: mx,
       title: "Reports",
       isLoggedIn: !!req.session.user,
+      isAdmin: true,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -198,6 +225,17 @@ router.get("/keep/:id", async (req, res) => {
   //   return;
   // }
 
+  if (!req.session.user) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
+  let user = await usersData.get(req.session.user);
+  if (!user.isAdmin) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
   try {
     let report = await reportsData.get(req.params.id);
     await reportsData.remove(req.params.id);
@@ -205,6 +243,7 @@ router.get("/keep/:id", async (req, res) => {
       m: "Report Deleted Successfully",
       title: "Reports",
       isLoggedIn: !!req.session.user,
+      isAdmin: true,
       partial: "empty-scripts",
     });
   } catch (e) {

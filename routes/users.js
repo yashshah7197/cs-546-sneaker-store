@@ -206,6 +206,8 @@ router.get("/profile", async (req, res) => {
         address: user.address,
         phoneNumber: user.phoneNumber,
         isLoggedIn: !!req.session.user,
+        isAdmin: user.isAdmin,
+
         partial: "user-scripts",
       };
 

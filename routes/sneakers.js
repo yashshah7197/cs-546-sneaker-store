@@ -41,6 +41,14 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
     return;
   }
 
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     checkValidation(isValidArgument(req.body.brandName, "brandName"));
     checkValidation(isValidString(req.body.brandName, "brandName"));
@@ -109,6 +117,7 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
       title: "Sneaker Added",
       sneaker: sneakerAdded,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -116,6 +125,7 @@ router.post("/photo/upload", upload.single("image"), async (req, res) => {
       res.status(e.statusCode).render("store/sneakerSell", {
         title: "Add Sneaker",
         isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
         partial: "sell-scripts",
         hasErrors: true,
         error: e.message,
@@ -132,6 +142,14 @@ router.get("/listedBy", async (req, res) => {
     return;
   }
 
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     let id = req.session.user;
     const sneakers = await sneakersData.getAllListedBy(id.trim());
@@ -140,6 +158,7 @@ router.get("/listedBy", async (req, res) => {
       sneakers: sneakers,
       title: "Sneakers Listed",
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -147,6 +166,7 @@ router.get("/listedBy", async (req, res) => {
       res.status(e.statusCode).render("store/sneakerListedby", {
         title: "Sneakers Listed",
         isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
         partial: "empty-scripts",
         hasErrors: true,
         error: e.message,
@@ -158,6 +178,14 @@ router.get("/listedBy", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     let sneakers = await sneakersData.getAll();
     let brands = await sneakersData.getBrands();
@@ -171,6 +199,7 @@ router.get("/", async (req, res) => {
       sneakers: sneakers,
       brands: brands,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "list-scripts",
     });
   } catch (e) {
@@ -178,6 +207,7 @@ router.get("/", async (req, res) => {
       res.status(e.statusCode).render({
         title: "Shop",
         isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
         partial: "empty-scripts",
         hasErrors: true,
         error: e.message,
@@ -192,6 +222,14 @@ router.get("/sneaker/:id", async (req, res) => {
   if (!req.session.user) {
     res.redirect('/users/login');
     return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
   }
   
   try {
@@ -219,6 +257,7 @@ router.get("/sneaker/:id", async (req, res) => {
       review: rev,
       qAndAs: qAndA,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "shop-scripts",
     });
   } catch (e) {
@@ -227,7 +266,9 @@ router.get("/sneaker/:id", async (req, res) => {
         title: "Shop",
         userID: req.session.user,
         partial: "shop-scripts",
+        isAdmin: isAdmin,
         hasErrors: true,
+        isLoggedIn: !!req.session.user,
         error: e.message,
       });
     } else {
@@ -242,6 +283,14 @@ router.get("/listedByUpdate/:id", async (req, res) => {
     return;
   }
 
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   checkValidation(isValidArgument(req.params.id, "sneakerId"));
   checkValidation(isValidString(req.params.id, "sneakerId"));
   checkValidation(isValidObjectId(req.params.id.trim()));
@@ -253,6 +302,7 @@ router.get("/listedByUpdate/:id", async (req, res) => {
       title: "Update",
       sneaker: sneaker,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "sell-scripts",
     });
   } catch (e) {
@@ -260,6 +310,7 @@ router.get("/listedByUpdate/:id", async (req, res) => {
       res.status(e.statusCode).render("store/sneakerUpdate", {
         title: "Update",
         isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
         partial: "sell-scripts",
         hasErrors: true,
         error: e.message,
@@ -271,6 +322,19 @@ router.get("/listedByUpdate/:id", async (req, res) => {
 });
 
 router.post("/updateSneakerNotifyBuyer", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     checkValidation(isValidArgument(req.body.id, "sneakerId"));
     checkValidation(isValidString(req.body.id, "sneakerId"));
@@ -376,6 +440,7 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
     res.render("store/sneakerUpdatedSuccessfully", {
       title: "Updated Successfully",
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -388,6 +453,19 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
 });
 
 router.get("/BuyList", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     let id = req.session.user;
     const sneaker = await sneakersData.getAllBuyList(id);
@@ -395,6 +473,7 @@ router.get("/BuyList", async (req, res) => {
       title: "Sneakers Bought",
       sneaker: sneaker,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "empty-scripts",
     });
   } catch (e) {
@@ -407,6 +486,11 @@ router.get("/BuyList", async (req, res) => {
 });
 
 router.get("/delete/:id", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
   try {
     checkValidation(isValidArgument(req.params.id, "sneakerId"));
     checkValidation(isValidString(req.params.id, "sneakerId"));
@@ -426,6 +510,19 @@ router.get("/delete/:id", async (req, res) => {
 });
 
 router.post("/search", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     let searchTerm = req.body.searchTerm;
 
@@ -445,6 +542,7 @@ router.post("/search", async (req, res) => {
         sneakers: sneakers,
         brands: brands,
         isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
         partial: "list-scripts",
       });
     } else {
@@ -453,6 +551,7 @@ router.post("/search", async (req, res) => {
         sneakers: sneakers,
         brands: brands,
         isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
         error: "No results found",
         partial: "list-scripts",
       });
@@ -467,6 +566,19 @@ router.post("/search", async (req, res) => {
 });
 
 router.get("/sell", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     if (!req.session.user) {
       res.redirect("/users/login");
@@ -476,6 +588,7 @@ router.get("/sell", async (req, res) => {
     res.render("store/sneakerSell", {
       title: "Add Sneaker",
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "sell-scripts",
     });
   } catch (e) {
@@ -561,6 +674,19 @@ router.post("/notify", async (req, res) => {
 });
 
 router.post("/filter", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     let filterOptions = req.body;
 
@@ -591,6 +717,7 @@ router.post("/filter", async (req, res) => {
       sneakers: filteredData,
       brands: brands,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "list-scripts",
     });
   } catch (e) {
