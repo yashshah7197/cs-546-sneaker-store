@@ -5,7 +5,6 @@ const sneakersData = data.sneakers;
 const reviewData = data.reviews;
 const usersData = data.users;
 const multer = require("multer");
-const validation = require("../data/validate");
 const nodemailer = require("nodemailer");
 const qAndAData = data.qAndA;
 
