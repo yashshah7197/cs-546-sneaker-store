@@ -256,6 +256,8 @@ const remove = async (reviewId) => {
     };
   }
 
+  await calAvgRating(review.reviewFor);
+
   result["reviewId"] = review._id.toString();
   result["deleted"] = true;
 
