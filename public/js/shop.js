@@ -102,10 +102,9 @@
               <div> Review: ${responseMessage.review}</div>
               <div id="rrBtn_${responseMessage._id}" class="rrBtn" hidden>
                     <div
-                      class="alert alert-danger d-none"
+                      class="alert alert-danger d-none rrFormError"
                       role="alert"
                       id="rrFormError_${responseMessage._id}"
-                      class="rrFormError"
                     >
                     </div>
                     <label id="rrll_${responseMessage._id}">Report Reason:</label>
@@ -247,10 +246,9 @@ function submitAnswer(event) {
                             <div>User: ${responseMessage.answer.answerBy}</div>
                             <div id="rqBtn_${responseMessage.answer._id}" class="rqBtn" hidden>
                               <div
-                                class="alert alert-danger d-none"
+                                class="alert alert-danger d-none rqFormError"
                                 role="alert"
                                 id="rqFormError_${responseMessage.answer._id}"
-                                class="rrFormError"
                               >
                               </div>
                               <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
@@ -280,10 +278,9 @@ function submitAnswer(event) {
                             <div>User: ${responseMessage.answer.answerBy}</div>
                             <div id="rqBtn_${responseMessage.answer._id}" class="rqBtn" hidden>
                               <div
-                                class="alert alert-danger d-none"
+                                class="alert alert-danger d-none rqFormError"
                                 role="alert"
                                 id="rqFormError_${responseMessage.answer._id}"
-                                class="rrFormError"
                               >
                               </div>
                               <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
