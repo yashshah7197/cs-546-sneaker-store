@@ -1,0 +1,31 @@
+<h1>Reported Content:</h1>
+{{#each reports}}
+  <div class="col">
+    <div class="card shadow-sm">
+
+      <div class="card-body">
+        <h5 class="card-title">{{type}}</h5>
+        <p class="card-text">Reported Reason : {{reportReasons}}</p>
+        <p class="card-text">Reported Text : {{reportFor}}</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="btn-group">
+            <a
+              href="/reports/keep/{{_id}}"
+              class="btn btn-sm btn-outline-primary"
+            >Keep</a>
+            <a
+              href="/reports/delete/{{_id}}"
+              class="btn btn-sm btn-outline-primary"
+            >Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/each}}
+
+{{#if error}}
+  <div class="alert alert-danger" role="alert" id="buyPageError">
+    {{error}}
+  </div>
+{{/if}}

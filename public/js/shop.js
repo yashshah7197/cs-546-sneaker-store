@@ -22,6 +22,10 @@
       var quantity = sizeArr[1];
 
       checkInputStr(sneakerId, "Sneaker ID");
+      checkInputStr(sneakerPrice, "Price");
+      checkInputStr(size, "Size");
+      checkInputStr(quantity, "Quantity");
+
       checkIsNumber(Number(sneakerPrice), "Price");
       checkIsNumber(Number(size), "Size");
       checkIsNumber(Number(quantity), "Quantity");
@@ -48,6 +52,7 @@
       checkInputStr(reviewForElem.val(), "reviewFor");
       checkInputStr(reviewTitleElem.val(), "Title");
       checkInputStr(reviewTextElem.val(), "Review");
+      checkInputStr(reviewRatingElem.val(), "Rating");
       checkIsNumber(Number(reviewRatingElem.val()), "Rating");
       checkRating(Number(reviewRatingElem.val()));
 
@@ -88,7 +93,28 @@
           >
             <div class="accordion-body">
               <div> User: ${responseMessage.reviewedBy} </div>
+              <div class="revReportBtn">
+                    <a
+                      id="revReportBtn_${responseMessage._id}"
+                      onClick="openReport(event)"
+                      href=""
+                    >Report</a></div>
               <div> Review: ${responseMessage.review}</div>
+              <div id="rrBtn_${responseMessage._id}" class="rrBtn" hidden>
+                    <div
+                      class="alert alert-danger d-none"
+                      role="alert"
+                      id="rrFormError_${responseMessage._id}"
+                      class="rrFormError"
+                    >
+                    </div>
+                    <label id="rrll_${responseMessage._id}">Report Reason:</label>
+                    <input type="text" id="rr_${responseMessage._id}" />
+                    <button
+                      id="rrB_${responseMessage._id}"
+                      onclick="reportReview(event)"
+                    >Submit Report</button>
+                  </div>
             </div>
           </div>
         </div>`;
@@ -235,6 +261,8 @@ function submitAnswer(event) {
     checkInputStr(answerByID, "Answer By");
     checkInputStr(answerText, "Answer");
 
+    var userID = $("#reviewedBy");
+
     var requestConfig = {
       method: $("#method_" + qID).val(),
       url: "/qAndA/" + qID,
@@ -248,20 +276,70 @@ function submitAnswer(event) {
     $.ajax(requestConfig)
       .then(function (responseMessage) {
         if ($(`#answerPanel_${responseMessage._id} .answerBlock`).length > 0) {
-          var newHTML = `<hr />
-                  <div>
-                    <div>Answer: ${responseMessage.answer.answer}</div>
-                    <div>User: ${responseMessage.answer.answeredBy}</div>
-                  </div>
-                  <hr />`;
+          var newHTML = `<div class="answerBlock">
+                          <hr />
+                          <div>
+                            <div>Answer: ${responseMessage.answer.answer}</div>
+
+                            <div class="qnaReportBtn">
+                              <a
+                                id="qnaReportBtn_${responseMessage.answer._id}"
+                                onclick="openReport2(event)"
+                                href=""
+                              >Report</a></div>
+                            <div>User: ${responseMessage.answer.answerBy}</div>
+                            <div id="rqBtn_${responseMessage.answer._id}" class="rqBtn" hidden>
+                              <div
+                                class="alert alert-danger d-none"
+                                role="alert"
+                                id="rqFormError_${responseMessage.answer._id}"
+                                class="rrFormError"
+                              >
+                              </div>
+                              <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
+                              <input type="text" id="rq_${responseMessage.answer._id}" />
+                              <button
+                                id="rqB_${responseMessage.answer._id}_${responseMessage._id}"
+                                onclick="reportQna(event)"
+                              >Submit Report</button>
+                            </div>
+
+                          </div>
+                          <hr />
+                        </div>`;
           $(`#answerPanel_${responseMessage._id}`).append(newHTML);
         } else {
-          var newHTML = `<hr />
-                  <div>
-                    <div>Answer: ${responseMessage.answer.answer}</div>
-                    <div>User: ${responseMessage.answer.answeredBy}</div>
-                  </div>
-                  <hr />`;
+          var newHTML = `<div class="answerBlock">
+                          <hr />
+                          <div>
+                            <div>Answer: ${responseMessage.answer.answer}</div>
+
+                            <div class="qnaReportBtn">
+                              <a
+                                id="qnaReportBtn_${responseMessage.answer._id}"
+                                onclick="openReport2(event)"
+                                href=""
+                              >Report</a></div>
+                            <div>User: ${responseMessage.answer.answerBy}</div>
+                            <div id="rqBtn_${responseMessage.answer._id}" class="rqBtn" hidden>
+                              <div
+                                class="alert alert-danger d-none"
+                                role="alert"
+                                id="rqFormError_${responseMessage.answer._id}"
+                                class="rrFormError"
+                              >
+                              </div>
+                              <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
+                              <input type="text" id="rq_${responseMessage.answer._id}" />
+                              <button
+                                id="rqB_${responseMessage.answer._id}_${responseMessage._id}"
+                                onclick="reportQna(event)"
+                              >Submit Report</button>
+                            </div>
+
+                          </div>
+                          <hr />
+                        </div>`;
           $(`#answerPanel_${responseMessage._id}`).empty().append(newHTML);
         }
 
@@ -339,6 +417,7 @@ function reportQna(event) {
   try {
     let reportedBy = $("#reviewedBy").val();
     let reportFor = event.currentTarget.id.split("_");
+
     let reportR = $(`#rq_${reportFor[1]}`).val();
 
     var reportFormError = $("#rqFormError_" + reportFor[1]);
@@ -356,6 +435,7 @@ function reportQna(event) {
       data: {
         reportedBy: reportedBy,
         reportFor: reportFor[1],
+        reportForQ: reportFor[2],
         reportReasons: reportR,
         type: "QnA",
       },

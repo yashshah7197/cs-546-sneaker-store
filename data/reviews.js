@@ -5,7 +5,13 @@ const validation = require("./validate");
 const usersData = require("./users");
 
 const { ObjectId } = require("mongodb");
-const {isValidArgument, isValidString, isValidObjectId, isValidNumber, isValidRating} = require("./validate");
+const {
+  isValidArgument,
+  isValidString,
+  isValidObjectId,
+  isValidNumber,
+  isValidRating,
+} = require("./validate");
 
 const create = async (reviewedBy, reviewFor, title, review, rating) => {
   checkValidation(isValidArgument(reviewedBy, "reviewedBy"));
@@ -40,7 +46,7 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
   if (insertInfo.insertedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -54,7 +60,7 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
   if (sneaker === null) {
     throw {
       statusCode: 404,
-      message: "No sneaker was found with the given id!"
+      message: "No sneaker was found with the given id!",
     };
   }
 
@@ -69,7 +75,7 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
   if (updateInfo.modifiedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -123,7 +129,7 @@ const get = async (reviewId) => {
   if (review === null) {
     throw {
       statusCode: 404,
-      message: "No review was found with the given id!"
+      message: "No review was found with the given id!",
     };
   }
 
@@ -172,7 +178,7 @@ const update = async (
   if (existingReview === null) {
     throw {
       statusCode: 404,
-      message: "No review was found with the given id!"
+      message: "No review was found with the given id!",
     };
   }
 
@@ -185,7 +191,7 @@ const update = async (
   ) {
     throw {
       statusCode: 400,
-      message: "Update field values are the same as the review field values!"
+      message: "Update field values are the same as the review field values!",
     };
   }
 
@@ -204,7 +210,7 @@ const update = async (
   if (updateInfo.modifiedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -234,7 +240,7 @@ const remove = async (reviewId) => {
   if (review === null) {
     throw {
       statusCode: 404,
-      message: "No review was found with the given id!"
+      message: "No review was found with the given id!",
     };
   }
 
@@ -243,7 +249,7 @@ const remove = async (reviewId) => {
   if (deletionInfo.deletedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -267,7 +273,7 @@ async function calAvgRating(productId) {
   if (sneaker === null) {
     throw {
       statusCode: 404,
-      message: "No sneaker was found with the given id!"
+      message: "No sneaker was found with the given id!",
     };
   }
 
@@ -284,7 +290,7 @@ async function calAvgRating(productId) {
     if (review === null) {
       throw {
         statusCode: 404,
-        message: "No review was found with the given id!"
+        message: "No review was found with the given id!",
       };
     }
 
@@ -304,7 +310,7 @@ async function calAvgRating(productId) {
   if (updatedSneaker.modifiedCount === 0 && sneaker.overallRating !== rating) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   } else {
     return true;
@@ -315,10 +321,10 @@ const checkValidation = (validation) => {
   if (!validation.result) {
     throw {
       statusCode: 400,
-      message: validation.message
+      message: validation.message,
     };
   }
-}
+};
 
 module.exports = {
   create,

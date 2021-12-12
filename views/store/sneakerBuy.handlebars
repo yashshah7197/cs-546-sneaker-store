@@ -1,8 +1,9 @@
-{{#if error}}<div class="alert alert-danger" role="alert" id="buyPageError">
-    <h2>Error</h2>
-    <hr />
-    <p>{{error}}</p>
-  </div>{{/if}}
+{{#if hasErrors}}
+    <div class="alert alert-danger" role="alert" id="buyPageError">
+        {{error}}
+    </div>
+{{/if}}
+
 
 {{#if sneaker}}
   <div
@@ -17,6 +18,7 @@
             <div class="row">
               <div class="col">
                 <h1>{{sneaker.modelName}}</h1>
+                  <h2 class="visually-hidden">{{sneaker.modelName}}</h2>
                 <p> {{sneaker.brandName}} </p>
                 <img
                   class="img-thumbnail"
@@ -46,7 +48,7 @@
                     <select
                       class="form-select"
                       id="sneakerSize"
-                      name="size"
+                      name="sneakerSize"
                       required
                     >
                       <option value="">-</option>
@@ -66,6 +68,7 @@
                   <br />
 
                   <input
+                          class="btn btn-primary"
                     type="submit"
                     value="Buy"
                     id="buy"
@@ -74,12 +77,16 @@
                   />
 
                   <input
+                          class="btn btn-primary"
                     type="submit"
                     value="Notify"
                     id="notify"
                     formaction="/sneakers/notify"
                     hidden
                   />
+                  <div class="ss-box" data-ss-social=" whatsapp,email" data-ss-email = "subject:Sole Search" data-ss-content="false"  data-ss-link="Hey, Check the latest collection of Sneaker.... http://localhost:3000/sneakers/sneaker/{{sneaker._id}}"></div>
+
+
                 </form>
               </div>
             </div>
@@ -138,7 +145,6 @@
                       id="rrB_{{_id}}"
                       onclick="reportReview(event)"
                     >Submit Report</button>
-                    {{!-- <a id = "rrB_{{_id}}" onclick="reportReview(event)" href="" ></a> --}}
                   </div>
                 </div>
               </div>
@@ -256,7 +262,6 @@
                             <div>Answer: {{answer}}</div>
 
                             <div class="qnaReportBtn">
-                              {{!-- <a id = "revReportBtn_{{_id}}" onclick ="reportReview(event,{{../userID}})" href="">Report</a></div> --}}
                               <a
                                 id="qnaReportBtn_{{_id}}"
                                 onclick="openReport2(event)"
@@ -274,10 +279,9 @@
                               <label id="rqll_{{_id}}">Report Reason:</label>
                               <input type="text" id="rq_{{_id}}" />
                               <button
-                                id="rqB_{{_id}}"
+                                id="rqB_{{_id}}_{{../_id}}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>
-                              {{!-- <a id = "rrB_{{_id}}" onclick="reportReview(event)" href="" ></a> --}}
                             </div>
 
                           </div>

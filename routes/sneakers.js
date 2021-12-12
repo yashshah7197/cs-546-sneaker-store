@@ -5,8 +5,17 @@ const sneakersData = data.sneakers;
 const reviewData = data.reviews;
 const usersData = data.users;
 const multer = require("multer");
-const validation = require("../data/validate");
 const nodemailer = require("nodemailer");
+const qAndAData = data.qAndA;
+
+const { getBrands } = require("../data/sneakers");
+const {
+  isValidArgument,
+  isValidString,
+  isValidNumber,
+  isValidPrice,
+  isValidObjectId, isValidQuantity,
+} = require("../data/validate");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -27,74 +36,156 @@ const fileStorageEngine = multer.diskStorage({
 const upload = multer({ storage: fileStorageEngine });
 
 router.post("/photo/upload", upload.single("image"), async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
-    let brandName = req.body.brandName;
-    let modelName = req.body.modelName;
-    let price = req.body.price;
+    checkValidation(isValidArgument(req.body.brandName, "brandName"));
+    checkValidation(isValidString(req.body.brandName, "brandName"));
+
+    checkValidation(isValidArgument(req.body.modelName, "modelName"));
+    checkValidation(isValidString(req.body.modelName, "modelName"));
+
+    checkValidation(isValidArgument(req.body.price, "price"));
+    checkValidation(isValidNumber(req.body.price.trim(), "price"));
+    checkValidation(isValidPrice(Number(req.body.price)));
+
+    checkValidation(isValidArgument(req.body.size7, "size7"));
+    checkValidation(isValidNumber(req.body.size7.trim(), "size7"));
+    checkValidation(isValidQuantity(Number(req.body.size7.trim())));
+
+    checkValidation(isValidArgument(req.body.size8, "size8"));
+    checkValidation(isValidNumber(req.body.size8.trim(), "size8"));
+    checkValidation(isValidQuantity(Number(req.body.size8.trim())));
+
+    checkValidation(isValidArgument(req.body.size9, "size9"));
+    checkValidation(isValidNumber(req.body.size9.trim(), "size9"));
+    checkValidation(isValidQuantity(Number(req.body.size9.trim())));
+
+    checkValidation(isValidArgument(req.body.size10, "size10"));
+    checkValidation(isValidNumber(req.body.size10.trim(), "size10"));
+    checkValidation(isValidQuantity(Number(req.body.size10.trim())));
+
+    checkValidation(isValidArgument(req.body.size11, "size11"));
+    checkValidation(isValidNumber(req.body.size11.trim(), "size11"));
+    checkValidation(isValidQuantity(Number(req.body.size11.trim())));
+
+    checkValidation(isValidArgument(req.body.size12, "size12"));
+    checkValidation(isValidNumber(req.body.size12.trim(), "size12"));
+    checkValidation(isValidQuantity(Number(req.body.size12.trim())));
+
+    let brandName = req.body.brandName.trim();
+    let modelName = req.body.modelName.trim();
+    let price = req.body.price.trim();
+
     let sizesAvailable = [
-      { size: 7, quantity: Number(req.body.size7) },
-      { size: 8, quantity: Number(req.body.size8) },
-      { size: 9, quantity: Number(req.body.size9) },
-      { size: 10, quantity: Number(req.body.size10) },
-      { size: 11, quantity: Number(req.body.size11) },
-      { size: 12, quantity: Number(req.body.size12) },
+      { size: 7, quantity: Number(req.body.size7.trim()) },
+      { size: 8, quantity: Number(req.body.size8.trim()) },
+      { size: 9, quantity: Number(req.body.size9.trim()) },
+      { size: 10, quantity: Number(req.body.size10.trim()) },
+      { size: 11, quantity: Number(req.body.size11.trim()) },
+      { size: 12, quantity: Number(req.body.size12.trim()) },
     ];
+
     let image;
     if (req.file != null && req.file.path != null) {
-      image = "../../" + req.file.path;
+      image = "../../" + req.file.path.trim();
     } else {
       image = "../../public/uploads/no_image.jpeg";
     }
-    validation.checkInputStr(brandName);
-    validation.checkInputStr(modelName);
-    validation.checkIsNumber(Number(price));
-    validation.checkInputStr(image);
-    validation.checkIsChar(brandName);
-    validation.checkIsChar(modelName);
-    validation.checkIsChar(image);
 
     const sneakerAdded = await sneakersData.create(
       brandName,
       modelName,
       sizesAvailable,
-      price,
+      Number(price),
       image,
-      req.session.user
+      req.session.user.trim()
     );
+
     res.render("store/sneakerAdded", {
       title: "Sneaker Added",
       sneaker: sneakerAdded,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "empty-scripts",
     });
   } catch (e) {
-    res.sendStatus(500);
+    if (e.statusCode) {
+      res.status(e.statusCode).render("store/sneakerSell", {
+        title: "Add Sneaker",
+        isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
+        partial: "sell-scripts",
+        hasErrors: true,
+        error: e.message,
+      });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
-const qAndAData = data.qAndA;
-const users = data.users;
 
-const { ObjectId } = require("mongodb");
-const { update } = require("../data/users");
-const { getBrands } = require("../data/sneakers");
-//User listed sneakers
 router.get("/listedBy", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     let id = req.session.user;
-    const sneakers = await sneakersData.getAllListedBy(id);
+    const sneakers = await sneakersData.getAllListedBy(id.trim());
 
     res.render("store/sneakerListedby", {
       sneakers: sneakers,
-      title: 'Sneakers Listed',
+      title: "Sneakers Listed",
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "empty-scripts",
     });
   } catch (e) {
-    res.sendStatus(500);
+    if (e.statusCode) {
+      res.status(e.statusCode).render("store/sneakerListedby", {
+        title: "Sneakers Listed",
+        isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
+        partial: "empty-scripts",
+        hasErrors: true,
+        error: e.message,
+      });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
-//getall sneakers
+
 router.get("/", async (req, res) => {
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     let sneakers = await sneakersData.getAll();
     let brands = await sneakersData.getBrands();
@@ -108,22 +199,51 @@ router.get("/", async (req, res) => {
       sneakers: sneakers,
       brands: brands,
       isLoggedIn: !!req.session.user,
-      partial: "empty-scripts",
+      isAdmin: isAdmin,
+      partial: "list-scripts",
     });
   } catch (e) {
-    res.sendStatus(500);
+    if (e.statusCode) {
+      res.status(e.statusCode).render({
+        title: "Shop",
+        isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
+        partial: "empty-scripts",
+        hasErrors: true,
+        error: e.message,
+      });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
-//Changes from "/:id" to add search functionality || Hamza
+
 router.get("/sneaker/:id", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect('/users/login');
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+  
   try {
-    let id = req.params.id;
     if (!req.session.user) {
       res.redirect("/users/login");
       return;
     }
+    let id = req.params.id;
 
-    const sneaker = await sneakersData.get(id);
+    checkValidation(isValidArgument(req.params.id, "sneakerId"));
+    checkValidation(isValidString(req.params.id, "sneakerId"));
+    checkValidation(isValidObjectId(req.params.id.trim()));
+
+    const sneaker = await sneakersData.get(id.trim());
     let rev = [];
     for (const x of sneaker.reviews) {
       rev.push(await reviewData.get(x));
@@ -137,64 +257,149 @@ router.get("/sneaker/:id", async (req, res) => {
       review: rev,
       qAndAs: qAndA,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "shop-scripts",
     });
   } catch (e) {
-    res.status(404).render("store/sneakerBuy", {
-      title: "Shop",
-      userID: req.session.user,
-      partial: "shop-scripts",
-      error: e,
-    });
-    //res.status(404).json({ message: " There is no Sneaker with that ID" + e });
+    if (e.statusCode) {
+      res.status(e.statusCode).render("store/sneakerBuy", {
+        title: "Shop",
+        userID: req.session.user,
+        partial: "shop-scripts",
+        isAdmin: isAdmin,
+        hasErrors: true,
+        isLoggedIn: !!req.session.user,
+        error: e.message,
+      });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
-//User updates sneaker
 router.get("/listedByUpdate/:id", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
+  checkValidation(isValidArgument(req.params.id, "sneakerId"));
+  checkValidation(isValidString(req.params.id, "sneakerId"));
+  checkValidation(isValidObjectId(req.params.id.trim()));
+
   try {
-    const sneaker = await sneakersData.get(req.params.id);
+    const sneaker = await sneakersData.get(req.params.id.trim());
 
     res.render("store/sneakerUpdate", {
       title: "Update",
       sneaker: sneaker,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "sell-scripts",
     });
-    //  console.log("hell2");
   } catch (e) {
-    res.status(404).json({ message: " There is no Sneaker with that ID" });
+    if (e.statusCode) {
+      res.status(e.statusCode).render("store/sneakerUpdate", {
+        title: "Update",
+        isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
+        partial: "sell-scripts",
+        hasErrors: true,
+        error: e.message,
+      });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
 router.post("/updateSneakerNotifyBuyer", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
-    const sneaker = await sneakersData.get(req.body.id);
+    checkValidation(isValidArgument(req.body.id, "sneakerId"));
+    checkValidation(isValidString(req.body.id, "sneakerId"));
+    checkValidation(isValidObjectId(req.body.id.trim()));
+
+    checkValidation(isValidArgument(req.body.brandName, "brandName"));
+    checkValidation(isValidString(req.body.brandName, "brandName"));
+
+    checkValidation(isValidArgument(req.body.modelName, "modelName"));
+    checkValidation(isValidString(req.body.modelName, "modelName"));
+
+    checkValidation(isValidArgument(req.body.size7, "size7"));
+    checkValidation(isValidNumber(req.body.size7.trim(), "size7"));
+    checkValidation(isValidQuantity(Number(req.body.size7.trim())));
+
+    checkValidation(isValidArgument(req.body.size8, "size8"));
+    checkValidation(isValidNumber(req.body.size8.trim(), "size8"));
+    checkValidation(isValidQuantity(Number(req.body.size8.trim())));
+
+    checkValidation(isValidArgument(req.body.size9, "size9"));
+    checkValidation(isValidNumber(req.body.size9.trim(), "size9"));
+    checkValidation(isValidQuantity(Number(req.body.size9.trim())));
+
+    checkValidation(isValidArgument(req.body.size10, "size10"));
+    checkValidation(isValidNumber(req.body.size10.trim(), "size10"));
+    checkValidation(isValidQuantity(Number(req.body.size10.trim())));
+
+    checkValidation(isValidArgument(req.body.size11, "size11"));
+    checkValidation(isValidNumber(req.body.size11.trim(), "size11"));
+    checkValidation(isValidQuantity(Number(req.body.size11.trim())));
+
+    checkValidation(isValidArgument(req.body.size12, "size12"));
+    checkValidation(isValidNumber(req.body.size12.trim(), "size12"));
+    checkValidation(isValidQuantity(Number(req.body.size12.trim())));
+
+    checkValidation(isValidArgument(req.body.price, "price"));
+    checkValidation(isValidNumber(req.body.price.trim(), "price"));
+    checkValidation(isValidPrice(Number(req.body.price)));
+
+    const sneaker = await sneakersData.get(req.body.id.trim());
     let sizesAvailable = [
-      { size: 7, quantity: Number(req.body.size7) },
-      { size: 8, quantity: Number(req.body.size8) },
-      { size: 9, quantity: Number(req.body.size9) },
-      { size: 10, quantity: Number(req.body.size10) },
-      { size: 11, quantity: Number(req.body.size11) },
-      { size: 12, quantity: Number(req.body.size12) },
+      { size: 7, quantity: Number(req.body.size7.trim()) },
+      { size: 8, quantity: Number(req.body.size8.trim()) },
+      { size: 9, quantity: Number(req.body.size9.trim()) },
+      { size: 10, quantity: Number(req.body.size10.trim()) },
+      { size: 11, quantity: Number(req.body.size11.trim()) },
+      { size: 12, quantity: Number(req.body.size12.trim()) },
     ];
 
-    let s7 = Number(req.body.size7);
-    let s8 = Number(req.body.size8);
-    let s9 = Number(req.body.size9);
-    let s10 = Number(req.body.size10);
-    let s11 = Number(req.body.size11);
-    let s12 = Number(req.body.size12);
+    let s7 = Number(req.body.size7.trim());
+    let s8 = Number(req.body.size8.trim());
+    let s9 = Number(req.body.size9.trim());
+    let s10 = Number(req.body.size10.trim());
+    let s11 = Number(req.body.size11.trim());
+    let s12 = Number(req.body.size12.trim());
     let mailList = [];
     let myArr = [];
     for (let i = 0; i < sneaker.notify.length; i++) {
       if (
-        (sneaker.notify[i].size == "7" && s7 > 0) ||
-        (sneaker.notify[i].size == "8" && s8 > 0) ||
-        (sneaker.notify[i].size == "9" && s9 > 0) ||
-        (sneaker.notify[i].size == "10" && s10 > 0) ||
-        (sneaker.notify[i].size == "11" && s11 > 0) ||
-        (sneaker.notify[i].size == "12" && s12 > 0)
+        (sneaker.notify[i].size === 7 && s7 > 0) ||
+        (sneaker.notify[i].size === 8 && s8 > 0) ||
+        (sneaker.notify[i].size === 9 && s9 > 0) ||
+        (sneaker.notify[i].size === 10 && s10 > 0) ||
+        (sneaker.notify[i].size === 11 && s11 > 0) ||
+        (sneaker.notify[i].size === 12 && s12 > 0)
       ) {
         mailList.push(sneaker.notify[i].userName);
       } else {
@@ -202,12 +407,12 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
       }
     }
 
-    const update = await sneakersData.update(
-      req.body.id,
-      req.body.brandName,
-      req.body.modelName,
+    await sneakersData.update(
+      req.body.id.trim(),
+      req.body.brandName.trim(),
+      req.body.modelName.trim(),
       sizesAvailable,
-      req.body.price,
+      Number(req.body.price),
       sneaker.images,
       sneaker.reviews,
       sneaker.overallRating,
@@ -216,31 +421,51 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
       myArr
     );
 
-    var mailOptions = {
-      from: "noreply.solesearch@gmail.com",
-      to: mailList,
-      subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock. Hurry up and Order Now!`,
-      text: "This is a system generated email. Please do not reply to this mail. Thank you!",
-    };
+    if (mailList.length !== 0) {
+      const mailOptions = {
+        from: "noreply.solesearch@gmail.com",
+        to: mailList,
+        subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock. Hurry up and Order Now!`,
+        text: "This is a system generated email. Please do not reply to this mail. Thank you!",
+      };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      }
-    });
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+          console.log(info);
+        }
+      });
+    }
 
     res.render("store/sneakerUpdatedSuccessfully", {
       title: "Updated Successfully",
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "empty-scripts",
     });
   } catch (e) {
-    console.log(e);
-    res.sendStatus(500);
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
 router.get("/BuyList", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     let id = req.session.user;
     const sneaker = await sneakersData.getAllBuyList(id);
@@ -248,74 +473,149 @@ router.get("/BuyList", async (req, res) => {
       title: "Sneakers Bought",
       sneaker: sneaker,
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "empty-scripts",
     });
-    // console.log("hell2");
   } catch (e) {
-    res.status(404).json({ message: " There is no Sneaker with that ID" });
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
 router.get("/delete/:id", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
   try {
-    let id = req.params.id;
-    const sneaker = await sneakersData.remove(req.params.id);
+    checkValidation(isValidArgument(req.params.id, "sneakerId"));
+    checkValidation(isValidString(req.params.id, "sneakerId"));
+    checkValidation(isValidObjectId(req.params.id.trim()));
+
+    let id = req.params.id.trim();
+
+    const sneaker = await sneakersData.remove(req.params.id.trim());
     res.redirect("/sneakers/");
   } catch (e) {
-    console.log(e);
-    res.status(404).json({ message: "There is no Restaurant with that ID" });
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
 router.post("/search", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     let searchTerm = req.body.searchTerm;
-    validation.checkIsChar(searchTerm);
-    const sneakers = await sneakersData.getName(searchTerm);
-    //console.log(sneakers);
+
+    checkValidation(isValidArgument(req.body.searchTerm, "searchTerm"));
+    checkValidation(isValidString(req.body.searchTerm, "searchTerm"));
+
+    let sneakers = await sneakersData.getName(searchTerm);
+    const brands = await sneakersData.getBrands();
+
+    if (!!req.session.user) {
+      sneakers = sneakers.filter((s) => s.listedBy !== req.session.user);
+    }
+
     if (sneakers.length > 0) {
       res.render("store/sneakersList", {
         title: "Shop",
         sneakers: sneakers,
+        brands: brands,
         isLoggedIn: !!req.session.user,
-        partial: "empty-scripts",
+        isAdmin: isAdmin,
+        partial: "list-scripts",
       });
     } else {
       res.render("store/sneakersList", {
         title: "Shop",
         sneakers: sneakers,
+        brands: brands,
         isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
         error: "No results found",
-        partial: "empty-scripts",
+        partial: "list-scripts",
       });
     }
   } catch (e) {
-    res.sendStatus(500);
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
 router.get("/sell", async (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
+
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
+
   try {
     if (!req.session.user) {
       res.redirect("/users/login");
       return;
     }
+
     res.render("store/sneakerSell", {
       title: "Add Sneaker",
       isLoggedIn: !!req.session.user,
+      isAdmin: isAdmin,
       partial: "sell-scripts",
     });
   } catch (e) {
-    console.log(e);
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 router.post("/buy", async (req, res) => {
   try {
-    let sneakerId = req.body.sneakerId;
-    let size = req.body.size;
-    let price = req.body.sneakerPrice;
-    // validation.checkInputStr(sneakerId);
-    // validation.checkInputStr(size);
+    checkValidation(isValidArgument(req.body.sneakerId, "sneakerId"));
+    checkValidation(isValidString(req.body.sneakerId, "sneakerId"));
+    checkValidation(isValidObjectId(req.body.sneakerId.trim()));
+
+    checkValidation(isValidArgument(req.body.sneakerSize, "size"));
+    checkValidation(isValidString(req.body.sneakerSize.trim(), "size"));
+
+    checkValidation(isValidArgument(req.body.sneakerPrice, "price"));
+    checkValidation(isValidNumber(req.body.sneakerPrice.trim(), "price"));
+    checkValidation(isValidPrice(Number(req.body.sneakerPrice)));
+
+    let sneakerId = req.body.sneakerId.trim();
+    let size = req.body.sneakerSize.trim();
+    let price = Number(req.body.sneakerPrice.trim());
+
     if (!req.session.user) {
       res.redirect("/users/login");
     } else {
@@ -328,17 +628,30 @@ router.post("/buy", async (req, res) => {
       res.redirect("/sneakers/BuyList");
     }
   } catch (e) {
-    console.log(e);
-    res.sendStatus(500);
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
 router.post("/notify", async (req, res) => {
   try {
-    let sneakerId = req.body.id;
-    let size = req.body.size;
-    // validation.checkInputStr(sneakerId);
-    // validation.checkInputStr(size);
+    checkValidation(isValidArgument(req.body.sneakerId, "sneakerId"));
+    checkValidation(isValidString(req.body.sneakerId, "sneakerId"));
+    checkValidation(isValidObjectId(req.body.sneakerId.trim()));
+
+    checkValidation(isValidArgument(req.body.sneakerSize, "size"));
+
+    let sizeArray = req.body.sneakerSize.split(",");
+    let size = sizeArray[0];
+
+    checkValidation(isValidArgument(size, "size"));
+    checkValidation(isValidNumber(size.trim(), "size"));
+
+    let sneakerId = req.body.sneakerId.trim();
+
     if (!req.session.user) {
       res.redirect("/users/login");
     } else {
@@ -352,24 +665,44 @@ router.post("/notify", async (req, res) => {
       res.redirect("/sneakers/sneaker/" + sneakerId);
     }
   } catch (e) {
-    console.log(e);
-    res.sendStatus(500);
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
 
 router.post("/filter", async (req, res) => {
-  let filterOptions = req.body;
+  if (!req.session.user) {
+    res.redirect("/users/login");
+    return;
+  }
 
-  let brandName = filterOptions.brandName;
-  let size = filterOptions.size;
-  let price = filterOptions.price;
+  let user;
+  let isAdmin;
+
+  if (req.session.user) {
+    user = await data.users.get(req.session.user);
+    isAdmin = user.isAdmin;
+  }
 
   try {
-    let filteredData = await sneakersData.filter(
-      brandName,
-      Number(size),
-      Number(price)
-    );
+    let filterOptions = req.body;
+
+    checkValidation(isValidArgument(req.body.brandName, "brandName"));
+
+    checkValidation(isValidArgument(req.body.size, "size"));
+    checkValidation(isValidNumber(req.body.size.trim(), "size"));
+
+    checkValidation(isValidArgument(req.body.price, "price"));
+    checkValidation(isValidNumber(req.body.price.trim(), "price"));
+
+    let brandName = filterOptions.brandName.trim();
+    let size = Number(filterOptions.size.trim());
+    let price = Number(filterOptions.price.trim());
+
+    let filteredData = await sneakersData.filter(brandName, size, price);
 
     if (!!req.session.user) {
       filteredData = filteredData.filter(
@@ -384,11 +717,25 @@ router.post("/filter", async (req, res) => {
       sneakers: filteredData,
       brands: brands,
       isLoggedIn: !!req.session.user,
-      partial: "empty-scripts",
+      isAdmin: isAdmin,
+      partial: "list-scripts",
     });
   } catch (e) {
-    res.redirect("/");
+    if (e.statusCode) {
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
+    }
   }
 });
+
+const checkValidation = (validation) => {
+  if (!validation.result) {
+    throw {
+      statusCode: 400,
+      message: validation.message,
+    };
+  }
+};
 
 module.exports = router;

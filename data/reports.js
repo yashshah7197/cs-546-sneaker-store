@@ -2,9 +2,13 @@ const mongoCollections = require("../config/mongoCollections");
 const reports = mongoCollections.reports;
 
 const { ObjectId } = require("mongodb");
-const {isValidArgument, isValidString, isValidObjectId} = require("./validate");
+const {
+  isValidArgument,
+  isValidString,
+  isValidObjectId,
+} = require("./validate");
 
-const create = async (reportedBy, reportFor, reportReasons, type) => {
+const createRevR = async (reportedBy, reportFor, reportReasons, type) => {
   checkValidation(isValidArgument(reportedBy, "reportedBy"));
   checkValidation(isValidString(reportedBy, "reportedBy"));
   checkValidation(isValidObjectId(reportedBy.trim()));
@@ -32,7 +36,7 @@ const create = async (reportedBy, reportFor, reportReasons, type) => {
   if (insertInfo.insertedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -76,7 +80,7 @@ const get = async (reportId) => {
   if (report === null) {
     throw {
       statusCode: 404,
-      message: "No report was found with the given id!"
+      message: "No report was found with the given id!",
     };
   }
   report._id = report._id.toString();
@@ -108,7 +112,7 @@ const update = async (reportId, reportedBy, reportFor, reportReasons) => {
   if (existingReport === null) {
     throw {
       statusCode: 404,
-      message: "No report was found with the given id!"
+      message: "No report was found with the given id!",
     };
   }
 
@@ -119,7 +123,7 @@ const update = async (reportId, reportedBy, reportFor, reportReasons) => {
   ) {
     throw {
       statusCode: 400,
-      message: "Update field values are the same as the report field values!"
+      message: "Update field values are the same as the report field values!",
     };
   }
 
@@ -136,7 +140,7 @@ const update = async (reportId, reportedBy, reportFor, reportReasons) => {
   if (updateInfo.modifiedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -164,7 +168,7 @@ const remove = async (reportId) => {
   if (report === null) {
     throw {
       statusCode: 404,
-      message: "No report was found with the given id!"
+      message: "No report was found with the given id!",
     };
   }
 
@@ -173,7 +177,7 @@ const remove = async (reportId) => {
   if (deletionInfo.deletedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -187,13 +191,66 @@ const checkValidation = (validation) => {
   if (!validation.result) {
     throw {
       statusCode: 400,
-      message: validation.message
+      message: validation.message,
     };
   }
-}
+};
+
+const createQnaR = async (
+  reportedBy,
+  reportFor,
+  reportForQ,
+  reportReasons,
+  type
+) => {
+  checkValidation(isValidArgument(reportedBy, "reportedBy"));
+  checkValidation(isValidString(reportedBy, "reportedBy"));
+  checkValidation(isValidObjectId(reportedBy.trim()));
+
+  checkValidation(isValidArgument(reportFor, "reportFor"));
+  checkValidation(isValidString(reportFor, "reportFor"));
+  checkValidation(isValidObjectId(reportFor.trim()));
+
+  checkValidation(isValidArgument(reportForQ, "reportForQ"));
+  checkValidation(isValidString(reportForQ, "reportForQ"));
+  checkValidation(isValidObjectId(reportForQ.trim()));
+
+  checkValidation(isValidArgument(reportReasons, "reportReasons"));
+  checkValidation(isValidString(reportReasons, "reportReasons"));
+
+  checkValidation(isValidArgument(type, "type"));
+  checkValidation(isValidString(type, "type"));
+
+  const reportCollection = await reports();
+
+  let newReport = {
+    reportedBy: reportedBy.trim(),
+    reportFor: reportFor.trim(),
+    reportForQ: reportForQ.trim(),
+    reportReasons: reportReasons.trim(),
+    type: type.trim(),
+  };
+
+  const insertInfo = await reportCollection.insertOne(newReport);
+  if (insertInfo.insertedCount === 0) {
+    throw {
+      statusCode: 500,
+      message: "Internal server error!",
+    };
+  }
+
+  const newId = insertInfo.insertedId;
+
+  const addedReport = await reportCollection.findOne({ _id: newId });
+
+  addedReport._id = addedReport._id.toString();
+
+  return addedReport;
+};
 
 module.exports = {
-  create,
+  createRevR,
+  createQnaR,
   getAll,
   get,
   update,

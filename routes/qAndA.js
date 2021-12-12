@@ -2,7 +2,12 @@ const express = require("express");
 const router = express.Router();
 const data = require("../data");
 const qAndAData = data.qAndA;
-const {isValidArgument, isValidString, isValidObjectId} = require("../data/validate");
+const userData = data.users;
+const {
+  isValidArgument,
+  isValidString,
+  isValidObjectId,
+} = require("../data/validate");
 
 router.get("/product/:id", async (req, res) => {
   try {
@@ -18,14 +23,19 @@ router.get("/product/:id", async (req, res) => {
     }
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
-    } else{
-      res.status(500).json({error: "Internal server error!"});
+      res.status(e.statusCode).json({ error: e.message });
+    } else {
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
 
 router.post("/", async (req, res) => {
+  if (!req.session.user) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
   const qAndA = req.body;
 
   try {
@@ -54,7 +64,7 @@ router.post("/", async (req, res) => {
     res.status(200).json(newQandA);
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     } else {
       res.status(500).json({ error: "Internal server error!" });
     }
@@ -75,13 +85,18 @@ router.get("/:id", async (req, res) => {
     res.status(200).json(qAndA);
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     }
     res.status(500).json({ error: e.message });
   }
 });
 
 router.put("/:id", async (req, res) => {
+  if (!req.session.user) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
   const qAndA = req.body;
 
   try {
@@ -89,12 +104,12 @@ router.put("/:id", async (req, res) => {
     checkValidation(isValidString(req.params.id, "qAndAId"));
     checkValidation(isValidObjectId(req.params.id.trim()));
 
-    checkValidation(isValidArgument(req.params.answerBy, "answerBy"));
-    checkValidation(isValidString(req.params.answerBy, "answerBy"));
-    checkValidation(isValidObjectId(req.params.answerBy.trim()));
+    checkValidation(isValidArgument(qAndA.answerBy, "answerBy"));
+    checkValidation(isValidString(qAndA.answerBy, "answerBy"));
+    checkValidation(isValidObjectId(qAndA.answerBy.trim()));
 
-    checkValidation(isValidArgument(req.params.answer, "answer"));
-    checkValidation(isValidString(req.params.answer, "answer"));
+    checkValidation(isValidArgument(qAndA.answer, "answer"));
+    checkValidation(isValidString(qAndA.answer, "answer"));
   } catch (e) {
     res.status(e.statusCode).json({ error: e.message });
     return;
@@ -104,9 +119,9 @@ router.put("/:id", async (req, res) => {
     await qAndAData.get(req.params.id.trim());
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
     return;
   }
@@ -120,14 +135,25 @@ router.put("/:id", async (req, res) => {
     res.status(200).json(answer);
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
 
 router.delete("/:id", async (req, res) => {
+  if (!req.session.user) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
+  let user = await userData.get(req.session.user);
+  if (!user.isAdmin) {
+    res.status(403).json({error: "Forbidden!"});
+    return;
+  }
+
   try {
     checkValidation(isValidArgument(req.params.id, "qAndAId"));
     checkValidation(isValidString(req.params.id, "qAndAId"));
@@ -141,9 +167,9 @@ router.delete("/:id", async (req, res) => {
     await qAndAData.get(req.params.id.trim());
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
     return;
   }
@@ -152,9 +178,9 @@ router.delete("/:id", async (req, res) => {
     res.status(200).json(qAndA);
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({error: e.message});
+      res.status(e.statusCode).json({ error: e.message });
     } else {
-      res.status(500).json({error: "Internal server error!"});
+      res.status(500).json({ error: "Internal server error!" });
     }
   }
 });
@@ -163,9 +189,9 @@ const checkValidation = (validation) => {
   if (!validation.result) {
     throw {
       statusCode: 400,
-      message: validation.message
+      message: validation.message,
     };
   }
-}
+};
 
 module.exports = router;

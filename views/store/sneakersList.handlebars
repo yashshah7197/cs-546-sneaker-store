@@ -3,8 +3,8 @@
 <h3 class="visually-hidden">Sneaker Shop</h3>
 <h4 class="visually-hidden">Sneaker Shop</h4>
 
-{{#if error}}
-  <div class="alert alert-primary" role="alert">
+{{#if hasErrors}}
+  <div class="alert alert-danger" role="alert">
     {{error}}
   </div>
 {{/if}}
@@ -13,6 +13,11 @@
   <div class="container">
     <div class="col-4"></div>
     <form action="/sneakers/filter" method="post" id="filter-form">
+      <div
+        class="alert alert-danger d-none"
+        role="alert"
+        id="filterFormError"
+      ></div>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div class="col">
           <label for="brandName" class="form-label">Brand Name</label>
@@ -62,12 +67,17 @@
       {{#each sneakers}}
         <div class="col">
           <div class="card shadow-sm">
-            <img
+           
+             <a
+                    href="/sneakers/sneaker/{{_id}}"
+             
+                  > <img
               src="{{images}}"
               alt="shoe"
               width="200"
+              height="200"
               class="card-img-top sneakerListImg"
-            />
+            /></a>
 
             <div class="card-body">
               <h5 class="card-title">{{modelName}}</h5>

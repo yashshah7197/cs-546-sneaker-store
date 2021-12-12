@@ -5,7 +5,11 @@ const usersData = require("./users");
 const validation = require("./validate");
 
 const { ObjectId } = require("mongodb");
-const {isValidArgument, isValidString, isValidObjectId} = require("./validate");
+const {
+  isValidArgument,
+  isValidString,
+  isValidObjectId,
+} = require("./validate");
 
 const create = async (qAndAFor, questionBy, question) => {
   checkValidation(isValidArgument(qAndAFor, "qAndAFor"));
@@ -32,7 +36,7 @@ const create = async (qAndAFor, questionBy, question) => {
   if (insertInfo.insertedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -46,7 +50,7 @@ const create = async (qAndAFor, questionBy, question) => {
   if (sneaker === null) {
     throw {
       statusCode: 404,
-      message: "No sneaker was found with the given id!"
+      message: "No sneaker was found with the given id!",
     };
   }
 
@@ -62,7 +66,7 @@ const create = async (qAndAFor, questionBy, question) => {
   if (updateInfo.modifiedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -85,7 +89,9 @@ const getAll = async (qAndAFor) => {
 
   const qAndACollection = await qAndA();
 
-  let qAndAList = await qAndACollection.find({ qAndAFor: qAndAFor.trim() }).toArray();
+  let qAndAList = await qAndACollection
+    .find({ qAndAFor: qAndAFor.trim() })
+    .toArray();
 
   if (qAndAList.length <= 0) {
     return emptyResult;
@@ -121,7 +127,7 @@ const get = async (qAndAId) => {
   if (qAndAItem === null) {
     throw {
       statusCode: 404,
-      message: "No Q&A was found with the given id!"
+      message: "No Q&A was found with the given id!",
     };
   }
 
@@ -164,7 +170,7 @@ const update = async (qAndAId, answerBy, answer) => {
   if (existingQandA === null) {
     throw {
       statusCode: 404,
-      message: "No Q&A was found with the given id!"
+      message: "No Q&A was found with the given id!",
     };
   }
 
@@ -184,7 +190,7 @@ const update = async (qAndAId, answerBy, answer) => {
   if (updateInfo.modifiedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -226,7 +232,7 @@ const remove = async (qAndAId) => {
   if (qAndAItem === null) {
     throw {
       statusCode: 404,
-      message: "No Q&A was found with the given id!"
+      message: "No Q&A was found with the given id!",
     };
   }
 
@@ -235,7 +241,7 @@ const remove = async (qAndAId) => {
   if (deletionInfo.deletedCount === 0) {
     throw {
       statusCode: 500,
-      message: "Internal server error!"
+      message: "Internal server error!",
     };
   }
 
@@ -249,10 +255,52 @@ const checkValidation = (validation) => {
   if (!validation.result) {
     throw {
       statusCode: 400,
-      message: validation.message
+      message: validation.message,
     };
   }
-}
+};
+
+const updateA = async (qAndAId, answerId) => {
+  checkValidation(isValidArgument(qAndAId, "qAndAId"));
+  checkValidation(isValidString(qAndAId, "qAndAId"));
+  checkValidation(isValidObjectId(qAndAId.trim()));
+
+  checkValidation(isValidArgument(answerId, "answerId"));
+  checkValidation(isValidString(answerId, "answerId"));
+  checkValidation(isValidObjectId(answerId.trim()));
+
+  let result = {};
+
+  let parsedId = ObjectId(qAndAId.trim());
+
+  const qAndACollection = await qAndA();
+
+  const existingQandA = await qAndACollection.findOne({ _id: parsedId });
+  if (existingQandA === null) {
+    throw {
+      statusCode: 404,
+      message: "No Q&A was found with the given id!",
+    };
+  }
+  let newAnswers = [];
+  let answersArr = existingQandA.answers;
+  for (let i = 0; i < answersArr.length; i++) {
+    if (answersArr[i]._id != answerId.trim()) {
+      newAnswers.push(answersArr[i]);
+    }
+  }
+
+  const updateInfo = await qAndACollection.updateOne(
+    { _id: parsedId },
+    { $set: { answers: newAnswers } }
+  );
+  if (updateInfo.modifiedCount === 0) {
+    throw {
+      statusCode: 500,
+      message: "Internal server error!",
+    };
+  }
+};
 
 module.exports = {
   create,
@@ -260,4 +308,5 @@ module.exports = {
   get,
   update,
   remove,
+  updateA,
 };
