@@ -15,7 +15,7 @@ const {
   isValidString,
   isValidNumber,
   isValidPrice,
-  isValidObjectId,
+  isValidObjectId, isValidQuantity,
 } = require("../data/validate");
 
 const transporter = nodemailer.createTransport({
@@ -331,12 +331,12 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
     let myArr = [];
     for (let i = 0; i < sneaker.notify.length; i++) {
       if (
-        (sneaker.notify[i].size === "7" && s7 > 0) ||
-        (sneaker.notify[i].size === "8" && s8 > 0) ||
-        (sneaker.notify[i].size === "9" && s9 > 0) ||
-        (sneaker.notify[i].size === "10" && s10 > 0) ||
-        (sneaker.notify[i].size === "11" && s11 > 0) ||
-        (sneaker.notify[i].size === "12" && s12 > 0)
+        (sneaker.notify[i].size === 7 && s7 > 0) ||
+        (sneaker.notify[i].size === 8 && s8 > 0) ||
+        (sneaker.notify[i].size === 9 && s9 > 0) ||
+        (sneaker.notify[i].size === 10 && s10 > 0) ||
+        (sneaker.notify[i].size === 11 && s11 > 0) ||
+        (sneaker.notify[i].size === 12 && s12 > 0)
       ) {
         mailList.push(sneaker.notify[i].userName);
       } else {
@@ -358,17 +358,21 @@ router.post("/updateSneakerNotifyBuyer", async (req, res) => {
       myArr
     );
 
-    var mailOptions = {
-      from: "noreply.solesearch@gmail.com",
-      to: mailList,
-      subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock. Hurry up and Order Now!`,
-      text: "This is a system generated email. Please do not reply to this mail. Thank you!",
-    };
+    if (mailList.length !== 0) {
+      const mailOptions = {
+        from: "noreply.solesearch@gmail.com",
+        to: mailList,
+        subject: `${sneaker.modelName} by ${sneaker.brandName} is in stock. Hurry up and Order Now!`,
+        text: "This is a system generated email. Please do not reply to this mail. Thank you!",
+      };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-      }
-    });
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+          console.log(info);
+        }
+      });
+    }
 
     res.render("store/sneakerUpdatedSuccessfully", {
       title: "Updated Successfully",
