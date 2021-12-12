@@ -2,13 +2,15 @@
 {{#each reports}}
   <div class="col">
     <div class="card shadow-sm">
-
+      <div class="alert alert-danger d-none" role="alert" id="reportLinkError">
+        {{error}}
+      </div>
       <div class="card-body">
         <h5 class="card-title">{{type}}</h5>
         <p class="card-text">Reported Reason : {{reportReasons}}</p>
         <p class="card-text">Reported Text : {{reportFor}}</p>
         <div class="d-flex justify-content-between align-items-center">
-          <div class="btn-group">
+          <div class="btn-group" id="reportLinks">
             <a
               href="/reports/keep/{{_id}}"
               class="btn btn-sm btn-outline-primary"
@@ -25,7 +27,7 @@
 {{/each}}
 
 {{#if error}}
-  <div class="alert alert-danger" role="alert" id="buyPageError">
+  <div class="alert alert-danger" role="alert" id="reportPageError">
     {{error}}
   </div>
 {{/if}}

@@ -16,13 +16,13 @@ const {
 router.get("/", async (req, res) => {
   try {
     if (!req.session.user) {
-      res.status(403).json({error: "Forbidden!"});
+      res.status(403).json({ error: "Forbidden!" });
       return;
     }
 
     let user = await usersData.get(req.session.user);
     if (!user.isAdmin) {
-      res.status(403).json({error: "Forbidden!"});
+      res.status(403).json({ error: "Forbidden!" });
       return;
     }
 
@@ -48,7 +48,7 @@ router.get("/", async (req, res) => {
         title: "Reports",
         isLoggedIn: !!req.session.user,
         isAdmin: true,
-        partial: "empty-scripts",
+        partial: "report-scripts",
       });
     } else {
       res.status(200).render("store/allReports", {
@@ -57,7 +57,7 @@ router.get("/", async (req, res) => {
         error: "No Reports Found",
         isAdmin: true,
         isLoggedIn: !!req.session.user,
-        partial: "empty-scripts",
+        partial: "report-scripts",
       });
     }
   } catch (e) {
@@ -71,7 +71,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   if (!req.session.user) {
-    res.status(403).json({error: "Forbidden!"});
+    res.status(403).json({ error: "Forbidden!" });
     return;
   }
 
@@ -137,13 +137,13 @@ router.get("/delete/:id", async (req, res) => {
   // }
 
   if (!req.session.user) {
-    res.status(403).json({error: "Forbidden!"});
+    res.status(403).json({ error: "Forbidden!" });
     return;
   }
 
   let user = await usersData.get(req.session.user);
   if (!user.isAdmin) {
-    res.status(403).json({error: "Forbidden!"});
+    res.status(403).json({ error: "Forbidden!" });
     return;
   }
 
@@ -226,13 +226,13 @@ router.get("/keep/:id", async (req, res) => {
   // }
 
   if (!req.session.user) {
-    res.status(403).json({error: "Forbidden!"});
+    res.status(403).json({ error: "Forbidden!" });
     return;
   }
 
   let user = await usersData.get(req.session.user);
   if (!user.isAdmin) {
-    res.status(403).json({error: "Forbidden!"});
+    res.status(403).json({ error: "Forbidden!" });
     return;
   }
 

@@ -304,7 +304,7 @@ async function calAvgRating(productId) {
 
   if (overallRating > 0) {
     overallRating = overallRating / reviewArr.length;
-    overallRating = overallRating.toFixed(2);
+    overallRating = Number(overallRating.toFixed(2));
   }
 
   let updatedSneaker = await sneakerCollection.updateOne(
@@ -312,7 +312,10 @@ async function calAvgRating(productId) {
     { $set: { overallRating: overallRating } }
   );
 
-  if (updatedSneaker.modifiedCount === 0 && sneaker.overallRating !== rating) {
+  if (
+    updatedSneaker.modifiedCount === 0 &&
+    sneaker.overallRating !== overallRating
+  ) {
     throw {
       statusCode: 500,
       message: "Internal server error!",
