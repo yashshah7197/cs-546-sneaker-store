@@ -14,7 +14,8 @@ const {
   isValidString,
   isValidNumber,
   isValidPrice,
-  isValidObjectId, isValidQuantity,
+  isValidObjectId,
+  isValidQuantity,
 } = require("../data/validate");
 
 const transporter = nodemailer.createTransport({
@@ -156,7 +157,7 @@ router.get("/listedBy", async (req, res) => {
 
     res.render("store/sneakerListedby", {
       sneakers: sneakers,
-      title: "Sneakers Listed",
+      title: "Listed Sneakers",
       isLoggedIn: !!req.session.user,
       isAdmin: isAdmin,
       partial: "empty-scripts",
@@ -164,7 +165,7 @@ router.get("/listedBy", async (req, res) => {
   } catch (e) {
     if (e.statusCode) {
       res.status(e.statusCode).render("store/sneakerListedby", {
-        title: "Sneakers Listed",
+        title: "Listed Sneakers",
         isLoggedIn: !!req.session.user,
         isAdmin: isAdmin,
         partial: "empty-scripts",
@@ -220,7 +221,7 @@ router.get("/", async (req, res) => {
 
 router.get("/sneaker/:id", async (req, res) => {
   if (!req.session.user) {
-    res.redirect('/users/login');
+    res.redirect("/users/login");
     return;
   }
 
@@ -231,7 +232,7 @@ router.get("/sneaker/:id", async (req, res) => {
     user = await data.users.get(req.session.user);
     isAdmin = user.isAdmin;
   }
-  
+
   try {
     if (!req.session.user) {
       res.redirect("/users/login");
@@ -469,13 +470,24 @@ router.get("/BuyList", async (req, res) => {
   try {
     let id = req.session.user;
     const sneaker = await sneakersData.getAllBuyList(id);
-    res.render("store/sneakerBuyList", {
-      title: "Sneakers Bought",
-      sneaker: sneaker,
-      isLoggedIn: !!req.session.user,
-      isAdmin: isAdmin,
-      partial: "empty-scripts",
-    });
+    if (sneaker.length > 0) {
+      res.render("store/sneakerBuyList", {
+        title: "Purchase History",
+        sneaker: sneaker,
+        isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
+        partial: "empty-scripts",
+      });
+    } else {
+      res.render("store/sneakerBuyList", {
+        title: "Purchase History",
+        sneaker: sneaker,
+        isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
+        partial: "empty-scripts",
+        error: "No Sneakers Found",
+      });
+    }
   } catch (e) {
     if (e.statusCode) {
       res.status(e.statusCode).json({ error: e.message });
