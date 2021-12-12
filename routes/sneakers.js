@@ -18,7 +18,6 @@ const {
   isValidObjectId,
 } = require("../data/validate");
 
-
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -192,6 +191,10 @@ router.get("/", async (req, res) => {
 
 router.get("/sneaker/:id", async (req, res) => {
   try {
+    if (!req.session.user) {
+      res.redirect("/users/login");
+      return;
+    }
     let id = req.params.id;
 
     checkValidation(isValidArgument(req.params.id, "sneakerId"));
@@ -517,13 +520,13 @@ router.post("/notify", async (req, res) => {
     checkValidation(isValidArgument(req.body.size, "size"));
     checkValidation(isValidNumber(req.body.size.trim(), "size"));
 
-    let sizeArray=req.body.sneakerSize.split(",");
-    let size=sizeArray[0];
+    let sizeArray = req.body.sneakerSize.split(",");
+    let size = sizeArray[0];
     checkValidation(isValidArgument(size, "size"));
     checkValidation(isValidNumber(size.trim(), "size"));
 
     let sneakerId = req.body.sneakerId.trim();
-  
+
     if (!req.session.user) {
       res.redirect("/users/login");
     } else {
@@ -546,8 +549,6 @@ router.post("/notify", async (req, res) => {
 });
 
 router.post("/filter", async (req, res) => {
-
-
   try {
     let filterOptions = req.body;
 
@@ -563,11 +564,7 @@ router.post("/filter", async (req, res) => {
     let size = Number(filterOptions.size.trim());
     let price = Number(filterOptions.price.trim());
 
-    let filteredData = await sneakersData.filter(
-      brandName,
-      size,
-      price
-    );
+    let filteredData = await sneakersData.filter(brandName, size, price);
 
     if (!!req.session.user) {
       filteredData = filteredData.filter(
