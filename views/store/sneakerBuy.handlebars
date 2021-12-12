@@ -20,12 +20,21 @@
                 <h1>{{sneaker.modelName}}</h1>
                   <h2 class="visually-hidden">{{sneaker.modelName}}</h2>
                 <p> {{sneaker.brandName}} </p>
+                  <div class="mb-4">
+                      {{#times starRating}}
+                          <span class="fa fa-star star-checked"></span>
+                      {{/times}}
+                      {{#times difference}}
+                          <span class="fa fa-star"></span>
+                      {{/times}}
+                  </div>
                 <img
                   class="img-thumbnail"
                   src="{{sneaker.images}}"
                   alt="{{sneaker.modelName}}"
                 />
               </div>
+
               <div class="col">
                 <form id="sneakerBuyForm" method="post">
                   <div
@@ -33,9 +42,16 @@
                     role="alert"
                     id="buyFormError"
                   >
+                  
                   </div>
+                  {{#if notify}}
+                  <div class="alert alert-success" role="alert">
+                    You will be Notified by email when stocks get updated.
+                          </div>
+                  {{/if}}
+                 
                   <div>
-                    <p>Price : {{sneaker.price}}$</p>
+                    <p>Price: {{sneaker.price}}$</p>
                     <input
                       type="hidden"
                       value={{sneaker.price}}
@@ -84,10 +100,11 @@
                     formaction="/sneakers/notify"
                     hidden
                   />
-                  <div class="ss-box" data-ss-social=" whatsapp,email" data-ss-email = "subject:Sole Search" data-ss-content="false"  data-ss-link="Hey, Check the latest collection of Sneaker.... http://localhost:3000/sneakers/sneaker/{{sneaker._id}}"></div>
+                  {{!-- <div class="ss-box" data-ss-social=" whatsapp,email" data-ss-email = "subject:Sole Search" data-ss-content="false"  data-ss-link="Hey, Check the latest collection of Sneakers.... http://localhost:3000/sneakers/sneaker/{{sneaker._id}}"></div> --}}
 
 
                 </form>
+                <div class="ss-box" data-ss-social=" whatsapp,email" data-ss-email = "subject:Sole Search" data-ss-content="false"  data-ss-link="Hey, Check the latest collection of Sneakers.... http://localhost:3000/sneakers/sneaker/{{sneaker._id}}"></div>
               </div>
             </div>
           </div>
@@ -141,7 +158,7 @@
                     </div>
                     <label id="rrll_{{_id}}">Report Reason:</label>
                     <input type="text" id="rr_{{_id}}" />
-                    <button
+                    <button class="btn btn-secondary"
                       id="rrB_{{_id}}"
                       onclick="reportReview(event)"
                     >Submit Report</button>
@@ -278,7 +295,7 @@
                               </div>
                               <label id="rqll_{{_id}}">Report Reason:</label>
                               <input type="text" id="rq_{{_id}}" />
-                              <button
+                              <button class="btn btn-secondary"
                                 id="rqB_{{_id}}_{{../_id}}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>

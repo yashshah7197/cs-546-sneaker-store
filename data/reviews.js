@@ -79,6 +79,8 @@ const create = async (reviewedBy, reviewFor, title, review, rating) => {
     };
   }
 
+  let avgRating = await calAvgRating(reviewFor.trim());
+
   const addedReview = await reviewCollection.findOne({ _id: newId });
 
   let user = await usersData.get(reviewedBy.trim());
@@ -214,7 +216,8 @@ const update = async (
     };
   }
 
-  await calAvgRating(reviewFor.trim());
+  let avgRating = await calAvgRating(reviewFor.trim());
+  //await calAvgRating(reviewFor.trim());
 
   const updatedReview = await reviewCollection.findOne({
     _id: parsedId,
@@ -253,6 +256,8 @@ const remove = async (reviewId) => {
     };
   }
 
+  await calAvgRating(review.reviewFor);
+
   result["reviewId"] = review._id.toString();
   result["deleted"] = true;
 
@@ -279,10 +284,10 @@ async function calAvgRating(productId) {
 
   const reviewCollection = await reviews();
 
-  let reviews = sneaker.reviews;
+  let reviewArr = sneaker.reviews;
   let overallRating = 0;
 
-  for (let element of reviews) {
+  for (let element of reviewArr) {
     let parsedId = ObjectId(element.trim());
 
     const review = await reviewCollection.findOne({ _id: parsedId });
@@ -298,8 +303,8 @@ async function calAvgRating(productId) {
   }
 
   if (overallRating > 0) {
-    overallRating = overallRating / reviews.length;
-    overallRating = rating.toFixed(2);
+    overallRating = overallRating / reviewArr.length;
+    overallRating = Number(overallRating.toFixed(2));
   }
 
   let updatedSneaker = await sneakerCollection.updateOne(
@@ -307,7 +312,10 @@ async function calAvgRating(productId) {
     { $set: { overallRating: overallRating } }
   );
 
-  if (updatedSneaker.modifiedCount === 0 && sneaker.overallRating !== rating) {
+  if (
+    updatedSneaker.modifiedCount === 0 &&
+    sneaker.overallRating !== overallRating
+  ) {
     throw {
       statusCode: 500,
       message: "Internal server error!",

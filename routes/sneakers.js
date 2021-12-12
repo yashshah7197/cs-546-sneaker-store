@@ -14,7 +14,8 @@ const {
   isValidString,
   isValidNumber,
   isValidPrice,
-  isValidObjectId, isValidQuantity,
+  isValidObjectId,
+  isValidQuantity,
 } = require("../data/validate");
 
 const transporter = nodemailer.createTransport({
@@ -156,7 +157,7 @@ router.get("/listedBy", async (req, res) => {
 
     res.render("store/sneakerListedby", {
       sneakers: sneakers,
-      title: "Sneakers Listed",
+      title: "Listed Sneakers",
       isLoggedIn: !!req.session.user,
       isAdmin: isAdmin,
       partial: "empty-scripts",
@@ -164,7 +165,7 @@ router.get("/listedBy", async (req, res) => {
   } catch (e) {
     if (e.statusCode) {
       res.status(e.statusCode).render("store/sneakerListedby", {
-        title: "Sneakers Listed",
+        title: "Listed Sneakers",
         isLoggedIn: !!req.session.user,
         isAdmin: isAdmin,
         partial: "empty-scripts",
@@ -220,7 +221,7 @@ router.get("/", async (req, res) => {
 
 router.get("/sneaker/:id", async (req, res) => {
   if (!req.session.user) {
-    res.redirect('/users/login');
+    res.redirect("/users/login");
     return;
   }
 
@@ -231,7 +232,7 @@ router.get("/sneaker/:id", async (req, res) => {
     user = await data.users.get(req.session.user);
     isAdmin = user.isAdmin;
   }
-  
+
   try {
     if (!req.session.user) {
       res.redirect("/users/login");
@@ -250,16 +251,26 @@ router.get("/sneaker/:id", async (req, res) => {
     }
     let qAndA = await qAndAData.getAll(sneaker._id);
 
-    res.render("store/sneakerBuy", {
+    var options=
+    {
       title: "Buy",
       userID: req.session.user,
       sneaker: sneaker,
+      starRating: Math.floor(sneaker.overallRating),
+      difference: 5 - Math.floor(sneaker.overallRating),
       review: rev,
       qAndAs: qAndA,
       isLoggedIn: !!req.session.user,
       isAdmin: isAdmin,
       partial: "shop-scripts",
-    });
+    }
+    if(req.session.notify)
+    {
+      options["notify"]=true;
+      delete req.session.notify;
+    }
+
+    res.render("store/sneakerBuy",options );
   } catch (e) {
     if (e.statusCode) {
       res.status(e.statusCode).render("store/sneakerBuy", {
@@ -469,18 +480,29 @@ router.get("/BuyList", async (req, res) => {
   try {
     let id = req.session.user;
     const sneaker = await sneakersData.getAllBuyList(id);
-    res.render("store/sneakerBuyList", {
-      title: "Sneakers Bought",
+    var option={
+      title: "Purchase History",
       sneaker: sneaker,
       isLoggedIn: !!req.session.user,
       isAdmin: isAdmin,
       partial: "empty-scripts",
-    });
+    }
+      if(req.session.buy)
+    {
+      option["buy"]=true;
+      delete req.session.buy;
+    }
+
+    if (sneaker.length > 0) {
+      res.render("store/sneakerBuyList", option);
+    } else {
+      res.render("store/sneakerBuyList", option);
+    }
   } catch (e) {
     if (e.statusCode) {
       res.status(e.statusCode).json({ error: e.message });
     } else {
-      res.status(500).json({ error: "Internal server error!" });
+      res.status(500).json({ error: e });
     }
   }
 });
@@ -625,6 +647,7 @@ router.post("/buy", async (req, res) => {
         size,
         price
       );
+      req.session.buy=true;
       res.redirect("/sneakers/BuyList");
     }
   } catch (e) {
@@ -656,6 +679,7 @@ router.post("/notify", async (req, res) => {
       res.redirect("/users/login");
     } else {
       const user = await usersData.get(req.session.user);
+      req.session.notify=true;
       const sneakers = await sneakersData.notifySneaker(
         req.session.user,
         user.email,

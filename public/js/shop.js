@@ -37,6 +37,7 @@
     }
   });
 
+
   //Review form submission
   reviewForm.submit(function (event) {
     event.preventDefault();
@@ -102,15 +103,14 @@
               <div> Review: ${responseMessage.review}</div>
               <div id="rrBtn_${responseMessage._id}" class="rrBtn" hidden>
                     <div
-                      class="alert alert-danger d-none"
+                      class="alert alert-danger d-none rrFormError"
                       role="alert"
                       id="rrFormError_${responseMessage._id}"
-                      class="rrFormError"
                     >
                     </div>
                     <label id="rrll_${responseMessage._id}">Report Reason:</label>
                     <input type="text" id="rr_${responseMessage._id}" />
-                    <button
+                    <button class="btn btn-secondary"
                       id="rrB_${responseMessage._id}"
                       onclick="reportReview(event)"
                     >Submit Report</button>
@@ -126,7 +126,7 @@
         })
         .fail(function (e) {
           errorMessage = JSON.parse(e.responseText);
-          reviewErrorMsg.empty().append(errorMessage.error);
+          reviewFormError.empty().append(errorMessage.error);
           reviewFormError.removeClass("d-none");
         });
     } catch (e) {
@@ -184,49 +184,6 @@
     }
   });
 
-  // //Answer AJAX call
-  // answerForm.submit(function (event) {
-  //   event.preventDefault();
-  //   try {
-  //     var qID = event.target.id;
-  //     qID = qID.replace("answerForm_", "");
-  //     var requestConfig = {
-  //       method: $("#method_" + qID).val(),
-  //       url: "/qAndA/" + qID,
-  //       dataType: "json",
-  //       data: {
-  //         answerBy: $("#answerBy_" + qID).val(),
-  //         //answer: values["answerText"],
-  //         answer: $("#answerText_" + qID).val(),
-  //       },
-  //     };
-
-  //     $.ajax(requestConfig).then(function (responseMessage) {
-  //       if ($(`#answerPanel_${responseMessage._id} .answerBlock`).length > 0) {
-  //         var newHTML = `<hr />
-  //                 <div>
-  //                   <div>Answer: ${responseMessage.answer.answer}</div>
-  //                   <div>User: ${responseMessage.answer.answeredBy}</div>
-  //                 </div>
-  //                 <hr />`;
-  //         $(`#answerPanel_${responseMessage._id}`).append(newHTML);
-  //       } else {
-  //         var newHTML = `<hr />
-  //                 <div>
-  //                   <div>Answer: ${responseMessage.answer.answer}</div>
-  //                   <div>User: ${responseMessage.answer.answeredBy}</div>
-  //                 </div>
-  //                 <hr />`;
-  //         $(`#answerPanel_${responseMessage._id}`).empty().append(newHTML);
-  //       }
-
-  //       $("#answerText_" + qID).val("");
-  //     });
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // });
-
   $("select").change(function () {
     var nameArr = $("#sneakerSize").val().split(",");
     console.log(nameArr[0]);
@@ -241,6 +198,7 @@
       $("#buy").attr("disabled", false);
     }
   });
+  
 })(window.jQuery);
 
 //Answer AJAX call
@@ -290,15 +248,14 @@ function submitAnswer(event) {
                             <div>User: ${responseMessage.answer.answerBy}</div>
                             <div id="rqBtn_${responseMessage.answer._id}" class="rqBtn" hidden>
                               <div
-                                class="alert alert-danger d-none"
+                                class="alert alert-danger d-none rqFormError"
                                 role="alert"
                                 id="rqFormError_${responseMessage.answer._id}"
-                                class="rrFormError"
                               >
                               </div>
                               <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
                               <input type="text" id="rq_${responseMessage.answer._id}" />
-                              <button
+                              <button class="btn btn-secondary"
                                 id="rqB_${responseMessage.answer._id}_${responseMessage._id}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>
@@ -323,15 +280,14 @@ function submitAnswer(event) {
                             <div>User: ${responseMessage.answer.answerBy}</div>
                             <div id="rqBtn_${responseMessage.answer._id}" class="rqBtn" hidden>
                               <div
-                                class="alert alert-danger d-none"
+                                class="alert alert-danger d-none rqFormError"
                                 role="alert"
                                 id="rqFormError_${responseMessage.answer._id}"
-                                class="rrFormError"
                               >
                               </div>
                               <label id="rqll_${responseMessage.answer._id}">Report Reason:</label>
                               <input type="text" id="rq_${responseMessage.answer._id}" />
-                              <button
+                              <button class="btn btn-secondary"
                                 id="rqB_${responseMessage.answer._id}_${responseMessage._id}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>
