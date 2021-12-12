@@ -8,45 +8,62 @@
     {{error}}
   </div>
 {{/if}}
-  {{#if buy}}
-                  <div class="alert alert-success" role="alert">
-                    Order Placed Successfully.
-                          </div>
-                  {{/if}}
-<div class="album py-5">
-  <div class="container">
-    <div class="col-4"></div>
-
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      {{#each sneaker}}
-        <div class="col">
-          <div class="card shadow-sm">
-
-            <a href="/sneakers/sneaker/{{_id}}">
-              <img
-                src="{{images}}"
-                alt="shoe"
-                width="200"
-                height="200"
-                class="card-img-top sneakerListImg"
-              /></a>
-
-            <div class="card-body">
-              <h5 class="card-title">{{modelName}}</h5>
-              <p class="card-text">{{brandName}}</p>
-              <p class="card-text">${{price}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a
-                    href="/sneakers/sneaker/{{_id}}"
-                    class="btn btn-sm btn-outline-primary"
-                  >View</a>
+{{#if isEmpty}}
+    <div class="row align-items-center justify-content-center g-0 min-vh-100">
+        <div class="col-lg-5 col-md-8 py-8 py-xl-0">
+            <!-- Card -->
+            <div class="card shadow ">
+                <!-- Card body -->
+                <div class="card-body p-6">
+                    <div class="mb-4">
+                        <h1 class="mb-1 fw-bold">Aww snap!</h1>
+                        <span>You haven't bought any sneakers yet! Go <a href="/sneakers">buy some</a> now!</span>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      {{/each}}
     </div>
-  </div>
-</div>
+{{else}}
+    <div class="album py-5">
+        <div class="container">
+            {{#if buy}}
+                <div class="alert alert-success" role="alert">
+                    Thank you for your purchase! Your order will be shipped shortly to the address listed in your profile!
+                </div>
+            {{/if}}
+            <div class="col-4"></div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {{#each sneaker}}
+                    <div class="col">
+                        <div class="card shadow-sm">
+
+                            <a href="/sneakers/sneaker/{{_id}}">
+                                <img
+                                        src="{{images}}"
+                                        alt="shoe"
+                                        width="200"
+                                        height="200"
+                                        class="card-img-top sneakerListImg"
+                                /></a>
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{modelName}}</h5>
+                                <p class="card-text">{{brandName}}</p>
+                                <p class="card-text">${{price}}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a
+                                                href="/sneakers/sneaker/{{_id}}"
+                                                class="btn btn-sm btn-outline-primary"
+                                        >View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+{{/if}}
