@@ -536,11 +536,6 @@ router.get("/delete/:id", async (req, res) => {
 });
 
 router.post("/search", async (req, res) => {
-  if (!req.session.user) {
-    res.redirect("/users/login");
-    return;
-  }
-
   let user;
   let isAdmin;
 
@@ -725,11 +720,6 @@ router.post("/notify", async (req, res) => {
 });
 
 router.post("/filter", async (req, res) => {
-  if (!req.session.user) {
-    res.redirect("/users/login");
-    return;
-  }
-
   let user;
   let isAdmin;
 
