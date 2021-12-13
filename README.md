@@ -6,3 +6,23 @@ Team Members :-
 2. Kheevar Choudhary
 3. Hamza Buch
 4. Niyati Bavishi
+---
+# Seed The Database
+## macOS/Linux
+With your MongoDB server running in the background run :-
+```
+npm run seed
+```
+
+## Windows
+1. In addition to the MongoDB server you need to download the command line database tools from - https://www.mongodb.com/try/download/database-tools
+2. Extract the archive and place the mongorestore.exe file in the project directory.
+3. With your MongoDB server running in the background, finally run :-
+```
+npm run seed
+```
+
+# How To Run
+1. Install all dependencies by running `npm install`.
+2. Run the server by running `npm start`.
+3. Enjoy!

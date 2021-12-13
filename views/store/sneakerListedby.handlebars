@@ -9,37 +9,55 @@
     </div>
 {{/if}}
 
-<div class="album py-5">
-    <div class="container">
-        <div class="col-4"></div>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {{#each sneakers}}
-                <div class="col">
-                    <div class="card shadow-sm">
-                        <img
-                                src="{{images}}"
-                                alt="shoe"
-                                width="200"
-                                height="200"
-                                class="card-img-top sneakerListImg"
-                        />
-
-                        <div class="card-body">
-                            <h5 class="card-title">{{modelName}}</h5>
-                            <p class="card-text">{{brandName}}</p>
-                            <p class="card-text">${{price}}</p>
-                            <form>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <button
-                                            type="submit"
-                                            class="btn btn-sm btn-outline-primary"
-                                            formaction="/sneakers/listedByUpdate/{{_id}}">Update</button>
-                                </div>
-                            </form>
-                        </div>
+{{#if isEmpty}}
+    <div class="row align-items-center justify-content-center g-0 min-vh-100">
+        <div class="col-lg-5 col-md-8 py-8 py-xl-0">
+            <!-- Card -->
+            <div class="card shadow ">
+                <!-- Card body -->
+                <div class="card-body p-6">
+                    <div class="mb-4">
+                        <h1 class="mb-1 fw-bold">Aww snap!</h1>
+                        <span>You haven't listed any sneakers yet! Go <a href="/sneakers/sell">sell some</a> now!</span>
                     </div>
                 </div>
-            {{/each}}
+            </div>
         </div>
     </div>
-</div>
+{{else}}
+
+    <div class="album py-5">
+        <div class="container">
+            <div class="col-4"></div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {{#each sneakers}}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <img
+                                    src="{{images}}"
+                                    alt="shoe"
+                                    width="200"
+                                    height="200"
+                                    class="card-img-top sneakerListImg"
+                            />
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{modelName}}</h5>
+                                <p class="card-text">{{brandName}}</p>
+                                <p class="card-text">${{price}}</p>
+                                <form>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <button
+                                                type="submit"
+                                                class="btn btn-sm btn-outline-primary"
+                                                formaction="/sneakers/listedByUpdate/{{_id}}">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+{{/if}}

@@ -54,6 +54,7 @@ router.get("/", async (req, res) => {
       res.status(200).render("store/allReports", {
         reports: reports,
         title: "Reports",
+        hasErrors: true,
         error: "No Reports Found",
         isAdmin: true,
         isLoggedIn: !!req.session.user,
@@ -62,7 +63,16 @@ router.get("/", async (req, res) => {
     }
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({ error: e.message });
+      // res.status(e.statusCode).json({ error: e.message });
+      res.status(e.statusCode).render("store/allReports", {
+        reports: reports,
+        title: "Reports",
+        hasErrors: true,
+        error: e.message,
+        isAdmin: true,
+        isLoggedIn: !!req.session.user,
+        partial: "report-scripts",
+      });
     } else {
       res.status(500).json({ error: "Internal server error!" });
     }

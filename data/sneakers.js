@@ -335,6 +335,13 @@ const notifySneaker = async (userId, userName, sneakerId, size1) => {
 
   checkValidation(isValidNumber(size1.trim()));
   const sneakerInfo = await get(sneakerId.toString().trim());
+
+  for (let obj of sneakerInfo.notify) {
+    if (obj.userName === userName) {
+      return sneakerInfo;
+    }
+  }
+
   sneakerInfo.notify[sneakerInfo.notify.length] = {
     userId: userId.trim(),
     userName: userName.trim(),

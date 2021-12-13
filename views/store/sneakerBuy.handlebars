@@ -14,6 +14,11 @@
       <div class="card shadow">
         <!-- Card body -->
         <div class="card-body p-6">
+            {{#if notify}}
+                <div class="alert alert-success" role="alert">
+                    Woohoo! You will be notified by email when stocks get updated!
+                </div>
+            {{/if}}
           <div class="mb-4">
             <div class="row">
               <div class="col">
@@ -44,12 +49,7 @@
                   >
                   
                   </div>
-                  {{#if notify}}
-                  <div class="alert alert-success" role="alert">
-                    You will be Notified by email when stocks get updated.
-                          </div>
-                  {{/if}}
-                 
+
                   <div>
                     <p>Price: {{sneaker.price}}$</p>
                     <input
@@ -100,19 +100,17 @@
                     formaction="/sneakers/notify"
                     hidden
                   />
-                  {{!-- <div class="ss-box" data-ss-social=" whatsapp,email" data-ss-email = "subject:Sole Search" data-ss-content="false"  data-ss-link="Hey, Check the latest collection of Sneakers.... http://localhost:3000/sneakers/sneaker/{{sneaker._id}}"></div> --}}
+                  
 
 
                 </form>
-                <div class="ss-box" data-ss-social=" whatsapp,email" data-ss-email = "subject:Sole Search" data-ss-content="false"  data-ss-link="Hey, Check the latest collection of Sneakers.... http://localhost:3000/sneakers/sneaker/{{sneaker._id}}"></div>
+                <div class="ss-box mt-4" data-ss-social="twitter,whatsapp,email" data-ss-email = "subject:Sole Search" data-ss-content="false"  data-ss-link="Hey, Check the latest collection of Sneakers.... http://localhost:3000/sneakers/sneaker/{{sneaker._id}}"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {{! <div class="alert alert-success" role="alert"  >
- You will be Notified by Email when stock is updated.!!!!! 
-</div> }}
+      
 
       <div class="container" id="reviewContainer">
         <h3>Reviews</h3>
@@ -141,8 +139,8 @@
               >
                 <div class="accordion-body">
                   <div> User: {{reviewedBy}} </div>
-                  <div class="revReportBtn">
-                    <a
+                  <div>
+                    <a class="btn btn-danger revReportBtn"
                       id="revReportBtn_{{_id}}"
                       onClick="openReport(event)"
                       href=""
@@ -150,15 +148,14 @@
                   <div> Review: {{review}}</div>
                   <div id="rrBtn_{{_id}}" class="rrBtn" hidden>
                     <div
-                      class="alert alert-danger d-none"
+                      class="alert alert-danger d-none rrFormError"
                       role="alert"
                       id="rrFormError_{{_id}}"
-                      class="rrFormError"
                     >
                     </div>
-                    <label id="rrll_{{_id}}">Report Reason:</label>
-                    <input type="text" id="rr_{{_id}}" />
-                    <button class="btn btn-secondary"
+                    <label class="mt-4" for="rr_{{_id}}" id="rrll_{{_id}}">Report Reason:</label>
+                    <input class="form-control" type="text" id="rr_{{_id}}" />
+                    <button class="btn btn-danger mt-2"
                       id="rrB_{{_id}}"
                       onclick="reportReview(event)"
                     >Submit Report</button>
@@ -235,7 +232,7 @@
                     name="reviewFor"
                     id="reviewFor"
                   />
-                  <input type="submit" value="Submit" id="reviewSubmit" />
+                  <input class="btn btn-primary" type="submit" value="Submit" id="reviewSubmit" />
                 </form>
               </div>
             </div>
@@ -278,8 +275,8 @@
                           <div>
                             <div>Answer: {{answer}}</div>
 
-                            <div class="qnaReportBtn">
-                              <a
+                            <div>
+                              <a class="qnaReportBtn btn btn-danger"
                                 id="qnaReportBtn_{{_id}}"
                                 onclick="openReport2(event)"
                                 href=""
@@ -287,15 +284,14 @@
                             <div>User: {{answeredBy}}</div>
                             <div id="rqBtn_{{_id}}" class="rqBtn" hidden>
                               <div
-                                class="alert alert-danger d-none"
+                                class="alert alert-danger d-none rrFormError"
                                 role="alert"
                                 id="rqFormError_{{_id}}"
-                                class="rrFormError"
                               >
                               </div>
                               <label id="rqll_{{_id}}">Report Reason:</label>
-                              <input type="text" id="rq_{{_id}}" />
-                              <button class="btn btn-secondary"
+                              <input class="form-control" type="text" id="rq_{{_id}}" />
+                              <button class="btn btn-danger mt-2"
                                 id="rqB_{{_id}}_{{../_id}}"
                                 onclick="reportQna(event)"
                               >Submit Report</button>
@@ -347,7 +343,7 @@
                         value="put"
                         id="method_{{_id}}"
                       />
-                      <input type="submit" value="Submit" />
+                      <input class="btn btn-primary mt-2 mb-2" type="submit" value="Submit" />
                     </div>
                   </form>
                 </div>
@@ -403,7 +399,7 @@
                     value="{{sneaker._id}}"
                     name="qAndAFor"
                   />
-                  <input type="submit" value="Submit" id="questionSubmit" />
+                  <input class="btn btn-primary" type="submit" value="Submit" id="questionSubmit" />
                 </form>
               </div>
             </div>

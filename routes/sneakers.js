@@ -155,13 +155,19 @@ router.get("/listedBy", async (req, res) => {
     let id = req.session.user;
     const sneakers = await sneakersData.getAllListedBy(id.trim());
 
-    res.render("store/sneakerListedby", {
+    let options = {
       sneakers: sneakers,
       title: "Listed Sneakers",
       isLoggedIn: !!req.session.user,
       isAdmin: isAdmin,
       partial: "empty-scripts",
-    });
+    };
+
+    if (sneakers.length === 0) {
+      options["isEmpty"] = true;
+    }
+
+    res.render("store/sneakerListedby", options);
   } catch (e) {
     if (e.statusCode) {
       res.status(e.statusCode).render("store/sneakerListedby", {
@@ -251,8 +257,7 @@ router.get("/sneaker/:id", async (req, res) => {
     }
     let qAndA = await qAndAData.getAll(sneaker._id);
 
-    var options=
-    {
+    var options = {
       title: "Buy",
       userID: req.session.user,
       sneaker: sneaker,
@@ -263,14 +268,13 @@ router.get("/sneaker/:id", async (req, res) => {
       isLoggedIn: !!req.session.user,
       isAdmin: isAdmin,
       partial: "shop-scripts",
-    }
-    if(req.session.notify)
-    {
-      options["notify"]=true;
+    };
+    if (req.session.notify) {
+      options["notify"] = true;
       delete req.session.notify;
     }
 
-    res.render("store/sneakerBuy",options );
+    res.render("store/sneakerBuy", options);
   } catch (e) {
     if (e.statusCode) {
       res.status(e.statusCode).render("store/sneakerBuy", {
@@ -480,22 +484,22 @@ router.get("/BuyList", async (req, res) => {
   try {
     let id = req.session.user;
     const sneaker = await sneakersData.getAllBuyList(id);
-    var option={
+    var option = {
       title: "Purchase History",
       sneaker: sneaker,
       isLoggedIn: !!req.session.user,
       isAdmin: isAdmin,
       partial: "empty-scripts",
-    }
-      if(req.session.buy)
-    {
-      option["buy"]=true;
+    };
+    if (req.session.buy) {
+      option["buy"] = true;
       delete req.session.buy;
     }
 
     if (sneaker.length > 0) {
       res.render("store/sneakerBuyList", option);
     } else {
+      option["isEmpty"] = true;
       res.render("store/sneakerBuyList", option);
     }
   } catch (e) {
@@ -544,15 +548,16 @@ router.post("/search", async (req, res) => {
     user = await data.users.get(req.session.user);
     isAdmin = user.isAdmin;
   }
-
+  let sneakers = [];
+  let brands;
   try {
     let searchTerm = req.body.searchTerm;
 
     checkValidation(isValidArgument(req.body.searchTerm, "searchTerm"));
     checkValidation(isValidString(req.body.searchTerm, "searchTerm"));
 
-    let sneakers = await sneakersData.getName(searchTerm);
-    const brands = await sneakersData.getBrands();
+    sneakers = await sneakersData.getName(searchTerm);
+    brands = await sneakersData.getBrands();
 
     if (!!req.session.user) {
       sneakers = sneakers.filter((s) => s.listedBy !== req.session.user);
@@ -574,13 +579,24 @@ router.post("/search", async (req, res) => {
         brands: brands,
         isLoggedIn: !!req.session.user,
         isAdmin: isAdmin,
+        hasErrors: true,
         error: "No results found",
         partial: "list-scripts",
       });
     }
   } catch (e) {
     if (e.statusCode) {
-      res.status(e.statusCode).json({ error: e.message });
+      // res.status(e.statusCode).json({ error: e.message });
+      res.status(e.statusCode).render("store/sneakersList", {
+        title: "Shop",
+        sneakers: sneakers,
+        brands: brands,
+        isLoggedIn: !!req.session.user,
+        isAdmin: isAdmin,
+        hasErrors: true,
+        error: e.message,
+        partial: "list-scripts",
+      });
     } else {
       res.status(500).json({ error: "Internal server error!" });
     }
@@ -641,13 +657,19 @@ router.post("/buy", async (req, res) => {
     if (!req.session.user) {
       res.redirect("/users/login");
     } else {
+      const user = await usersData.get(req.session.user);
+      if (!user.address) {
+        res.redirect("/users/profile");
+        return;
+      }
+
       const sneakers = await sneakersData.buySneaker(
         req.session.user,
         sneakerId,
         size,
         price
       );
-      req.session.buy=true;
+      req.session.buy = true;
       res.redirect("/sneakers/BuyList");
     }
   } catch (e) {
@@ -679,7 +701,12 @@ router.post("/notify", async (req, res) => {
       res.redirect("/users/login");
     } else {
       const user = await usersData.get(req.session.user);
-      req.session.notify=true;
+      if (!user.address) {
+        res.redirect("/users/profile");
+        return;
+      }
+
+      req.session.notify = true;
       const sneakers = await sneakersData.notifySneaker(
         req.session.user,
         user.email,

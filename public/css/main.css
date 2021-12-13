@@ -53,19 +53,12 @@
   padding: 10px;
 }
 
-.accordion-body {
-  background-color: #d8d8d8;
-}
-
 .sneakerListImg {
   width: 350px !important;
 }
 
 .revReportBtn {
-  border: 0.5px solid black;
-  border-radius: 5px;
   float: right;
-  background-color: #cef4fc;
 }
 
 .revReportBtn a {
@@ -84,10 +77,7 @@
 } */
 
 .qnaReportBtn {
-  border: 0.5px solid black;
-  border-radius: 5px;
   float: right;
-  background-color: #cef4fc;
 }
 
 .qnaReportBtn a {
@@ -136,4 +126,8 @@ html {
 .textOverImage {
   background: rgba(255, 255, 255, 0.75);
   color: black !important;
+}
+
+.star-checked {
+  color: orange;
 }
