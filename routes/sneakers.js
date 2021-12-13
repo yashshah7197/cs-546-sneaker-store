@@ -579,6 +579,7 @@ router.post("/search", async (req, res) => {
         brands: brands,
         isLoggedIn: !!req.session.user,
         isAdmin: isAdmin,
+        hasErrors: true,
         error: "No results found",
         partial: "list-scripts",
       });
@@ -586,13 +587,14 @@ router.post("/search", async (req, res) => {
   } catch (e) {
     if (e.statusCode) {
       // res.status(e.statusCode).json({ error: e.message });
-      res.render("store/sneakersList", {
+      res.status(e.statusCode).render("store/sneakersList", {
         title: "Shop",
         sneakers: sneakers,
         brands: brands,
         isLoggedIn: !!req.session.user,
         isAdmin: isAdmin,
-        error: "Invalid Input",
+        hasErrors: true,
+        error: e.message,
         partial: "list-scripts",
       });
     } else {
